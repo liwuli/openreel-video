@@ -34,6 +34,7 @@ import { ToolcraftText as Text } from "@openreel/ui";
 import { ToolcraftTextInputControl } from "@openreel/ui";
 import { useUIStore } from "../../stores/ui-store";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 
 interface SearchItem {
   id: string;
@@ -294,14 +295,6 @@ const SEARCHABLE_EFFECTS: SearchItem[] = [
   },
 ];
 
-const CATEGORIES = [
-  { id: "all", name: "All" },
-  { id: "video", name: "Video", icon: Video },
-  { id: "audio", name: "Audio", icon: Music2 },
-  { id: "text", name: "Text", icon: Type },
-  { id: "animation", name: "Animation", icon: Zap },
-];
-
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -311,11 +304,23 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { t } = useTranslation(["search", "common"]);
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  const categories = useMemo(
+    () => [
+      { id: "all", name: t("common:searchModal.categories.all", "All") },
+      { id: "video", name: t("common:searchModal.categories.video", "Video"), icon: Video },
+      { id: "audio", name: t("common:searchModal.categories.audio", "Audio"), icon: Music2 },
+      { id: "text", name: t("common:searchModal.categories.text", "Text"), icon: Type },
+      { id: "animation", name: t("common:searchModal.categories.creative", "Creative"), icon: Zap },
+    ],
+    [t],
+  );
 
   const { selectedItems, setPanelVisible } = useUIStore();
   const project = useProjectStore((state) => state.project);
@@ -465,11 +470,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       <Layout
         header={
           <DialogHeader
-            title="Search Effects"
+            title={t("search:title", "Search Effects")}
             subtitle={
               selectedClipType
-                ? `Find tools for the selected ${selectedClipType} clip.`
-                : "Find effects and tools across the inspector."
+                ? t("search:subtitleSelected", {
+                    type: selectedClipType,
+                    defaultValue: `Find tools for the selected ${selectedClipType} clip.`,
+                  })
+                : t("search:subtitleGeneral", "Find effects and tools across the inspector.")
             }
             onOpenChange={(open) => !open && onClose()}
             startContent={<Search size={18} className="text-primary" aria-hidden />}
@@ -482,15 +490,18 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 <div className="min-w-0 flex-1">
                   <ToolcraftTextInputControl
                     ref={inputRef}
-                    label="Search effects"
+                    label={t("search:title", "Search Effects")}
                     isLabelHidden
                     type="text"
                     value={query}
                     onChange={setQuery}
                     placeholder={
                       selectedClipType
-                        ? `Search effects for ${selectedClipType} clip...`
-                        : "Search all effects and tools..."
+                        ? t("search:placeholderSelected", {
+                            type: selectedClipType,
+                            defaultValue: `Search effects for ${selectedClipType} clip...`,
+                          })
+                        : t("search:placeholderGeneral", "Search all effects and tools...")
                     }
                     startIcon={<Search size={16} aria-hidden />}
                     width="100%"
@@ -499,7 +510,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 </div>
                 {query && (
                   <IconButton
-                    label="Clear search"
+                    label={t("search:clearSearch", "Clear search")}
                     onClick={() => setQuery("")}
                     variant="ghost"
                     size="sm"
@@ -513,7 +524,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 ariaLabel="Effect category"
                 value={selectedCategory}
                 onChange={setSelectedCategory}
-                options={CATEGORIES.map((cat) => {
+                options={categories.map((cat) => {
                   const CategoryIcon = cat.icon;
                   return {
                     value: cat.id,
@@ -528,8 +539,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               <div ref={listRef} className="max-h-[50vh] overflow-y-auto">
                 {filteredEffects.length === 0 ? (
                   <EmptyState
-                    title="No effects found"
-                    description="Try a different search term or category."
+                    title={t("common:searchModal.noResults", "No matching items found")}
+                    description={t(
+                      "common:searchModal.noResultsDesc",
+                      "Try different keywords or switch categories",
+                    )}
                     icon={<Search size={32} className="text-text-muted opacity-50" aria-hidden />}
                     isCompact
                   />
@@ -541,7 +555,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                       return (
                         <ClickableCard
                           key={effect.id}
-                          label={`Open ${effect.name}`}
+                          label={t("search:openEffect", { name: effect.name, defaultValue: `Open ${effect.name}` })}
                           onClick={() => handleSelect(effect)}
                           padding={3}
                           variant={selected ? "green" : "default"}
@@ -604,18 +618,20 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           <LayoutFooter hasDivider>
             <div className="flex items-center justify-between gap-3">
               <Text type="supporting" color="secondary" className="text-[10px]">
-                {filteredEffects.length} effect
-                {filteredEffects.length !== 1 ? "s" : ""} available
+                {t("search:effectsAvailable", {
+                  count: filteredEffects.length,
+                  defaultValue: `${filteredEffects.length} effects available`,
+                })}
               </Text>
               <div className="flex items-center gap-2">
                 <Kbd keys="up" />
                 <Kbd keys="down" />
                 <Text type="supporting" color="secondary" className="text-[10px]">
-                  Navigate
+                  {t("search:navigate", "Navigate")}
                 </Text>
                 <Kbd keys="enter" />
                 <Text type="supporting" color="secondary" className="text-[10px]">
-                  Select
+                  {t("search:select", "Select")}
                 </Text>
               </div>
             </div>

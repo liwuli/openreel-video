@@ -1,6 +1,7 @@
 import React from "react";
 import { TextSection, ShapeSection, SVGSection } from "../";
 import { InspectorSection } from "../shell/InspectorSection";
+import { useTranslation } from "../../../../i18n";
 
 export interface StyleTabProps {
   clipId: string;
@@ -15,20 +16,30 @@ export const StyleTab: React.FC<StyleTabProps> = ({
   showShapeSection,
   showSVGSection,
 }) => {
+  const { t } = useTranslation("inspector");
+
   return (
     <>
       {showTextSection && (
-        <InspectorSection title="Text Properties" sectionId="text-properties">
+        <InspectorSection
+          title={t("inspector:style.textProperties", "Text Properties")}
+          sectionId="text-properties"
+        >
           <TextSection clipId={clipId} />
         </InspectorSection>
       )}
       {showShapeSection && (
-        <InspectorSection title="Shape Properties" sectionId="shape-properties">
+        <InspectorSection
+          title={t("inspector:style.shapeProperties", "Shape Properties")}
+          sectionId="shape-properties"
+        >
           <ShapeSection clipId={clipId} />
         </InspectorSection>
       )}
       {showSVGSection && (
-        <InspectorSection title="SVG Properties">
+        <InspectorSection
+          title={t("inspector:style.svgProperties", "SVG Properties")}
+        >
           <SVGSection clipId={clipId} />
         </InspectorSection>
       )}

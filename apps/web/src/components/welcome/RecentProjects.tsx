@@ -9,6 +9,7 @@ import {
 } from "../../services/auto-save";
 import { useProjectStore } from "../../stores/project-store";
 import { useAnalytics, AnalyticsEvents } from "../../hooks/useAnalytics";
+import { useTranslation } from "../../i18n";
 
 interface RecentProject {
   id: string;
@@ -24,6 +25,7 @@ interface RecentProjectsProps {
 export const RecentProjects: React.FC<RecentProjectsProps> = ({
   onProjectSelected,
 }) => {
+  const { t } = useTranslation(["welcome", "common"]);
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProjectId, setLoadingProjectId] = useState<string | null>(null);
@@ -100,10 +102,10 @@ export const RecentProjects: React.FC<RecentProjectsProps> = ({
       (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
     );
 
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "Yesterday";
-    if (diffDays < 7) return `${diffDays} days ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays === 0) return t("welcome:recentList.today", "Today");
+    if (diffDays === 1) return t("welcome:recentList.yesterday", "Yesterday");
+    if (diffDays < 7) return t("welcome:recentList.daysAgo", { count: diffDays, defaultValue: `${diffDays} days ago` });
+    if (diffDays < 30) return t("welcome:recentList.weeksAgo", { count: Math.floor(diffDays / 7), defaultValue: `${Math.floor(diffDays / 7)} weeks ago` });
 
     return date.toLocaleDateString();
   };
@@ -113,7 +115,7 @@ export const RecentProjects: React.FC<RecentProjectsProps> = ({
       <div className="flex flex-col items-center justify-center py-20">
         <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin mb-4" />
         <Text type="supporting" color="secondary" className="text-sm text-text-secondary">
-          Loading recent projects...
+          {t("welcome:recentList.loading", "Loading recent projects...")}
         </Text>
       </div>
     );
@@ -126,11 +128,10 @@ export const RecentProjects: React.FC<RecentProjectsProps> = ({
           <Clock size={24} className="text-text-muted" />
         </div>
         <Text type="body" color="primary" weight="medium" className="text-base text-text-primary mb-2">
-          No Recent Projects
+          {t("welcome:recentList.noProjectsTitle", "No Recent Projects")}
         </Text>
         <Text type="supporting" color="secondary" className="text-sm text-text-muted text-center max-w-md">
-          Your recently opened projects will appear here. Start a new project or
-          use a template to get started.
+          {t("welcome:recentList.noProjectsDesc", "Your recently opened projects will appear here. Start a new project or use a template to get started.")}
         </Text>
       </div>
     );
@@ -140,7 +141,7 @@ export const RecentProjects: React.FC<RecentProjectsProps> = ({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <Text type="label" color="primary" weight="medium" className="text-sm text-text-primary">
-          Recent Projects ({recentProjects.length})
+          {t("welcome:recentList.title", { count: recentProjects.length, defaultValue: `Recent Projects (${recentProjects.length})` })}
         </Text>
       </div>
 
@@ -180,7 +181,7 @@ export const RecentProjects: React.FC<RecentProjectsProps> = ({
               </ClickableCard>
 
               <IconButton
-                label="Remove from recent"
+                label={t("welcome:recentList.removeFromRecent", "Remove from recent")}
                 onClick={(e) => handleRemoveProject(project.id, e)}
                 icon={<Trash2 size={14} aria-hidden />}
                 size="sm"
@@ -193,7 +194,7 @@ export const RecentProjects: React.FC<RecentProjectsProps> = ({
       </div>
 
       <Text type="supporting" color="secondary" className="text-xs text-text-muted text-center">
-        Recent projects are stored locally in your browser
+        {t("welcome:recentList.storedLocally", "Recent projects are stored locally in your browser")}
       </Text>
     </div>
   );

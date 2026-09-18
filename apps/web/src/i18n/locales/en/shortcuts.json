@@ -1,0 +1,22 @@
+{
+  "title": "Keyboard Shortcuts",
+  "searchPlaceholder": "Search shortcuts...",
+  "resetAll": "Reset All",
+  "pressKeys": "Press keys...",
+  "resetToDefault": "Reset to default",
+  "noShortcutsFound": "No shortcuts found",
+  "footerClickHint": "Click a shortcut key to customize • Press",
+  "footerToggleHint": "to toggle this overlay",
+  "presetLabel": "Preset",
+  "applyPreset": "Apply {{name}} preset",
+  "categories": {
+    "all": "All",
+    "timeline": "Timeline",
+    "playback": "Playback",
+    "tools": "Tools",
+    "editing": "Editing",
+    "view": "View",
+    "selection": "Selection",
+    "file": "File"
+  }
+}

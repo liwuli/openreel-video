@@ -16,24 +16,26 @@ import { ToolcraftText as Text } from "@openreel/ui";
 import { ToolcraftTextInputControl } from "@openreel/ui";
 import { useProjectStore } from "../../stores/project-store";
 import { autoSaveManager, type AutoSaveMetadata } from "../../services/auto-save";
-
-function formatTimeAgo(timestamp: number): string {
-  const seconds = Math.floor((Date.now() - timestamp) / 1000);
-  if (seconds < 60) return "just now";
-  if (seconds < 3600) {
-    const mins = Math.floor(seconds / 60);
-    return `${mins}m ago`;
-  }
-  if (seconds < 86400) {
-    const hours = Math.floor(seconds / 3600);
-    return `${hours}h ago`;
-  }
-  const days = Math.floor(seconds / 86400);
-  return `${days}d ago`;
-}
+import { useTranslation } from "../../i18n";
 
 export const ProjectSwitcher: React.FC = () => {
+  const { t } = useTranslation(["toolbar", "common"]);
   const { project, createNewProject, recoverFromAutoSave, renameProject } = useProjectStore();
+
+  const formatTimeAgo = useCallback((timestamp: number): string => {
+    const seconds = Math.floor((Date.now() - timestamp) / 1000);
+    if (seconds < 60) return t("toolbar:projectSwitcher.timeAgo.justNow", "just now");
+    if (seconds < 3600) {
+      const mins = Math.floor(seconds / 60);
+      return t("toolbar:projectSwitcher.timeAgo.minutesAgo", { count: mins, defaultValue: `${mins}m ago` });
+    }
+    if (seconds < 86400) {
+      const hours = Math.floor(seconds / 3600);
+      return t("toolbar:projectSwitcher.timeAgo.hoursAgo", { count: hours, defaultValue: `${hours}h ago` });
+    }
+    const days = Math.floor(seconds / 86400);
+    return t("toolbar:projectSwitcher.timeAgo.daysAgo", { count: days, defaultValue: `${days}d ago` });
+  }, [t]);
   const [isOpen, setIsOpen] = useState(false);
   const [savedProjects, setSavedProjects] = useState<AutoSaveMetadata[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -161,13 +163,13 @@ export const ProjectSwitcher: React.FC = () => {
               color="secondary"
               className="mb-2 text-xs font-medium uppercase tracking-wider"
             >
-              Current Project
+              {t("toolbar:projectSwitcher.currentProject", "Current Project")}
             </Text>
             {isEditing ? (
               <div className="flex items-center gap-2">
                 <ToolcraftTextInputControl
                   ref={inputRef}
-                  label="Project name"
+                  label={t("toolbar:projectSwitcher.projectName", "Project name")}
                   isLabelHidden
                   size="sm"
                   width="100%"
@@ -178,7 +180,7 @@ export const ProjectSwitcher: React.FC = () => {
                   className="flex-1 bg-background-secondary border-primary text-text-primary"
                 />
                 <IconButton
-                  label="Save project name"
+                  label={t("toolbar:projectSwitcher.saveProjectName", "Save project name")}
                   onClick={handleSaveName}
                   variant="secondary"
                   size="sm"
@@ -201,7 +203,7 @@ export const ProjectSwitcher: React.FC = () => {
                   {project.name}
                 </Text>
                 <IconButton
-                  label="Rename project"
+                  label={t("toolbar:projectSwitcher.renameProject", "Rename project")}
                   onClick={() => setIsEditing(true)}
                   variant="ghost"
                   size="sm"
@@ -214,7 +216,7 @@ export const ProjectSwitcher: React.FC = () => {
 
           <div className="p-2">
             <ClickableCard
-              label="New Project"
+              label={t("toolbar:projectSwitcher.newProject", "New Project")}
               onClick={handleNewProject}
               padding={3}
               variant="transparent"
@@ -225,10 +227,10 @@ export const ProjectSwitcher: React.FC = () => {
               </div>
               <div className="flex-1">
                 <Text type="supporting" color="primary" className="text-sm font-medium">
-                  New Project
+                  {t("toolbar:projectSwitcher.newProject", "New Project")}
                 </Text>
                 <Text type="supporting" color="secondary" className="text-xs">
-                  Start fresh with a new canvas
+                  {t("toolbar:projectSwitcher.newProjectDesc", "Start fresh with a new canvas")}
                 </Text>
               </div>
             </ClickableCard>
@@ -244,7 +246,7 @@ export const ProjectSwitcher: React.FC = () => {
                     color="secondary"
                     className="text-xs font-medium uppercase tracking-wider"
                   >
-                  Recent Projects
+                    {t("toolbar:projectSwitcher.recentProjects", "Recent Projects")}
                   </Text>
                 </div>
               </div>
@@ -252,7 +254,10 @@ export const ProjectSwitcher: React.FC = () => {
                 {otherProjects.map((save) => (
                   <ClickableCard
                     key={save.id}
-                    label={`Open ${save.projectName}`}
+                    label={t("toolbar:projectSwitcher.openProject", {
+                      name: save.projectName,
+                      defaultValue: `Open ${save.projectName}`,
+                    })}
                     onClick={() => handleSwitchProject(save.id)}
                     isDisabled={isLoading}
                     padding={3}

@@ -10,6 +10,7 @@ import { ToolcraftProgressBar as ProgressBar } from "@openreel/ui";
 import { ToolcraftSelectableCard as SelectableCard } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { Video, Loader2 } from "@/icons/lucide-compat";
+import { useTranslation } from "../../i18n";
 import {
   computeCompressionPlan,
   estimateCompressedBytes,
@@ -43,6 +44,7 @@ const QUALITY_TIERS: {
 const MB = 1024 * 1024;
 
 export function CompressDialog({ isOpen, onClose }: CompressDialogProps) {
+  const { t } = useTranslation(["export", "common"]);
   const abortRef = useRef<AbortController | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<CompressionSource | null>(null);
@@ -151,7 +153,7 @@ export function CompressDialog({ isOpen, onClose }: CompressDialogProps) {
       <Layout
         header={
           <DialogHeader
-            title="Compress Video"
+            title={t("export:compressDialog.title", "Compress Video")}
             onOpenChange={(open) => {
               if (!open && !compressing) {
                 resetSource();
@@ -177,14 +179,14 @@ export function CompressDialog({ isOpen, onClose }: CompressDialogProps) {
             }}
             accept="video/*"
             mode="dropzone"
-            placeholder="Choose a video to compress..."
+            placeholder={t("export:compressDialog.dropzone", "Choose a video to compress...")}
             isDisabled={compressing}
             isLoading={probing}
             width="100%"
             description={
               file
                 ? probing
-                  ? "Reading..."
+                  ? t("export:compressDialog.reading", "Reading...")
                   : source
                     ? `${source.width}x${source.height} - ${formatBytes(originalBytes)}`
                     : formatBytes(originalBytes)
@@ -199,31 +201,35 @@ export function CompressDialog({ isOpen, onClose }: CompressDialogProps) {
                 value={mode}
                 onChange={setMode}
                 options={[
-                  { value: "quality", label: "Quality" },
-                  { value: "size", label: "Target size" },
+                  { value: "quality", label: t("export:compressDialog.modes.quality", "Quality") },
+                  { value: "size", label: t("export:compressDialog.modes.size", "Target size") },
                 ]}
               />
 
               {mode === "quality" ? (
                 <div className="grid grid-cols-3 gap-2">
-                  {QUALITY_TIERS.map((tier) => (
-                    <SelectableCard
-                      key={tier.value}
-                      label={tier.label}
-                      isSelected={quality === tier.value}
-                      onChange={() => setQuality(tier.value)}
-                      padding={2}
-                      variant={quality === tier.value ? "green" : "default"}
-                      className="text-center"
-                    >
-                      <Text type="label" weight="bold" display="block">
-                        {tier.label}
-                      </Text>
-                      <Text type="supporting" color="secondary" display="block" className="text-[10px]">
-                        {tier.hint}
-                      </Text>
-                    </SelectableCard>
-                  ))}
+                  {QUALITY_TIERS.map((tier) => {
+                    const tierLabel = t(`export:compressDialog.qualityTiers.${tier.value}`, tier.label);
+                    const tierHint = t(`export:compressDialog.qualityTiers.${tier.value}Hint`, tier.hint);
+                    return (
+                      <SelectableCard
+                        key={tier.value}
+                        label={tierLabel}
+                        isSelected={quality === tier.value}
+                        onChange={() => setQuality(tier.value)}
+                        padding={2}
+                        variant={quality === tier.value ? "green" : "default"}
+                        className="text-center"
+                      >
+                        <Text type="label" weight="bold" display="block">
+                          {tierLabel}
+                        </Text>
+                        <Text type="supporting" color="secondary" display="block" className="text-[10px]">
+                          {tierHint}
+                        </Text>
+                      </SelectableCard>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -246,14 +252,14 @@ export function CompressDialog({ isOpen, onClose }: CompressDialogProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <SelectableCard
-                      label="Custom target size"
+                      label={t("export:compressDialog.customSize", "Custom target size")}
                       isSelected={sizePresetId === "custom"}
                       onChange={() => setSizePresetId("custom")}
                       padding={2}
                       variant={sizePresetId === "custom" ? "green" : "default"}
                     >
                       <Text type="label" weight="bold">
-                        Custom
+                        {t("export:compressDialog.custom", "Custom")}
                       </Text>
                     </SelectableCard>
                     {sizePresetId === "custom" && (
@@ -333,14 +339,14 @@ export function CompressDialog({ isOpen, onClose }: CompressDialogProps) {
         <div className="flex justify-end gap-2">
           {compressing ? (
             <Button
-              label="Cancel"
+              label={t("common:cancel")}
               variant="ghost"
               onClick={() => abortRef.current?.abort()}
             />
           ) : (
             <>
               <Button
-                label="Close"
+                label={t("export:compressDialog.close", "Close")}
                 variant="ghost"
                 onClick={() => {
                   resetSource();
@@ -348,7 +354,7 @@ export function CompressDialog({ isOpen, onClose }: CompressDialogProps) {
                 }}
               />
               <Button
-                label="Compress"
+                label={t("export:compressDialog.compressBtn", "Compress")}
                 variant="primary"
                 onClick={handleCompress}
                 isDisabled={!source || probing}

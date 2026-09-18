@@ -1,0 +1,102 @@
+{
+  "title": "导出视频",
+  "subtitle": "将时间线项目渲染为视频文件、图像序列或压缩资源。",
+  "tabs": {
+    "presets": "预设导出",
+    "custom": "自定义配置",
+    "reduce": "体积压缩"
+  },
+  "sections": {
+    "platformPresets": "平台与格式预设",
+    "exportSettings": "导出配置",
+    "advanced": "高级编码参数",
+    "compressPlan": "压缩策略"
+  },
+  "resolution": "分辨率",
+  "format": "格式",
+  "frameRate": "帧率",
+  "quality": "画质质量",
+  "bitrate": "码率",
+  "codec": "编解码器",
+  "audio": "音频",
+  "hardwareAccelerated": "已启用硬件加速",
+  "softwareEncoding": "软解编码",
+  "render": "开始导出视频",
+  "compressAndExport": "压缩并导出",
+  "rendering": "正在渲染导出视频…",
+  "cancel": "取消",
+  "completed": "导出已完成",
+  "download": "下载视频文件",
+  "bestMatch": "最佳匹配",
+  "timeRemaining": "预计剩余时间：{{time}}",
+  "estimatedSize": "预估体积：~{{size}}",
+  "matchSource": "匹配源媒体",
+  "quickExport": "快速导出",
+  "browsePresets": "浏览预设",
+  "forYourVideo": "适合当前视频",
+  "platforms": {
+    "all": "全部",
+    "recommended": "推荐",
+    "youtube": "YouTube",
+    "tiktok": "TikTok",
+    "instagram": "Instagram",
+    "twitter": "Twitter / X",
+    "podcast": "播客音频",
+    "web": "Web 网页",
+    "prores": "ProRes 母版"
+  },
+  "reduce": {
+    "mode": "压缩模式",
+    "modes": {
+      "quality": "画质优先",
+      "size": "目标大小"
+    },
+    "quality": "压缩画质",
+    "targetSize": "目标文件大小",
+    "qualityLevels": {
+      "light": "轻度",
+      "lightHint": "微调体积，高画质",
+      "balanced": "均衡",
+      "balancedHint": "画质与体积兼备",
+      "strong": "强力",
+      "strongHint": "极致体积最小化"
+    },
+    "savings": "可节省约 {{percent}}% 存储空间",
+    "originalSize": "原始估算：{{size}}",
+    "compressedSize": "压缩预估：{{size}}"
+  },
+  "custom": {
+    "videoSettings": "视频编码参数",
+    "audioSettings": "音频编码参数",
+    "bitrateMode": "码率模式",
+    "keyframeInterval": "关键帧间隔 (GOP)",
+    "audioFormat": "音频编码",
+    "sampleRate": "采样率",
+    "channels": "声道",
+    "audioBitrate": "音频码率",
+    "upscaling": "AI 超分辨率放大",
+    "upscalingQuality": "放大质量",
+    "sharpening": "锐化强度"
+  },
+  "compressDialog": {
+    "title": "压缩视频",
+    "dropzone": "选择或拖拽要压缩的视频文件…",
+    "reading": "正在读取视频…",
+    "modes": {
+      "quality": "画质优先",
+      "size": "目标大小"
+    },
+    "qualityTiers": {
+      "light": "轻度压缩",
+      "lightHint": "画质优先",
+      "balanced": "均衡压缩",
+      "balancedHint": "≈720p 常用",
+      "strong": "强力压缩",
+      "strongHint": "体积最小"
+    },
+    "customSize": "自定义目标大小",
+    "custom": "自定义",
+    "compressBtn": "开始压缩",
+    "close": "关闭"
+  }
+}

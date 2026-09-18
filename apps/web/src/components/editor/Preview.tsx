@@ -24,6 +24,7 @@ import {
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftIconButton as IconButton } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
+import { useTranslation } from "../../i18n";
 import { useProjectStore } from "../../stores/project-store";
 import { useTimelineStore } from "../../stores/timeline-store";
 import { useUIStore } from "../../stores/ui-store";
@@ -831,6 +832,7 @@ interface ClipWithPlaceholder {
 }
 
 export const Preview: React.FC = () => {
+  const { t } = useTranslation(["preview", "common"]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoAreaRef = useRef<HTMLDivElement>(null);
@@ -8088,7 +8090,7 @@ export const Preview: React.FC = () => {
 
         <div className="flex items-center gap-4 mx-auto">
           <IconButton
-            label="Skip back 5s"
+            label={t("preview:skipBack", "Skip back 5s")}
             icon={<SkipBack size={18} />}
             variant="ghost"
             size="sm"
@@ -8096,7 +8098,7 @@ export const Preview: React.FC = () => {
             className="w-8 h-8 grid place-items-center rounded-md text-fg-2 hover:bg-hover hover:text-fg transition-colors"
           />
           <IconButton
-            label={playbackLockedReason ?? (isPlaying ? "Pause" : "Play")}
+            label={playbackLockedReason ?? (isPlaying ? t("preview:pause", "Pause") : t("preview:play", "Play"))}
             icon={
               isPlaying ? (
                 <Pause size={18} fill="currentColor" />
@@ -8119,7 +8121,7 @@ export const Preview: React.FC = () => {
             }`}
           />
           <IconButton
-            label="Skip forward 5s"
+            label={t("preview:skipForward", "Skip forward 5s")}
             icon={<SkipForward size={18} />}
             variant="ghost"
             size="sm"
@@ -8130,7 +8132,7 @@ export const Preview: React.FC = () => {
 
         <div className="flex gap-1.5 items-center">
           <IconButton
-            label={isMuted ? "Unmute" : "Mute"}
+            label={isMuted ? t("preview:unmute", "Unmute") : t("preview:mute", "Mute")}
             icon={isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
             variant="ghost"
             size="sm"
@@ -8145,7 +8147,7 @@ export const Preview: React.FC = () => {
           {/* Aspect ratio (project canvas size) */}
           <div className="relative">
             <Button
-              label="Aspect ratio"
+              label={t("preview:aspectRatio", "Aspect ratio")}
               variant="ghost"
               onClick={() => setShowAspectMenu(!showAspectMenu)}
               className="flex items-center gap-1.5 rounded-[7px] bg-bg-2 px-[11px] py-[7px] text-[12px] font-medium text-fg-2 hover:bg-bg-3 hover:text-fg transition-colors"
@@ -8197,13 +8199,13 @@ export const Preview: React.FC = () => {
           {/* Playback Quality (render resolution) */}
           <div className="relative">
             <Button
-              label="Playback quality"
+              label={t("preview:playbackQuality", "Playback quality")}
               variant="ghost"
               onClick={() => setShowQualityMenu(!showQualityMenu)}
               className="rounded-[7px] bg-bg-2 px-[11px] py-[7px] text-[12px] font-medium text-fg-2 hover:bg-bg-3 hover:text-fg transition-colors"
             >
               {PREVIEW_QUALITY_OPTIONS.find((o) => o.value === playbackQuality)
-                ?.label ?? "Auto"}
+                ?.label ?? t("preview:auto", "Auto")}
             </Button>
             {showQualityMenu && (
               <>
@@ -8238,7 +8240,7 @@ export const Preview: React.FC = () => {
           {/* Zoom Control */}
           <div className="relative">
             <Button
-              label="Preview Zoom"
+              label={t("preview:previewZoom", "Preview Zoom")}
               variant="ghost"
               onClick={() => setShowZoomMenu(!showZoomMenu)}
               className="flex items-center gap-1.5 rounded-[7px] bg-bg-2 px-[11px] py-[7px] text-[12px] font-medium text-fg-2 hover:bg-bg-3 hover:text-fg transition-colors"
@@ -8279,7 +8281,7 @@ export const Preview: React.FC = () => {
           </div>
 
           <IconButton
-            label="Canvas snapping"
+            label={t("preview:canvasSnapping", "Canvas snapping")}
             icon={<Magnet size={16} />}
             variant="ghost"
             size="sm"
@@ -8295,7 +8297,7 @@ export const Preview: React.FC = () => {
             }`}
           />
           <IconButton
-            label="Composition grid"
+            label={t("preview:compositionGrid", "Composition grid")}
             icon={<Move size={16} />}
             variant="ghost"
             size="sm"
@@ -8308,7 +8310,7 @@ export const Preview: React.FC = () => {
             }`}
           />
           <IconButton
-            label="Title and action safe margins"
+            label={t("preview:safeMargins", "Title and action safe margins")}
             icon={<Proportions size={16} />}
             variant="ghost"
             size="sm"
@@ -8322,7 +8324,7 @@ export const Preview: React.FC = () => {
           />
 
           <IconButton
-            label={isFullscreen ? "Exit Full Screen" : "Full Screen"}
+            label={isFullscreen ? t("preview:exitFullscreen", "Exit Full Screen") : t("preview:fullscreen", "Full Screen")}
             icon={<Monitor size={16} />}
             variant="ghost"
             size="sm"
@@ -8334,7 +8336,7 @@ export const Preview: React.FC = () => {
             }`}
           />
           <IconButton
-            label={isMaximized ? "Restore Size" : "Maximize Preview"}
+            label={isMaximized ? t("preview:restore", "Restore Size") : t("preview:maximize", "Maximize Preview")}
             icon={isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
             variant="ghost"
             size="sm"

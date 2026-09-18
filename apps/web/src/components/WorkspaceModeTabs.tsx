@@ -1,14 +1,7 @@
 import type { JSX } from "react";
+import { useTranslation } from "../i18n";
 
 export type WorkspaceMode = "video" | "motion";
-
-const MODES: Array<{
-  id: WorkspaceMode;
-  label: string;
-}> = [
-  { id: "video", label: "Video Editor" },
-  { id: "motion", label: "Motion Design" },
-];
 
 export function WorkspaceModeTabs({
   activeMode,
@@ -23,13 +16,19 @@ export function WorkspaceModeTabs({
   className?: string;
   accessibleLabels?: Partial<Record<WorkspaceMode, string>>;
 }): JSX.Element {
+  const { t } = useTranslation("common");
+
+  const modes = [
+    { id: "video" as const, label: t("videoEditor", "Video Editor") },
+    { id: "motion" as const, label: t("motionDesign", "Motion Design") },
+  ];
   return (
     <div
       role="tablist"
       aria-label={ariaLabel}
       className={`inline-flex items-center gap-0 rounded-[9px] bg-bg-3 p-[3px] ${className}`}
     >
-      {MODES.map((mode) => {
+      {modes.map((mode) => {
         const isActive = activeMode === mode.id;
         return (
           <button

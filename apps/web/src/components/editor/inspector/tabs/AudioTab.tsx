@@ -9,6 +9,7 @@ import {
 } from "../";
 import { InspectorSection } from "../shell/InspectorSection";
 import { PropertySlider } from "../shell/PropertySlider";
+import { useTranslation } from "../../../../i18n";
 
 export interface AudioTabProps {
   clipId: string;
@@ -25,6 +26,7 @@ export const AudioTab: React.FC<AudioTabProps> = ({
   noiseReductionSectionTitle,
   selectedNoiseReductionEffect,
 }) => {
+  const { t } = useTranslation("inspector");
   const clip = useProjectStore((state) =>
     state.project.timeline.tracks
       .flatMap((track) => track.clips)
@@ -46,10 +48,14 @@ export const AudioTab: React.FC<AudioTabProps> = ({
   return (
     <>
       {showAudioEffects && clip && (
-        <InspectorSection title="Clip Audio" sectionId="clip-audio" defaultOpen>
+        <InspectorSection
+          title={t("inspector:audio.clipAudio", "Clip Audio")}
+          sectionId="clip-audio"
+          defaultOpen
+        >
           <div className="space-y-4">
             <PropertySlider
-              label="Volume"
+              label={t("inspector:audio.volume", "Volume")}
               value={clip.volume * 100}
               onChange={(value) => updateAudio("audio/setVolume", { volume: value / 100 })}
               min={0}
@@ -58,7 +64,7 @@ export const AudioTab: React.FC<AudioTabProps> = ({
               formatValue={(value) => `${Math.round(value)}%`}
             />
             <PropertySlider
-              label="Fade in"
+              label={t("inspector:audio.fadeIn", "Fade in")}
               value={clip.fade?.fadeIn ?? 0}
               onChange={(fadeIn) => updateAudio("audio/setFade", { fadeIn })}
               min={0}
@@ -67,7 +73,7 @@ export const AudioTab: React.FC<AudioTabProps> = ({
               formatValue={(value) => `${value.toFixed(1)}s`}
             />
             <PropertySlider
-              label="Fade out"
+              label={t("inspector:audio.fadeOut", "Fade out")}
               value={clip.fade?.fadeOut ?? 0}
               onChange={(fadeOut) => updateAudio("audio/setFade", { fadeOut })}
               min={0}
@@ -80,7 +86,7 @@ export const AudioTab: React.FC<AudioTabProps> = ({
       )}
       {showAudioEffects && (
         <InspectorSection
-          title="Auto Cut Silence"
+          title={t("inspector:audio.autoCutSilence", "Auto Cut Silence")}
           sectionId="auto-cut-silence"
           defaultOpen={false}
         >
@@ -88,13 +94,17 @@ export const AudioTab: React.FC<AudioTabProps> = ({
         </InspectorSection>
       )}
       {clipType === "audio" && (
-        <InspectorSection title="Beat Sync" sectionId="beat-sync" defaultOpen={false}>
+        <InspectorSection
+          title={t("inspector:audio.beatSync", "Beat Sync")}
+          sectionId="beat-sync"
+          defaultOpen={false}
+        >
           <AudioTextSyncPanel clipId={clipId} />
         </InspectorSection>
       )}
       {showAudioEffects && (
         <InspectorSection
-          title={noiseReductionSectionTitle}
+          title={noiseReductionSectionTitle || t("inspector:audio.backgroundNoiseRemoval", "Background Noise Removal")}
           sectionId="background-noise-removal"
           defaultOpen={Boolean(selectedNoiseReductionEffect)}
         >
@@ -104,7 +114,7 @@ export const AudioTab: React.FC<AudioTabProps> = ({
       {showAudioEffects && (
         <>
           <InspectorSection
-            title="Audio Effects"
+            title={t("inspector:audio.audioEffects", "Audio Effects")}
             sectionId="audio-effects"
             defaultOpen={false}
           >
@@ -114,7 +124,7 @@ export const AudioTab: React.FC<AudioTabProps> = ({
       )}
       {showAudioEffects && (
         <InspectorSection
-          title="Audio Ducking"
+          title={t("inspector:audio.audioDucking", "Audio Ducking")}
           sectionId="audio-ducking"
           defaultOpen={false}
         >

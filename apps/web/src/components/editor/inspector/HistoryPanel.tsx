@@ -21,6 +21,7 @@ import { ToolcraftText as Text } from "@openreel/ui";
 import { ToolcraftTextInputControl } from "@openreel/ui";
 import { useProjectStore } from "../../../stores/project-store";
 import type { HistorySnapshot } from "@openreel/core";
+import { useTranslation } from "../../../i18n";
 
 interface DisplayEntry {
   id: string;
@@ -33,6 +34,7 @@ interface DisplayEntry {
 }
 
 export const HistoryPanel: React.FC = () => {
+  const { t } = useTranslation("inspector");
   const { actionHistory, undo, redo, canUndo, canRedo, clipUndoStack, clipRedoStack } = useProjectStore();
   const [combinedHistory, setCombinedHistory] = useState<DisplayEntry[]>([]);
   const [snapshots, setSnapshots] = useState<HistorySnapshot[]>([]);
@@ -42,11 +44,11 @@ export const HistoryPanel: React.FC = () => {
 
   const getClipDescription = (type: "shape" | "text" | "svg" | "sticker"): string => {
     switch (type) {
-      case "text": return "Create text clip";
-      case "shape": return "Create shape";
-      case "svg": return "Import SVG";
-      case "sticker": return "Add sticker";
-      default: return "Create clip";
+      case "text": return t("historyPanel.clipDescriptions.text", "Create text clip");
+      case "shape": return t("historyPanel.clipDescriptions.shape", "Create shape");
+      case "svg": return t("historyPanel.clipDescriptions.svg", "Import SVG");
+      case "sticker": return t("historyPanel.clipDescriptions.sticker", "Add sticker");
+      default: return t("historyPanel.clipDescriptions.default", "Create clip");
     }
   };
 
@@ -135,12 +137,12 @@ export const HistoryPanel: React.FC = () => {
         <div className="flex items-center gap-2">
           <History size={14} className="text-primary" aria-hidden />
           <Text type="body" color="primary" weight="bold" className="text-sm">
-            History
+            {t("historyPanel.title", "History")}
           </Text>
         </div>
         <div className="flex items-center gap-1">
           <IconButton
-            label={`Undo (${undoCount})`}
+            label={t("historyPanel.undo", "Undo ({{count}})", { count: undoCount })}
             icon={<Undo2 size={14} aria-hidden />}
             variant="ghost"
             size="sm"
@@ -148,7 +150,7 @@ export const HistoryPanel: React.FC = () => {
             isDisabled={!canUndo()}
           />
           <IconButton
-            label={`Redo (${redoCount})`}
+            label={t("historyPanel.redo", "Redo ({{count}})", { count: redoCount })}
             icon={<Redo2 size={14} aria-hidden />}
             variant="ghost"
             size="sm"
@@ -160,7 +162,7 @@ export const HistoryPanel: React.FC = () => {
 
       <div className="border-b border-border">
         <ClickableCard
-          label={`${showSnapshots ? "Hide" : "Show"} snapshots`}
+          label={showSnapshots ? t("historyPanel.hideSnapshots", "Hide snapshots") : t("historyPanel.showSnapshots", "Show snapshots")}
           onClick={() => setShowSnapshots(!showSnapshots)}
           padding={2}
           variant="transparent"
@@ -174,7 +176,7 @@ export const HistoryPanel: React.FC = () => {
             )}
             <Bookmark size={12} className="text-yellow-500" aria-hidden />
             <Text type="supporting" color="secondary" className="text-xs">
-              Snapshots ({snapshots.length})
+              {t("historyPanel.snapshots", "Snapshots ({{count}})", { count: snapshots.length })}
             </Text>
           </div>
         </ClickableCard>
@@ -183,7 +185,7 @@ export const HistoryPanel: React.FC = () => {
           <div className="px-2 pb-2">
             {snapshots.length === 0 && !isCreatingSnapshot && (
               <Text type="supporting" color="secondary" className="block text-[10px] py-2 text-center">
-                No snapshots saved
+                {t("historyPanel.noSnapshots", "No snapshots saved")}
               </Text>
             )}
 
@@ -206,7 +208,7 @@ export const HistoryPanel: React.FC = () => {
                   </div>
                 </div>
                 <IconButton
-                  label={`Delete snapshot ${snapshot.name}`}
+                  label={t("historyPanel.deleteSnapshot", "Delete snapshot {{name}}", { name: snapshot.name })}
                   icon={<Trash2 size={10} aria-hidden />}
                   variant="ghost"
                   size="sm"
@@ -219,7 +221,7 @@ export const HistoryPanel: React.FC = () => {
             {isCreatingSnapshot ? (
               <div className="flex items-center gap-2 p-2">
                 <ToolcraftTextInputControl
-                  label="Snapshot name"
+                  label={t("historyPanel.snapshotNameLabel", "Snapshot name")}
                   isLabelHidden
                   size="sm"
                   width="100%"
@@ -229,11 +231,11 @@ export const HistoryPanel: React.FC = () => {
                     if (e.key === "Enter") handleCreateSnapshot();
                     if (e.key === "Escape") setIsCreatingSnapshot(false);
                   }}
-                  placeholder="Snapshot name..."
+                  placeholder={t("historyPanel.snapshotNamePlaceholder", "Snapshot name...")}
                   hasAutoFocus
                 />
                 <Button
-                  label="Save"
+                  label={t("historyPanel.saveSnapshot", "Save")}
                   variant="primary"
                   size="sm"
                   onClick={handleCreateSnapshot}
@@ -241,7 +243,7 @@ export const HistoryPanel: React.FC = () => {
               </div>
             ) : (
               <Button
-                label="Create Snapshot"
+                label={t("historyPanel.createSnapshot", "Create Snapshot")}
                 icon={<BookmarkPlus size={12} aria-hidden />}
                 variant="secondary"
                 size="sm"
@@ -258,7 +260,7 @@ export const HistoryPanel: React.FC = () => {
           <div className="flex flex-col items-center justify-center h-full text-fg-3">
             <History size={24} className="mb-2 opacity-30" aria-hidden />
             <Text type="supporting" color="secondary" className="text-xs">
-              No actions yet
+              {t("historyPanel.noActions", "No actions yet")}
             </Text>
           </div>
         ) : (
@@ -308,12 +310,12 @@ export const HistoryPanel: React.FC = () => {
                   </div>
                   {item.groupId && (
                     <Text type="supporting" color="secondary" className="px-1 py-0.5 bg-bg-2 rounded text-[8px]">
-                      grouped
+                      {t("historyPanel.grouped", "grouped")}
                     </Text>
                   )}
                   {item.isClipEntry && (
                     <Text type="supporting" className="px-1 py-0.5 bg-amber-500/20 rounded text-[8px] text-amber-400">
-                      clip
+                      {t("historyPanel.clip", "clip")}
                     </Text>
                   )}
                 </Card>
@@ -326,10 +328,10 @@ export const HistoryPanel: React.FC = () => {
       <div className="p-2 border-t border-border bg-bg-2">
         <div className="flex items-center justify-between text-[10px] text-fg-3">
           <Text type="supporting" color="secondary" className="text-[10px]">
-            {undoCount} actions
+            {t("historyPanel.actionsCount", "{{count}} actions", { count: undoCount })}
           </Text>
           <Text type="supporting" color="secondary" className="text-[10px]">
-            {redoCount} redoable
+            {t("historyPanel.redoable", "{{count}} redoable", { count: redoCount })}
           </Text>
         </div>
       </div>

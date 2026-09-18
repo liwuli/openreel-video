@@ -7,6 +7,7 @@ import { ToolcraftText as Text } from "@openreel/ui";
 import { PropertySlider } from "./shell/PropertySlider";
 import { ChevronDown, RotateCcw, Sun, Thermometer } from "@/icons/lucide-compat";
 import { useProjectStore } from "../../../stores/project-store";
+import { useTranslation } from "../../../i18n";
 import type {
   ColorWheelValues,
   HSLValues,
@@ -71,6 +72,7 @@ interface ColorGradingSectionProps {
 export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const { getColorGrading, updateColorGrading, resetColorGrading } =
     useProjectStore();
 
@@ -173,7 +175,7 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
     <div className="space-y-3">
       <div className="flex justify-end">
         <Button
-          label="Reset All"
+          label={t("color.resetAll", "Reset All")}
           icon={<RotateCcw size={10} />}
           variant="ghost"
           size="sm"
@@ -182,15 +184,14 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
         />
       </div>
 
-      <SubSection title="White Balance" defaultOpen>
+      <SubSection title={t("color.whiteBalance", "White Balance")} defaultOpen>
         <div className="space-y-4">
           <div className="flex items-start justify-between gap-2">
             <Text type="supporting" color="secondary" className="text-[10px] leading-snug">
-              Warm up cool shots or cool down warm ones. Tint corrects green or
-              magenta casts.
+              {t("color.whiteBalanceDesc", "Warm up cool shots or cool down warm ones. Tint corrects green or magenta casts.")}
             </Text>
             <IconButton
-              label="Reset white balance"
+              label={t("color.resetWhiteBalance", "Reset white balance")}
               icon={<RotateCcw size={10} />}
               variant="ghost"
               size="sm"
@@ -203,7 +204,7 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
             <div className="flex items-center gap-1.5">
               <Thermometer size={12} className="text-fg-3" />
               <PropertySlider
-                label="Temperature"
+                label={t("color.temperature", "Temperature")}
                 value={temperatureValue}
                 onChange={handleTemperatureChange}
                 min={-100}
@@ -229,7 +230,7 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
             <div className="flex items-center gap-1.5">
               <Sun size={12} className="text-fg-3" />
               <PropertySlider
-                label="Tint"
+                label={t("color.tint", "Tint")}
                 value={tintValue}
                 onChange={handleTintChange}
                 min={-100}
@@ -253,17 +254,18 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
 
           <div className="pt-1">
             <Text type="supporting" color="secondary" className="mb-1.5 block text-[10px]">
-              Presets
+              {t("color.presets", "Presets")}
             </Text>
             <div className="grid grid-cols-5 gap-1">
               {WHITE_BALANCE_PRESETS.map((preset) => {
                 const isActive =
                   Math.abs(preset.temperature - temperatureValue) < 0.5 &&
                   Math.abs(preset.tint - tintValue) < 0.5;
+                const localizedPresetLabel = t(`color.presetsList.${preset.label.toLowerCase()}`, preset.label);
                 return (
                   <ClickableCard
                     key={preset.label}
-                    label={`Apply ${preset.label} white balance`}
+                    label={t("color.applyWBPreset", "Apply {{label}} white balance", { label: localizedPresetLabel })}
                     onClick={() => handleWhiteBalancePreset(preset)}
                     className={`py-1 rounded text-[9px] transition-colors ${
                       isActive
@@ -271,7 +273,7 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
                         : "bg-bg-2 border border-border text-fg-2 hover:text-fg"
                     }`}
                   >
-                    {preset.label}
+                    {localizedPresetLabel}
                   </ClickableCard>
                 );
               })}
@@ -280,7 +282,7 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
         </div>
       </SubSection>
 
-      <SubSection title="Color Wheels" defaultOpen={false}>
+      <SubSection title={t("color.colorWheels", "Color Wheels")} defaultOpen={false}>
         <ColorWheelsControl
           values={colorWheelValues}
           onChange={handleColorWheelsChange}
@@ -288,7 +290,7 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
         />
       </SubSection>
 
-      <SubSection title="Curves">
+      <SubSection title={t("color.curves", "Curves")}>
         <CurvesEditor
           values={curvesValues}
           onChange={handleCurvesChange}
@@ -296,14 +298,14 @@ export const ColorGradingSection: React.FC<ColorGradingSectionProps> = ({
         />
       </SubSection>
 
-      <SubSection title="LUT">
+      <SubSection title={t("color.lut", "LUT")}>
         <LUTLoader
           lutData={colorGrading.lut as LUTData | null}
           onChange={handleLUTChange}
         />
       </SubSection>
 
-      <SubSection title="HSL">
+      <SubSection title={t("color.hsl", "HSL")}>
         <HSLControls
           values={hslValues}
           onChange={handleHSLValuesChange}

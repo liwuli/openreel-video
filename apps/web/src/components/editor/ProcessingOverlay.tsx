@@ -8,6 +8,7 @@ import {
   PROCESSING_TYPE_LABELS,
   type ProcessingTask,
 } from "../../services/processing-manager";
+import { useTranslation } from "../../i18n";
 
 const TaskItem: React.FC<{ task: ProcessingTask }> = ({ task }) => {
   const getIcon = () => {
@@ -79,10 +80,11 @@ const TaskItem: React.FC<{ task: ProcessingTask }> = ({ task }) => {
 };
 
 export const ProcessingOverlay: React.FC = () => {
+  const { t } = useTranslation("common");
   const { tasks, isProcessing, getOverallProgress } = useProcessingStore();
   const taskList = Array.from(tasks.values());
   const activeTasks = taskList.filter(
-    (t) => t.status === "queued" || t.status === "processing",
+    (task) => task.status === "queued" || task.status === "processing",
   );
 
   if (!isProcessing || activeTasks.length === 0) {
@@ -104,11 +106,10 @@ export const ProcessingOverlay: React.FC = () => {
           </div>
           <div>
             <Text as="h3" type="label" weight="bold" display="block">
-              Processing Effects
+              {t("processing.title", "Processing Effects")}
             </Text>
             <Text type="supporting" color="secondary" display="block">
-              {activeTasks.length} task{activeTasks.length !== 1 ? "s" : ""} in
-              progress
+              {t("processing.tasksInProgress", "{{count}} task in progress", { count: activeTasks.length })}
             </Text>
           </div>
         </div>
@@ -116,14 +117,14 @@ export const ProcessingOverlay: React.FC = () => {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1">
             <Text type="supporting" color="secondary" className="text-[10px]">
-              Overall Progress
+              {t("processing.overallProgress", "Overall Progress")}
             </Text>
             <Text type="supporting" color="secondary" className="text-[10px] font-mono">
               {progress}%
             </Text>
           </div>
           <ProgressBar
-            label="Overall progress"
+            label={t("processing.overallProgress", "Overall progress")}
             isLabelHidden
             value={progress}
             max={100}
@@ -140,7 +141,7 @@ export const ProcessingOverlay: React.FC = () => {
         </div>
 
         <Text type="supporting" color="secondary" display="block" justify="center" className="mt-4 text-[10px]">
-          Please wait while effects are being applied...
+          {t("processing.pleaseWait", "Please wait while effects are being applied...")}
         </Text>
       </Card>
     </div>

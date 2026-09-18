@@ -21,6 +21,7 @@ import {
   type StickerClip,
 } from "@openreel/core";
 import { templateCloudService } from "../../services/template-cloud-service";
+import { useTranslation } from "../../i18n";
 
 interface TemplateWithGraphics extends Template {
   timeline: Template["timeline"] & {
@@ -41,6 +42,7 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { t } = useTranslation("common");
   const { project } = useProjectStore();
   const getTemplateEngine = useEngineStore((state) => state.getTemplateEngine);
   const getGraphicsEngine = useEngineStore((state) => state.getGraphicsEngine);
@@ -57,12 +59,12 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
 
   const handleSave = useCallback(async () => {
     if (!name.trim()) {
-      setError("Template name is required");
+      setError(t("saveTemplate.errorNameRequired", "Template name is required"));
       return;
     }
 
     if (!description.trim()) {
-      setError("Description is required");
+      setError(t("saveTemplate.errorDescRequired", "Description is required"));
       return;
     }
 
@@ -77,7 +79,7 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
 
       const tagArray = tags
         .split(",")
-        .map((t) => t.trim())
+        .map((tag) => tag.trim())
         .filter(Boolean);
 
       const placeholders: TemplatePlaceholder[] = [];
@@ -130,7 +132,7 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
         setCategory("custom");
       }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save template");
+      setError(err instanceof Error ? err.message : t("saveTemplate.errorSaveFailed", "Failed to save template"));
     } finally {
       setIsSaving(false);
     }
@@ -145,6 +147,7 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
     getTemplateEngine,
     getGraphicsEngine,
     onClose,
+    t,
   ]);
 
   if (!isOpen) return null;
@@ -159,7 +162,7 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
       <Layout
         header={
           <DialogHeader
-            title="Save as Template"
+            title={t("saveTemplate.title", "Save as Template")}
             onOpenChange={(open) => !open && onClose()}
           />
         }
@@ -170,7 +173,7 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
             <Card variant="green" padding={3} className="flex items-center gap-2 border border-green-500/30">
               <Check size={16} className="text-green-400" aria-hidden />
               <Text type="supporting" className="text-green-400">
-                Template saved successfully!
+                {t("saveTemplate.successMsg", "Template saved successfully!")}
               </Text>
             </Card>
           )}
@@ -183,31 +186,31 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
           )}
 
           <ToolcraftTextInputControl
-            label="Template Name"
+            label={t("saveTemplate.nameLabel", "Template Name")}
             isRequired
             type="text"
             value={name}
             onChange={(nextName) => setName(nextName.slice(0, 50))}
-            placeholder="My Awesome Template"
+            placeholder={t("saveTemplate.namePlaceholder", "My Awesome Template")}
             width="100%"
           />
           <Text type="supporting" color="secondary" display="block" className="text-[10px]">
-            {name.length}/50 characters
+            {t("saveTemplate.charCount", "{{count}}/50 characters", { count: name.length })}
           </Text>
 
           <ToolcraftTextAreaControl
-            label="Description"
+            label={t("saveTemplate.descLabel", "Description")}
             isRequired
             value={description}
             onChange={setDescription}
-            placeholder="Describe what this template is for and how to use it..."
+            placeholder={t("saveTemplate.descPlaceholder", "Describe what this template is for and how to use it...")}
             rows={4}
             maxLength={500}
             width="100%"
           />
 
           <Selector
-            label="Category"
+            label={t("saveTemplate.categoryLabel", "Category")}
             value={category}
             onChange={(nextCategory) => setCategory(nextCategory as TemplateCategory)}
             options={TEMPLATE_CATEGORIES.map((cat) => ({
@@ -218,30 +221,30 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
           />
 
           <ToolcraftTextInputControl
-            label="Tags (comma-separated)"
+            label={t("saveTemplate.tagsLabel", "Tags (comma-separated)")}
             type="text"
             value={tags}
             onChange={setTags}
-            placeholder="intro, animated, youtube"
+            placeholder={t("saveTemplate.tagsPlaceholder", "intro, animated, youtube")}
             width="100%"
           />
 
           <ToolcraftTextInputControl
-            label="Author Name"
+            label={t("saveTemplate.authorLabel", "Author Name")}
             type="text"
             value={author}
             onChange={setAuthor}
-            placeholder="Your name or username"
+            placeholder={t("saveTemplate.authorPlaceholder", "Your name or username")}
             width="100%"
           />
 
           <div className="space-y-2">
             <Text type="supporting" color="secondary" weight="bold" display="block">
-              Save Location
+              {t("saveTemplate.saveLocation", "Save Location")}
             </Text>
             <div className="grid grid-cols-2 gap-2">
               <SelectableCard
-                label="Cloud"
+                label={t("saveTemplate.cloud", "Cloud")}
                 isSelected={saveLocation === "cloud"}
                 onChange={() => setSaveLocation("cloud")}
                 padding={3}
@@ -249,11 +252,11 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
               >
                 <div className="flex items-center justify-center gap-2">
                   <Cloud size={16} aria-hidden />
-                  <Text type="label" weight="bold">Cloud</Text>
+                  <Text type="label" weight="bold">{t("saveTemplate.cloud", "Cloud")}</Text>
                 </div>
               </SelectableCard>
               <SelectableCard
-                label="Local"
+                label={t("saveTemplate.local", "Local")}
                 isSelected={saveLocation === "local"}
                 onChange={() => setSaveLocation("local")}
                 padding={3}
@@ -261,14 +264,14 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
               >
                 <div className="flex items-center justify-center gap-2">
                   <HardDrive size={16} aria-hidden />
-                  <Text type="label" weight="bold">Local</Text>
+                  <Text type="label" weight="bold">{t("saveTemplate.local", "Local")}</Text>
                 </div>
               </SelectableCard>
             </div>
             <Text type="supporting" color="secondary" display="block" className="text-[10px]">
               {saveLocation === "cloud"
-                ? "Saved to cloud and accessible from any device"
-                : "Saved locally in your browser storage"}
+                ? t("saveTemplate.cloudDesc", "Saved to cloud and accessible from any device")
+                : t("saveTemplate.localDesc", "Saved locally in your browser storage")}
             </Text>
           </div>
         </div>
@@ -278,13 +281,13 @@ export const SaveTemplateDialog: React.FC<SaveTemplateDialogProps> = ({
           <LayoutFooter hasDivider>
             <div className="flex items-center justify-end gap-2">
               <Button
-                label="Cancel"
+                label={t("saveTemplate.cancel", "Cancel")}
                 variant="ghost"
                 onClick={onClose}
                 isDisabled={isSaving}
               />
               <Button
-                label={isSaving ? "Saving..." : "Save Template"}
+                label={isSaving ? t("saveTemplate.saving", "Saving...") : t("saveTemplate.save", "Save Template")}
                 onClick={handleSave}
                 isDisabled={isSaving || !name.trim() || !description.trim()}
                 isLoading={isSaving}

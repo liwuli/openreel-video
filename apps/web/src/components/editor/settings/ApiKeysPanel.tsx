@@ -19,6 +19,7 @@ import { ToolcraftLink as Link } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { ToolcraftTextInputControl } from "@openreel/ui";
 import { useSettingsStore, SERVICE_REGISTRY } from "../../../stores/settings-store";
+import { useTranslation } from "../../../i18n";
 import {
   isMasterPasswordSet,
   isSessionUnlocked,
@@ -36,6 +37,7 @@ import { MasterPasswordDialog } from "./MasterPasswordDialog";
 import { toast } from "../../../stores/notification-store";
 
 export const ApiKeysPanel: React.FC = () => {
+  const { t } = useTranslation(["settings", "common"]);
   const { addConfiguredService, removeConfiguredService } =
     useSettingsStore();
 
@@ -196,14 +198,13 @@ export const ApiKeysPanel: React.FC = () => {
           <Shield size={32} className="text-primary" aria-hidden />
         </div>
         <Text as="h3" type="large" weight="bold" display="block" className="mb-2">
-          Secure API Key Storage
+          {t("settings:apiKeys.title")}
         </Text>
         <Text as="p" type="supporting" color="secondary" display="block" className="mb-6 max-w-sm">
-          Set up a master password to encrypt and store your API keys locally.
-          Keys are encrypted with AES-256-GCM and are only sent when making a request to the selected service.
+          {t("settings:apiKeys.description")}
         </Text>
         <Button
-          label="Set Up Master Password"
+          label={t("settings:apiKeys.setupPassword")}
           onClick={() => setPasswordDialogMode("setup")}
           variant="primary"
           icon={<KeyRound size={16} aria-hidden />}
@@ -229,13 +230,13 @@ export const ApiKeysPanel: React.FC = () => {
           <Lock size={32} className="text-amber-500" aria-hidden />
         </div>
         <Text as="h3" type="large" weight="bold" display="block" className="mb-2">
-          Session Locked
+          {t("settings:apiKeys.sessionLocked")}
         </Text>
         <Text as="p" type="supporting" color="secondary" display="block" className="mb-6 max-w-sm">
-          Enter your master password to view and manage API keys.
+          {t("settings:apiKeys.sessionLockedDesc")}
         </Text>
         <Button
-          label="Unlock"
+          label={t("settings:apiKeys.unlock")}
           onClick={() => setPasswordDialogMode("unlock")}
           variant="primary"
           icon={<Unlock size={16} aria-hidden />}
@@ -266,14 +267,14 @@ export const ApiKeysPanel: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            label="Change Password"
+            label={t("settings:apiKeys.changePassword")}
             variant="secondary"
             size="sm"
             onClick={() => setPasswordDialogMode("change")}
             icon={<Key size={14} aria-hidden />}
           />
           <Button
-            label="Lock"
+            label={t("settings:apiKeys.lock")}
             variant="secondary"
             size="sm"
             onClick={handleLock}
@@ -315,14 +316,14 @@ export const ApiKeysPanel: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <IconButton
-                    label={isRevealed ? "Hide key" : "Show key"}
+                    label={isRevealed ? t("settings:apiKeys.hideKey", "Hide key") : t("settings:apiKeys.showKey", "Show key")}
                     onClick={() => handleRevealKey(stored.id)}
                     variant="ghost"
                     size="sm"
                     icon={isRevealed ? <EyeOff size={14} aria-hidden /> : <Eye size={14} aria-hidden />}
                   />
                   <IconButton
-                    label="Delete key"
+                    label={t("settings:apiKeys.deleteKey", "Delete key")}
                     onClick={() => handleDeleteKey(stored.id)}
                     variant="destructive"
                     size="sm"
@@ -382,7 +383,7 @@ export const ApiKeysPanel: React.FC = () => {
           />
           <div className="flex justify-end gap-2">
             <Button
-              label="Cancel"
+              label={t("common:cancel")}
               variant="secondary"
               size="sm"
               onClick={() => {
@@ -391,7 +392,7 @@ export const ApiKeysPanel: React.FC = () => {
               }}
             />
             <Button
-              label="Save Key"
+              label={t("settings:apiKeys.saveKey")}
               variant="primary"
               size="sm"
               onClick={() => handleSaveKey(addingService)}
@@ -402,7 +403,7 @@ export const ApiKeysPanel: React.FC = () => {
       ) : availableServices.length > 0 ? (
         <div>
           <Text as="h3" type="label" weight="bold" color="secondary" display="block" className="mb-3">
-            Add API Key
+            {t("settings:apiKeys.addKey")}
           </Text>
           <div className="grid gap-2">
             {availableServices.map((service) => (

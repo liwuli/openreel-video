@@ -1,0 +1,73 @@
+{
+  "tabs": {
+    "media": "Media",
+    "text": "Text",
+    "graphics": "Graphics",
+    "effects": "Effects",
+    "transitions": "Transitions",
+    "ai": "AI Generate",
+    "recipes": "Recipes",
+    "templates": "Project Templates"
+  },
+  "tabDescriptions": {
+    "media": "Import footage, audio, and stills.",
+    "text": "Add title presets and caption elements.",
+    "graphics": "Create shapes, arrows, and SVG overlays.",
+    "effects": "Drag effects onto a clip to apply them.",
+    "transitions": "Drag transitions onto a clip's edge.",
+    "ai": "Generate clips, captions, and assisted edits.",
+    "recipes": "Apply clip-scoped looks, overlays, and text stacks.",
+    "templates": "Load full-project starter layouts and presets."
+  },
+  "import": "Import",
+  "record": "Record",
+  "noMedia": "No media yet",
+  "dragOrClick": "Drag files here or click to import",
+  "importMedia": "Import Media",
+  "projectMedia": "Project Media",
+  "addMedia": "Add media",
+  "dropFilesToImport": "Drop files to import",
+  "sortMedia": "Sort media",
+  "showOnlyMissing": "Show Only Missing Assets",
+  "relinkFromFolder": "Relink from Folder…",
+  "relinkProgress": "Relinking {{name}}…",
+  "relinkedSummary": "Relinked {{count}} of {{total}} assets",
+  "noMatchesFound": "No matches found",
+  "noMatchesFoundDesc": "None of the files in the selected folder matched the missing assets by filename.",
+  "backgrounds": "Backgrounds",
+  "bgCategories": {
+    "all": "All",
+    "solid": "Solid",
+    "gradient": "Gradient",
+    "pattern": "Pattern",
+    "mesh": "Mesh"
+  },
+  "shapes": "Shapes",
+  "shapeLabels": {
+    "rectangle": "Rectangle",
+    "circle": "Circle",
+    "triangle": "Triangle",
+    "star": "Star",
+    "arrow": "Arrow",
+    "polygon": "Polygon"
+  },
+  "objects3d": "3D Objects",
+  "meshLabels": {
+    "cube": "Cube",
+    "sphere": "Sphere",
+    "torus": "Torus",
+    "cone": "Cone",
+    "cylinder": "Cylinder",
+    "icosahedron": "Icosahedron"
+  },
+  "svgImport": "SVG Import",
+  "importSvgFile": "Import SVG File",
+  "textPresets": "Text Presets",
+  "presetNames": {
+    "heading": "Heading",
+    "subtitle": "Subtitle",
+    "lowerThird": "Lower Third",
+    "caption": "Caption",
+    "hero": "Hero"
+  }
+}

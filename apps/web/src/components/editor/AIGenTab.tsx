@@ -22,6 +22,7 @@ import { TemplatesBrowserPanel } from "./inspector/TemplatesBrowserPanel";
 import { MultiCameraPanel } from "./inspector/MultiCameraPanel";
 import { useTtsAudioStore } from "../../stores/tts-store";
 import { toast } from "../../stores/notification-store";
+import { useTranslation } from "../../i18n";
 
 type FeatureId = "templates" | "captions" | "tts" | "filters" | "music" | "multicam" | null;
 
@@ -107,15 +108,16 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({ title, icon: Icon, chil
 );
 
 export const AIGenTab: React.FC = () => {
+  const { t } = useTranslation("ai");
   const [activeFeature, setActiveFeature] = useState<FeatureId>(null);
   const ttsHasUnsaved = useTtsAudioStore((s) => s.generatedAudio !== null && !s.isAudioSaved);
 
   const navigateAway = useCallback((next: FeatureId) => {
     if (activeFeature === "tts" && next !== "tts" && ttsHasUnsaved) {
-      toast.warning("Unsaved audio discarded", "Save to media or download next time to keep it.");
+      toast.warning(t("unsavedDiscarded", "Unsaved audio discarded"), t("unsavedDiscardedDesc", "Save to media or download next time to keep it."));
     }
     setActiveFeature(next);
-  }, [activeFeature, ttsHasUnsaved]);
+  }, [activeFeature, t, ttsHasUnsaved]);
 
   const handleFeatureClick = (id: FeatureId) => {
     navigateAway(activeFeature === id ? null : id);
@@ -144,7 +146,7 @@ export const AIGenTab: React.FC = () => {
     return (
       <div className="flex-1 flex flex-col overflow-y-auto w-full min-w-0">
         <Button
-          label="Back to AI Tools"
+          label={t("backToAiTools", "Back to AI Tools")}
           onClick={() => navigateAway(null)}
           variant="ghost"
           icon={<ChevronRight size={14} className="rotate-180" aria-hidden />}
@@ -165,18 +167,18 @@ export const AIGenTab: React.FC = () => {
             <Wand2 size={24} className="text-primary" aria-hidden />
           </div>
           <Text as="h2" type="label" weight="bold" display="block">
-            AI-Powered Tools
+            {t("aiPoweredTools", "AI-Powered Tools")}
           </Text>
           <Text type="supporting" color="secondary" display="block" className="mt-1 text-[11px]">
-            Automate your editing with intelligent features
+            {t("aiPoweredToolsDesc", "Automate your editing with intelligent features")}
           </Text>
         </div>
 
-        <FeatureSection title="Content Generation" icon={Wand2}>
+        <FeatureSection title={t("contentGeneration", "Content Generation")} icon={Wand2}>
           <FeatureCard
             icon={Mic}
-            title="Text to Speech"
-            description="Generate natural voiceovers from text"
+            title={t("tts", "Text to Speech")}
+            description={t("ttsDesc", "Generate natural voiceovers from text")}
             iconColor="text-blue-400"
             iconBg="bg-blue-500/20"
             activeBorder="border-blue-500/50"
@@ -187,8 +189,8 @@ export const AIGenTab: React.FC = () => {
           />
           <FeatureCard
             icon={Subtitles}
-            title="Auto Captions"
-            description="Automatically generate subtitles from audio"
+            title={t("autoCaption", "Auto Captions")}
+            description={t("autoCaptionsDesc", "Automatically generate subtitles from audio")}
             iconColor="text-primary"
             iconBg="bg-primary/20"
             activeBorder="border-primary/50"
@@ -199,11 +201,11 @@ export const AIGenTab: React.FC = () => {
           />
         </FeatureSection>
 
-        <FeatureSection title="Templates & Presets" icon={FileStack}>
+        <FeatureSection title={t("templatesAndPresets", "Templates & Presets")} icon={FileStack}>
           <FeatureCard
             icon={Layers}
-            title="Project Templates"
-            description="Start with pre-built project structures"
+            title={t("smartTemplates", "Project Templates")}
+            description={t("smartTemplatesDesc", "Start with pre-built project structures")}
             iconColor="text-green-400"
             iconBg="bg-green-500/20"
             activeBorder="border-green-500/50"
@@ -214,8 +216,8 @@ export const AIGenTab: React.FC = () => {
           />
           <FeatureCard
             icon={Palette}
-            title="Filter Presets"
-            description="Apply cinematic color grades instantly"
+            title={t("filterPresets", "Filter Presets")}
+            description={t("filterPresetsDesc", "Apply cinematic color grades instantly")}
             iconColor="text-orange-400"
             iconBg="bg-orange-500/20"
             activeBorder="border-orange-500/50"
@@ -226,11 +228,11 @@ export const AIGenTab: React.FC = () => {
           />
         </FeatureSection>
 
-        <FeatureSection title="Media Library" icon={Volume2}>
+        <FeatureSection title={t("mediaLibrarySection", "Media Library")} icon={Volume2}>
           <FeatureCard
             icon={Music}
-            title="Music & Sound Effects"
-            description="Browse royalty-free audio for your projects"
+            title={t("musicAndSfx", "Music & Sound Effects")}
+            description={t("musicAndSfxDesc", "Browse royalty-free audio for your projects")}
             iconColor="text-teal-400"
             iconBg="bg-teal-500/20"
             activeBorder="border-teal-500/50"
@@ -241,11 +243,11 @@ export const AIGenTab: React.FC = () => {
           />
         </FeatureSection>
 
-        <FeatureSection title="Tools" icon={Video}>
+        <FeatureSection title={t("tools", "Tools")} icon={Video}>
           <FeatureCard
             icon={Video}
-            title="Multi-Camera Editing"
-            description="Sync and switch between multiple angles"
+            title={t("multiCamTitle", "Multi-Camera Editing")}
+            description={t("multiCamDesc", "Sync and switch between multiple angles")}
             iconColor="text-cyan-400"
             iconBg="bg-cyan-500/20"
             activeBorder="border-cyan-500/50"
@@ -258,7 +260,7 @@ export const AIGenTab: React.FC = () => {
 
         <div className="pt-2 border-t border-border">
           <Text type="supporting" color="secondary" display="block" justify="center" className="text-[9px]">
-            More AI features coming soon — image generation, auto-edit, and more
+            {t("moreComingSoon", "More AI features coming soon — image generation, auto-edit, and more")}
           </Text>
         </div>
       </div>

@@ -1,0 +1,73 @@
+{
+  "tabs": {
+    "media": "媒体素材",
+    "text": "文本字幕",
+    "graphics": "图形贴纸",
+    "effects": "特效滤镜",
+    "transitions": "转场过渡",
+    "ai": "AI 生成",
+    "recipes": "预设组合",
+    "templates": "模板预设"
+  },
+  "tabDescriptions": {
+    "media": "导入视频片段、音频与静态图像。",
+    "text": "添加标题预设与字幕元素。",
+    "graphics": "创建几何图形、箭头与矢量遮罩。",
+    "effects": "拖拽特效至时间线片段即可应用。",
+    "transitions": "拖拽转场至两个片段连接处。",
+    "ai": "通过 AI 生成视频片段、字幕与智能剪辑。",
+    "recipes": "一键应用调色滤镜、贴纸与字幕组合。",
+    "templates": "载入完整的项目启动模板与画幅预设。"
+  },
+  "import": "导入",
+  "record": "录制",
+  "noMedia": "暂无媒体素材",
+  "dragOrClick": "拖拽文件到此处，或点击导入",
+  "importMedia": "导入媒体素材",
+  "projectMedia": "工程媒体素材",
+  "addMedia": "添加媒体",
+  "dropFilesToImport": "释放文件以立即导入",
+  "sortMedia": "排序媒体",
+  "showOnlyMissing": "仅显示缺失素材",
+  "relinkFromFolder": "从文件夹重新链接…",
+  "relinkProgress": "正在重新链接 {{name}}…",
+  "relinkedSummary": "已重新链接 {{count}} 个素材（共 {{total}} 个）",
+  "noMatchesFound": "未找到匹配素材",
+  "noMatchesFoundDesc": "所选文件夹中未找到与缺失素材相匹配的文件。",
+  "backgrounds": "背景预设",
+  "bgCategories": {
+    "all": "全部",
+    "solid": "纯色",
+    "gradient": "渐变",
+    "pattern": "图案",
+    "mesh": "网格光斑"
+  },
+  "shapes": "几何形状",
+  "shapeLabels": {
+    "rectangle": "矩形",
+    "circle": "圆形",
+    "triangle": "三角形",
+    "star": "星形",
+    "arrow": "箭头",
+    "polygon": "多边形"
+  },
+  "objects3d": "3D 几何物体",
+  "meshLabels": {
+    "cube": "立方体",
+    "sphere": "球体",
+    "torus": "圆环体",
+    "cone": "圆锥体",
+    "cylinder": "圆柱体",
+    "icosahedron": "二十面体"
+  },
+  "svgImport": "矢量 SVG 导入",
+  "importSvgFile": "导入 SVG 矢量文件",
+  "textPresets": "文字预设样式",
+  "presetNames": {
+    "heading": "主标题",
+    "subtitle": "副标题",
+    "lowerThird": "底部人名字幕",
+    "caption": "视频旁白字幕",
+    "hero": "醒目海报大字"
+  }
+}

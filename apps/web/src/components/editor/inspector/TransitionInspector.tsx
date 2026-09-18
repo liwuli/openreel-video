@@ -21,6 +21,7 @@ import {
 import type { Transition, Clip, TransitionEdge } from "@openreel/core";
 import type { TransitionType } from "@openreel/core";
 import { toast } from "../../../stores/notification-store";
+import { useTranslation } from "../../../i18n";
 
 const TransitionSlider: React.FC<{
   label: string;
@@ -52,6 +53,7 @@ const DirectionSelector: React.FC<{
   onChange: (direction: string) => void;
   options?: string[];
 }> = ({ value, onChange, options = ["left", "right", "up", "down"] }) => {
+  const { t } = useTranslation("inspector");
   const directionIcons: Record<string, React.ReactNode> = {
     left: <ArrowLeft size={14} />,
     right: <ArrowRight size={14} />,
@@ -62,24 +64,27 @@ const DirectionSelector: React.FC<{
   return (
     <div className="space-y-1">
       <Text type="supporting" color="secondary" className="text-[10px]">
-        Direction
+        {t("transitionInspector.direction", "Direction")}
       </Text>
       <div className="grid grid-cols-4 gap-1">
-        {options.map((dir) => (
-          <IconButton
-            key={dir}
-            label={dir.charAt(0).toUpperCase() + dir.slice(1)}
-            icon={(directionIcons[dir] || dir) as any}
-            variant={value === dir ? "primary" : "secondary"}
-            size="sm"
-            onClick={() => onChange(dir)}
-            className={`p-2 rounded-lg border transition-colors flex items-center justify-center ${
-              value === dir
-                ? "bg-primary/20 border-primary text-primary"
-                : "bg-bg-2 border-border text-fg-2 hover:text-fg"
-            }`}
-          />
-        ))}
+        {options.map((dir) => {
+          const localizedDir = t(`transitionInspector.${dir}`, dir.charAt(0).toUpperCase() + dir.slice(1));
+          return (
+            <IconButton
+              key={dir}
+              label={localizedDir}
+              icon={(directionIcons[dir] || dir) as any}
+              variant={value === dir ? "primary" : "secondary"}
+              size="sm"
+              onClick={() => onChange(dir)}
+              className={`p-2 rounded-lg border transition-colors flex items-center justify-center ${
+                value === dir
+                  ? "bg-primary/20 border-primary text-primary"
+                  : "bg-bg-2 border-border text-fg-2 hover:text-fg"
+              }`}
+            />
+          );
+        })}
       </div>
     </div>
   );
@@ -408,11 +413,14 @@ const TransitionTypeCard: React.FC<{
   isSelected: boolean;
   onSelect: () => void;
 }> = ({ typeInfo, isSelected, onSelect }) => {
+  const { t } = useTranslation("inspector");
   const [isHovered, setIsHovered] = React.useState(false);
+  const localizedName = t(`transitionInspector.types.${typeInfo.type}.name`, typeInfo.name);
+  const localizedDesc = t(`transitionInspector.types.${typeInfo.type}.description`, typeInfo.description);
 
   return (
     <ClickableCard
-      label={typeInfo.name}
+      label={localizedName}
       onClick={onSelect}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -433,12 +441,12 @@ const TransitionTypeCard: React.FC<{
             isSelected ? "text-primary" : "text-fg"
           }`}
         >
-          {typeInfo.name}
+          {localizedName}
         </Text>
         {isSelected && <Check size={12} className="text-primary" />}
       </div>
       <Text type="supporting" color="secondary" className="text-[9px]">
-        {typeInfo.description}
+        {localizedDesc}
       </Text>
     </ClickableCard>
   );
@@ -476,6 +484,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
   onTransitionUpdate,
   onTransitionRemove,
 }) => {
+  const { t } = useTranslation("inspector");
   const bridge = getTransitionBridge();
   const transitionTypes = useMemo(
     () => bridge.getAvailableTransitionTypes(),
@@ -612,7 +621,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
     const renderCenterControls = () => (
       <div className="grid grid-cols-2 gap-2">
         <TransitionSlider
-          label="Center X"
+          label={t("transitionInspector.centerX", "Center X")}
           value={centerX * 100}
           onChange={(value) =>
             handleParamChange("center", { x: value / 100, y: centerY })
@@ -622,7 +631,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
           unit="%"
         />
         <TransitionSlider
-          label="Center Y"
+          label={t("transitionInspector.centerY", "Center Y")}
           value={centerY * 100}
           onChange={(value) =>
             handleParamChange("center", { x: centerX, y: value / 100 })
@@ -643,7 +652,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               options={["left", "right", "up", "down"]}
             />
             <TransitionSlider
-              label="Softness"
+              label={t("transitionInspector.softness", "Softness")}
               value={((params.softness as number) || 0) * 100}
               onChange={(v) => handleParamChange("softness", v / 100)}
               min={0}
@@ -661,7 +670,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               onChange={(dir) => handleParamChange("direction", dir)}
             />
             <Toggle
-              label="Push Out"
+              label={t("transitionInspector.pushOut", "Push Out")}
               value={(params.pushOut as boolean) || false}
               onChange={(v) => handleParamChange("pushOut", v)}
             />
@@ -679,7 +688,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       case "blur":
         return (
           <TransitionSlider
-            label="Blur Strength"
+            label={t("transitionInspector.blurStrength", "Blur Strength")}
             value={((params.intensity as number) ?? 1) * 100}
             onChange={(value) => handleParamChange("intensity", value / 100)}
             min={0}
@@ -697,7 +706,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               onChange={(direction) => handleParamChange("direction", direction)}
             />
             <TransitionSlider
-              label="Motion Blur"
+              label={t("transitionInspector.motionBlur", "Motion Blur")}
               value={((params.blurIntensity as number) ?? 1) * 100}
               onChange={(value) =>
                 handleParamChange("blurIntensity", value / 100)
@@ -714,7 +723,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         return (
           <>
             <TransitionSlider
-              label="Start Angle"
+              label={t("transitionInspector.startAngle", "Start Angle")}
               value={(params.startAngle as number) ?? -90}
               onChange={(value) => handleParamChange("startAngle", value)}
               min={-180}
@@ -723,7 +732,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               unit="°"
             />
             <Toggle
-              label="Clockwise"
+              label={t("transitionInspector.clockwise", "Clockwise")}
               value={(params.clockwise as boolean) ?? true}
               onChange={(value) => handleParamChange("clockwise", value)}
             />
@@ -734,7 +743,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         return (
           <>
             <TransitionSlider
-              label="Scale"
+              label={t("transitionInspector.scale", "Scale")}
               value={(params.scale as number) || 2}
               onChange={(v) => handleParamChange("scale", v)}
               min={1.1}
@@ -754,7 +763,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       case "dipToWhite":
         return (
           <TransitionSlider
-            label="Hold Duration"
+            label={t("transitionInspector.holdDuration", "Hold Duration")}
             value={(params.holdDuration as number) || 0.1}
             onChange={(v) => handleParamChange("holdDuration", v)}
             min={0}
@@ -767,7 +776,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       case "pixelate":
         return (
           <TransitionSlider
-            label="Maximum Pixel Size"
+            label={t("transitionInspector.maxPixelSize", "Maximum Pixel Size")}
             value={(params.maxPixelSize as number) || 48}
             onChange={(v) => handleParamChange("maxPixelSize", v)}
             min={4}
@@ -781,7 +790,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         return (
           <>
             <TransitionSlider
-              label="Intensity"
+              label={t("transitionInspector.intensity", "Intensity")}
               value={((params.intensity as number) || 0.08) * 100}
               onChange={(v) => handleParamChange("intensity", v / 100)}
               min={1}
@@ -789,7 +798,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               unit="%"
             />
             <TransitionSlider
-              label="Slices"
+              label={t("transitionInspector.slices", "Slices")}
               value={(params.slices as number) || 12}
               onChange={(v) => handleParamChange("slices", v)}
               min={4}
@@ -810,7 +819,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               options={["vertical", "horizontal"]}
             />
             <TransitionSlider
-              label="Slats"
+              label={t("transitionInspector.slats", "Slats")}
               value={(params.count as number) || 8}
               onChange={(v) => handleParamChange("count", v)}
               min={2}
@@ -823,7 +832,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       case "spin":
         return (
           <TransitionSlider
-            label="Rotations"
+            label={t("transitionInspector.rotations", "Rotations")}
             value={(params.rotations as number) ?? 1}
             onChange={(value) => handleParamChange("rotations", value)}
             min={-2}
@@ -855,7 +864,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       case "flash":
         return (
           <TransitionSlider
-            label="Flash Intensity"
+            label={t("transitionInspector.flashIntensity", "Flash Intensity")}
             value={((params.intensity as number) ?? 1) * 100}
             onChange={(value) => handleParamChange("intensity", value / 100)}
             min={0}
@@ -869,7 +878,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         return (
           <>
             <TransitionSlider
-              label="Burn Intensity"
+              label={t("transitionInspector.burnIntensity", "Burn Intensity")}
               value={((params.intensity as number) ?? 1) * 100}
               onChange={(value) => handleParamChange("intensity", value / 100)}
               min={0}
@@ -878,7 +887,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               unit="%"
             />
             <TransitionSlider
-              label="Warmth"
+              label={t("transitionInspector.warmth", "Warmth")}
               value={((params.warmth as number) ?? 0.75) * 100}
               onChange={(value) => handleParamChange("warmth", value / 100)}
               min={0}
@@ -893,7 +902,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         return (
           <>
             <TransitionSlider
-              label="Tile Columns"
+              label={t("transitionInspector.tileColumns", "Tile Columns")}
               value={(params.tiles as number) ?? 8}
               onChange={(value) => handleParamChange("tiles", value)}
               min={2}
@@ -901,7 +910,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               step={1}
             />
             <TransitionSlider
-              label="Randomness"
+              label={t("transitionInspector.randomness", "Randomness")}
               value={((params.randomness as number) ?? 0.85) * 100}
               onChange={(value) => handleParamChange("randomness", value / 100)}
               min={0}
@@ -916,7 +925,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         return (
           <>
             <TransitionSlider
-              label="Amplitude"
+              label={t("transitionInspector.amplitude", "Amplitude")}
               value={((params.amplitude as number) ?? 0.04) * 100}
               onChange={(value) => handleParamChange("amplitude", value / 100)}
               min={0}
@@ -925,7 +934,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               unit="%"
             />
             <TransitionSlider
-              label="Waves"
+              label={t("transitionInspector.waves", "Waves")}
               value={(params.waves as number) ?? 3}
               onChange={(value) => handleParamChange("waves", value)}
               min={0.5}
@@ -944,7 +953,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               options={["left", "right"]}
             />
             <TransitionSlider
-              label="Fold Shadow"
+              label={t("transitionInspector.foldShadow", "Fold Shadow")}
               value={((params.shadow as number) ?? 0.55) * 100}
               onChange={(value) => handleParamChange("shadow", value / 100)}
               min={0}
@@ -959,7 +968,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         return (
           <>
             <TransitionSlider
-              label="Maximum Offset"
+              label={t("transitionInspector.maxOffset", "Maximum Offset")}
               value={(params.maxOffset as number) ?? 18}
               onChange={(value) => handleParamChange("maxOffset", value)}
               min={0}
@@ -968,7 +977,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
               unit="px"
             />
             <TransitionSlider
-              label="Angle"
+              label={t("transitionInspector.angle", "Angle")}
               value={(params.angle as number) ?? 0}
               onChange={(value) => handleParamChange("angle", value)}
               min={0}
@@ -986,10 +995,10 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
   };
 
   const selectedTypeInfo = transitionTypes.find((t) => t.type === selectedType);
-  const fromLabel = edge === "in" ? "Background" : `${clipA.id.substring(0, 12)}...`;
+  const fromLabel = edge === "in" ? t("transitionInspector.background", "Background") : `${clipA.id.substring(0, 12)}...`;
   const toLabel =
     edge === "out"
-      ? "Background"
+      ? t("transitionInspector.background", "Background")
       : `${(clipB ?? clipA).id.substring(0, 12)}...`;
 
   return (
@@ -998,7 +1007,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       <Card variant="muted" padding={2} className="flex items-center gap-2 border border-border">
         <div className="flex-1 min-w-0 flex flex-col items-center gap-0.5 text-center">
           <Text type="supporting" color="secondary" display="block" className="text-[9px]">
-            From
+            {t("transitionInspector.from", "From")}
           </Text>
           <Text type="supporting" color="primary" display="block" maxLines={1} className="w-full truncate text-[10px]">
             {fromLabel}
@@ -1007,7 +1016,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
         <ArrowRight size={14} className="text-fg-3" />
         <div className="flex-1 min-w-0 flex flex-col items-center gap-0.5 text-center">
           <Text type="supporting" color="secondary" display="block" className="text-[9px]">
-            To
+            {t("transitionInspector.to", "To")}
           </Text>
           <Text type="supporting" color="primary" display="block" maxLines={1} className="w-full truncate text-[10px]">
             {toLabel}
@@ -1027,7 +1036,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       {/* Transition Type Selector */}
       <div className="space-y-2">
         <Text type="supporting" color="secondary" className="text-[10px] font-medium">
-          Transition Type
+          {t("transitionInspector.type", "Transition Type")}
         </Text>
         <div className="grid grid-cols-2 gap-2">
           {transitionTypes.map((typeInfo) => (
@@ -1043,7 +1052,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
 
       {/* Duration Slider */}
       <TransitionSlider
-        label="Duration"
+        label={t("transitionInspector.duration", "Duration")}
         value={duration}
         onChange={handleDurationChange}
         min={0.1}
@@ -1053,7 +1062,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       />
 
       <Toggle
-        label={edge ? "Fade clip audio" : "Smooth transition audio"}
+        label={edge ? t("transitionInspector.fadeClipAudio", "Fade clip audio") : t("transitionInspector.smoothTransitionAudio", "Smooth transition audio")}
         value={(params.audioFade as boolean) ?? false}
         onChange={(value) => handleParamChange("audioFade", value)}
       />
@@ -1062,7 +1071,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       {selectedTypeInfo?.hasCustomParams && (
         <div className="space-y-3 pt-2 border-t border-border">
           <Text type="supporting" color="secondary" className="text-[10px] font-medium">
-            Parameters
+            {t("transitionInspector.parameters", "Parameters")}
           </Text>
           {renderTypeParams()}
         </div>
@@ -1072,7 +1081,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
       <div className="flex gap-2 pt-2">
         {transition ? (
           <Button
-            label="Remove Transition"
+            label={t("transitionInspector.removeTransition", "Remove Transition")}
             icon={<X size={12} />}
             variant="secondary"
             size="sm"
@@ -1081,7 +1090,7 @@ export const TransitionInspector: React.FC<TransitionInspectorProps> = ({
           />
         ) : (
           <Button
-            label="Apply Transition"
+            label={t("transitionInspector.applyTransition", "Apply Transition")}
             icon={<Check size={12} />}
             variant={validation.valid ? "primary" : "secondary"}
             size="sm"

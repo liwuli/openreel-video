@@ -1,0 +1,14 @@
+{
+  "title": "搜索特效与工具",
+  "subtitleSelected": "查找适用于当前所选 {{type}} 片段的工具与特效。",
+  "subtitleGeneral": "在属性检查器中查找所有特效与编辑工具。",
+  "placeholderSelected": "搜索适用于 {{type}} 片段的特效…",
+  "placeholderGeneral": "搜索全部特效与工具…",
+  "clearSearch": "清空搜索",
+  "noEffectsFound": "未找到相关特效",
+  "noEffectsFoundDesc": "请尝试搜索其他关键字或切换分类。",
+  "effectsAvailable": "共 {{count}} 个可用工具与特效",
+  "navigate": "上下切换",
+  "select": "确认打开",
+  "openEffect": "打开 {{name}}"
+}

@@ -35,6 +35,7 @@ import { loadMediaBlob } from "../../services/media-storage";
 import { useKieAIStore } from "../../stores/kieai-store";
 import { StickerPickerPanel } from "./inspector/StickerPickerPanel";
 import { insertTimelineOverlay } from "../../stores/project/insert-timeline-overlay";
+import { useTranslation } from "../../i18n";
 
 const formatDuration = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
@@ -599,25 +600,28 @@ const MediaThumbnail: React.FC<{
   );
 };
 
-const EmptyState: React.FC<{ onImport: () => void }> = ({ onImport }) => (
-  <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-    <div className="w-16 h-16 rounded-2xl bg-bg-2 border border-border flex items-center justify-center mb-4 shadow-inner">
-      <Upload size={24} className="text-fg-muted" />
+const EmptyState: React.FC<{ onImport: () => void }> = ({ onImport }) => {
+  const { t } = useTranslation("assets");
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+      <div className="w-16 h-16 rounded-2xl bg-bg-2 border border-border flex items-center justify-center mb-4 shadow-inner">
+        <Upload size={24} className="text-fg-muted" />
+      </div>
+      <Text type="body" color="secondary" weight="bold" display="block" className="mb-2 text-sm text-fg">
+        {t("noMedia", "No media imported")}
+      </Text>
+      <Text type="supporting" color="secondary" display="block" className="mb-6 text-xs text-fg-3">
+        {t("dragOrClick", "Drag files here or click to import")}
+      </Text>
+      <Button
+        label={t("importMedia", "Import Media")}
+        variant="ghost"
+        onClick={onImport}
+        className="px-4 py-2 bg-bg-2 hover:bg-bg-3 border border-border text-fg-2 text-xs font-medium rounded-lg transition-all hover:border-accent/50"
+      />
     </div>
-    <Text type="body" color="secondary" weight="bold" display="block" className="mb-2 text-sm text-fg">
-      No media imported
-    </Text>
-    <Text type="supporting" color="secondary" display="block" className="mb-6 text-xs text-fg-3">
-      Drag files here or click to import
-    </Text>
-    <Button
-      label="Import Media"
-      variant="ghost"
-      onClick={onImport}
-      className="px-4 py-2 bg-bg-2 hover:bg-bg-3 border border-border text-fg-2 text-xs font-medium rounded-lg transition-all hover:border-accent/50"
-    />
-  </div>
-);
+  );
+};
 
 const LoadingIndicator: React.FC<{ message: string }> = ({ message }) => (
   <div className="absolute inset-0 bg-bg-1/90 backdrop-blur-sm flex flex-col items-center justify-center z-50">
@@ -627,7 +631,54 @@ const LoadingIndicator: React.FC<{ message: string }> = ({ message }) => (
 );
 
 export const AssetsPanel: React.FC = () => {
+  const { t } = useTranslation(["assets", "common"]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const getTabLabel = useCallback(
+    (value: AssetsTab) => {
+      switch (value) {
+        case "media":
+          return t("assets:tabs.media", "Media");
+        case "text":
+          return t("assets:tabs.text", "Text");
+        case "graphics":
+          return t("assets:tabs.graphics", "Graphics");
+        case "effects":
+          return t("assets:tabs.effects", "Effects");
+        case "transitions":
+          return t("assets:tabs.transitions", "Transitions");
+        case "ai":
+          return t("assets:tabs.ai", "AI Generate");
+        case "recipes":
+          return t("assets:tabs.recipes", "Recipes");
+        case "templates":
+          return t("assets:tabs.templates", "Templates");
+        default:
+          return value;
+      }
+    },
+    [t],
+  );
+
+  const getPresetDisplayName = useCallback(
+    (name: string) => {
+      switch (name.toLowerCase()) {
+        case "heading":
+          return t("assets:presetNames.heading", "Heading");
+        case "subtitle":
+          return t("assets:presetNames.subtitle", "Subtitle");
+        case "lower third":
+          return t("assets:presetNames.lowerThird", "Lower Third");
+        case "caption":
+          return t("assets:presetNames.caption", "Caption");
+        case "hero":
+          return t("assets:presetNames.hero", "Hero");
+        default:
+          return name;
+      }
+    },
+    [t],
+  );
   const [activeTab, setActiveTabRaw] = useState<AssetsTab>("media");
   const ttsHasUnsaved = useTtsAudioStore((s) => s.generatedAudio !== null && !s.isAudioSaved);
   const playheadPosition = useTimelineStore((state) => state.playheadPosition);
@@ -1005,11 +1056,13 @@ export const AssetsPanel: React.FC = () => {
         return (
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="px-4 pt-[18px] shrink-0">
-              <div className="font-bold text-[18px] text-fg mb-[14px]">Media</div>
+              <div className="font-bold text-[18px] text-fg mb-[14px]">
+                {getTabLabel("media")}
+              </div>
               <div className="flex gap-2 mb-[18px]">
                 <button
                   type="button"
-                  aria-label="Import media"
+                  aria-label={t("assets:import", "Import")}
                   onClick={triggerFileInput}
                   className="flex-1 flex items-center justify-center gap-[7px] bg-bg border border-border rounded-[9px] p-[10px] font-medium text-[13px] text-fg-2"
                 >
@@ -1026,11 +1079,11 @@ export const AssetsPanel: React.FC = () => {
                     <path d="M12 16V4M7 9l5-5 5 5" />
                     <path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2" />
                   </svg>
-                  Import
+                  {t("assets:import", "Import")}
                 </button>
                 <button
                   type="button"
-                  aria-label="Record"
+                  aria-label={t("assets:record", "Record")}
                   onClick={() => openModal("recorder")}
                   className="flex-1 flex items-center justify-center gap-[7px] bg-bg border border-border rounded-[9px] p-[10px] font-medium text-[13px] text-fg-2"
                 >
@@ -1045,7 +1098,7 @@ export const AssetsPanel: React.FC = () => {
                     <circle cx="12" cy="12" r="8" />
                     <circle cx="12" cy="12" r="3" fill="var(--fg-3)" stroke="none" />
                   </svg>
-                  Record
+                  {t("assets:record", "Record")}
                 </button>
                 <button
                   type="button"
@@ -1075,7 +1128,7 @@ export const AssetsPanel: React.FC = () => {
             {missingAssetsCount > 0 && (
               <div className="px-4 pb-3 space-y-2">
                 <PanelButton
-                  label="Show Only Missing Assets"
+                  label={t("assets:showOnlyMissing", "Show Only Missing Assets")}
                   onClick={() => setShowOnlyMissing(!showOnlyMissing)}
                   className={`w-full px-3 py-2 rounded-lg border text-xs font-medium transition-all flex items-center justify-between ${
                     showOnlyMissing
@@ -1085,19 +1138,19 @@ export const AssetsPanel: React.FC = () => {
                 >
                   <div className="flex items-center gap-2">
                     <AlertTriangle size={14} />
-                    <span>Show Only Missing Assets</span>
+                    <span>{t("assets:showOnlyMissing", "Show Only Missing Assets")}</span>
                   </div>
                   <div className="px-2 py-0.5 rounded-full bg-yellow-500 text-black text-[10px] font-bold">
                     {missingAssetsCount}
                   </div>
                 </PanelButton>
                 <PanelButton
-                  label="Relink from Folder"
+                  label={t("assets:relinkFromFolder", "Relink from Folder…")}
                   onClick={handleRelinkFromFolder}
                   className="w-full px-3 py-2 rounded-lg border border-yellow-500/40 bg-yellow-500/5 text-yellow-500 text-xs font-medium transition-all hover:bg-yellow-500/15 flex items-center gap-2"
                 >
                   <RefreshCw size={14} />
-                  <span>Relink from Folder…</span>
+                  <span>{t("assets:relinkFromFolder", "Relink from Folder…")}</span>
                 </PanelButton>
               </div>
             )}
@@ -1111,7 +1164,7 @@ export const AssetsPanel: React.FC = () => {
               <div className="px-4 pb-[18px] relative">
                 {filteredItems.length > 0 && (
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[13px] font-semibold text-fg-2">Project Media</span>
+                    <span className="text-[13px] font-semibold text-fg-2">{t("assets:projectMedia", "Project Media")}</span>
                     <span className="text-[12px] font-medium text-fg-muted">{filteredItems.length}</span>
                   </div>
                 )}
@@ -1136,13 +1189,13 @@ export const AssetsPanel: React.FC = () => {
                     ))}
                     <div className="flex flex-col">
                       <PanelButton
-                        label="Add media"
+                        label={t("assets:addMedia", "Add media")}
                         onClick={triggerFileInput}
                         className="h-[78px] bg-bg-2 rounded-lg border border-dashed border-border hover:border-accent/50 hover:bg-accent-soft relative flex items-center justify-center cursor-pointer transition-all overflow-hidden group"
                       >
                         <div className="flex flex-col items-center gap-1.5">
                           <Upload size={20} className="text-fg-muted group-hover:text-accent transition-colors" />
-                          <span className="text-[10px] text-fg-muted group-hover:text-accent transition-colors font-medium">Add media</span>
+                          <span className="text-[10px] text-fg-muted group-hover:text-accent transition-colors font-medium">{t("assets:addMedia", "Add media")}</span>
                         </div>
                       </PanelButton>
                     </div>
@@ -1152,7 +1205,7 @@ export const AssetsPanel: React.FC = () => {
                 {isDragOver && (
                   <div className="absolute inset-4 border-2 border-dashed border-accent rounded-xl flex items-center justify-center bg-accent-soft pointer-events-none z-50 backdrop-blur-sm">
                     <div className="text-accent text-sm font-bold bg-bg-1 px-4 py-2 rounded-full shadow-lg">
-                      Drop files to import
+                      {t("assets:dropFilesToImport", "Drop files to import")}
                     </div>
                   </div>
                 )}
@@ -1169,7 +1222,7 @@ export const AssetsPanel: React.FC = () => {
                   <div className="flex items-center justify-between mb-3">
                     <Text type="label" color="secondary" weight="bold" display="block" className="flex items-center gap-1.5 text-xs">
                       <Palette size={12} />
-                      Backgrounds
+                      {t("assets:backgrounds", "Backgrounds")}
                     </Text>
                   </div>
                   <div className="flex gap-1.5 mb-3 flex-wrap">
@@ -1222,31 +1275,31 @@ export const AssetsPanel: React.FC = () => {
 
                 <div className="mb-6">
                   <Text type="label" color="secondary" weight="bold" display="block" className="mb-3 text-xs">
-                    Shapes
+                    {t("assets:shapes", "Shapes")}
                   </Text>
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       {
                         type: "rectangle" as ShapeType,
                         icon: Square,
-                        label: "Rectangle",
+                        label: t("assets:shapeLabels.rectangle", "Rectangle"),
                       },
-                      { type: "circle" as ShapeType, icon: Circle, label: "Circle" },
+                      { type: "circle" as ShapeType, icon: Circle, label: t("assets:shapeLabels.circle", "Circle") },
                       {
                         type: "triangle" as ShapeType,
                         icon: Triangle,
-                        label: "Triangle",
+                        label: t("assets:shapeLabels.triangle", "Triangle"),
                       },
-                      { type: "star" as ShapeType, icon: Star, label: "Star" },
+                      { type: "star" as ShapeType, icon: Star, label: t("assets:shapeLabels.star", "Star") },
                       {
                         type: "arrow" as ShapeType,
                         icon: ArrowRight,
-                        label: "Arrow",
+                        label: t("assets:shapeLabels.arrow", "Arrow"),
                       },
                       {
                         type: "polygon" as ShapeType,
                         icon: Hexagon,
-                        label: "Polygon",
+                        label: t("assets:shapeLabels.polygon", "Polygon"),
                       },
                     ].map((shape) => (
                       <PanelButton
@@ -1273,13 +1326,13 @@ export const AssetsPanel: React.FC = () => {
                             });
                           }
                         }}
-                        className="aspect-square bg-background-tertiary rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 group"
+                        className="p-3 bg-background-tertiary rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1.5 group"
                       >
                         <shape.icon
                           size={20}
                           className="text-text-secondary group-hover:text-primary transition-colors"
                         />
-                        <span className="text-[9px] text-text-muted group-hover:text-text-secondary">
+                        <span className="text-[10px] text-text-secondary group-hover:text-text-primary">
                           {shape.label}
                         </span>
                       </PanelButton>
@@ -1289,16 +1342,16 @@ export const AssetsPanel: React.FC = () => {
 
                 <div className="mb-6">
                   <Text type="label" color="secondary" weight="bold" display="block" className="mb-3 text-xs">
-                    3D Objects
+                    {t("assets:objects3d", "3D Objects")}
                   </Text>
                   <div className="grid grid-cols-3 gap-2">
                     {([
-                      { type: "mesh-cube" as ShapeType, label: "Cube", icon: "□" },
-                      { type: "mesh-sphere" as ShapeType, label: "Sphere", icon: "○" },
-                      { type: "mesh-torus" as ShapeType, label: "Torus", icon: "◯" },
-                      { type: "mesh-cone" as ShapeType, label: "Cone", icon: "△" },
-                      { type: "mesh-cylinder" as ShapeType, label: "Cylinder", icon: "▯" },
-                      { type: "mesh-icosahedron" as ShapeType, label: "Icosahedron", icon: "◆" },
+                      { type: "mesh-cube" as ShapeType, label: t("assets:meshLabels.cube", "Cube"), icon: "□" },
+                      { type: "mesh-sphere" as ShapeType, label: t("assets:meshLabels.sphere", "Sphere"), icon: "○" },
+                      { type: "mesh-torus" as ShapeType, label: t("assets:meshLabels.torus", "Torus"), icon: "◯" },
+                      { type: "mesh-cone" as ShapeType, label: t("assets:meshLabels.cone", "Cone"), icon: "△" },
+                      { type: "mesh-cylinder" as ShapeType, label: t("assets:meshLabels.cylinder", "Cylinder"), icon: "▯" },
+                      { type: "mesh-icosahedron" as ShapeType, label: t("assets:meshLabels.icosahedron", "Icosahedron"), icon: "◆" },
                     ]).map((mesh) => (
                       <PanelButton
                         key={mesh.type}
@@ -1345,10 +1398,10 @@ export const AssetsPanel: React.FC = () => {
 
                 <div className="mb-6">
                   <Text type="label" color="secondary" weight="bold" display="block" className="mb-3 text-xs">
-                    SVG Import
+                    {t("assets:svgImport", "SVG Import")}
                   </Text>
                   <PanelButton
-                    label="Import SVG File"
+                    label={t("assets:importSvgFile", "Import SVG File")}
                     onClick={() => {
                       const input = document.createElement("input");
                       input.type = "file";
@@ -1401,7 +1454,7 @@ export const AssetsPanel: React.FC = () => {
             <div className="min-h-0 flex-1 overflow-auto">
               <div className="min-w-0 px-4 py-4 space-y-3">
                 <PanelButton
-                  label="Add Title"
+                  label={t("assets:textPresets", "Add Title")}
                   onClick={async () => {
                     const created = await insertTimelineOverlay(
                       playheadPosition,
@@ -1428,7 +1481,7 @@ export const AssetsPanel: React.FC = () => {
                   className="flex min-h-[72px] w-full min-w-0 flex-col items-center justify-center rounded-lg border border-border bg-background-tertiary px-3 py-3 text-center transition-all hover:border-primary/50 hover:bg-primary/5"
                 >
                   <span className="block max-w-full truncate text-base font-bold leading-tight text-text-primary">
-                    Add Title
+                    {t("assets:textPresets", "Add Title")}
                   </span>
                   <Text
                     type="supporting"
@@ -1437,14 +1490,14 @@ export const AssetsPanel: React.FC = () => {
                     maxLines={1}
                     className="mt-1 max-w-full text-[11px] leading-tight"
                   >
-                    Click to add text to timeline
+                    {t("assets:tabDescriptions.text", "Click to add text to timeline")}
                   </Text>
                 </PanelButton>
                 <div className="grid min-w-0 grid-cols-2 gap-2">
                   {TEXT_STYLE_PRESETS.map((preset) => (
                     <PanelButton
                       key={preset.name}
-                      label={preset.name}
+                      label={getPresetDisplayName(preset.name)}
                       onClick={async () => {
                         const created = await insertTimelineOverlay(
                           playheadPosition,
@@ -1471,7 +1524,7 @@ export const AssetsPanel: React.FC = () => {
                       className="flex min-h-[44px] min-w-0 items-center justify-center rounded-lg border border-border bg-background-tertiary px-2 py-2 text-center text-xs font-medium leading-tight text-text-secondary transition-all hover:border-primary/50 hover:bg-primary/5 hover:text-text-primary"
                     >
                       <span className="block max-w-full truncate">
-                        {preset.name}
+                        {getPresetDisplayName(preset.name)}
                       </span>
                     </PanelButton>
                   ))}
@@ -1525,13 +1578,14 @@ export const AssetsPanel: React.FC = () => {
         {ASSETS_TABS.map((tab) => {
           const Icon = TAB_ICONS[tab.value];
           const isActive = activeTab === tab.value;
+          const label = getTabLabel(tab.value);
           return (
             <button
               key={tab.value}
               type="button"
-              aria-label={tab.label}
+              aria-label={label}
               aria-pressed={isActive}
-              title={tab.label}
+              title={label}
               onClick={() => setActiveTab(tab.value)}
               className={`group flex h-16 w-[68px] shrink-0 flex-col items-center justify-center gap-1 rounded-[10px] px-1 py-2 text-[10px] leading-tight tracking-tight transition-colors ${
                 isActive
@@ -1541,7 +1595,7 @@ export const AssetsPanel: React.FC = () => {
             >
               <Icon size={20} strokeWidth={isActive ? 1.8 : 1.7} />
               <span className="block max-w-full text-center leading-[11px]">
-                {tab.label}
+                {label}
               </span>
             </button>
           );
@@ -1573,9 +1627,9 @@ export const AssetsPanel: React.FC = () => {
             <div className="min-w-0 px-4 pt-[18px] pb-0 shrink-0">
               <div
                 className="truncate font-bold text-[18px] text-fg"
-                title={ASSETS_TABS.find((t) => t.value === activeTab)?.label}
+                title={getTabLabel(activeTab)}
               >
-                {ASSETS_TABS.find((t) => t.value === activeTab)?.label}
+                {getTabLabel(activeTab)}
               </div>
             </div>
           )}

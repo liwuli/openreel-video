@@ -17,6 +17,7 @@ import {
   type ShortcutCategory,
   type ShortcutDefinition,
 } from "../../services/keyboard-shortcuts";
+import { useTranslation } from "../../i18n";
 
 interface KeyboardShortcutsOverlayProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ interface KeyboardShortcutsOverlayProps {
 export const KeyboardShortcutsOverlay: React.FC<
   KeyboardShortcutsOverlayProps
 > = ({ isOpen, onClose }) => {
+  const { t } = useTranslation(["shortcuts", "common"]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<
     ShortcutCategory | "all"
@@ -133,12 +135,38 @@ export const KeyboardShortcutsOverlay: React.FC<
     setShowPresets(false);
   };
 
+  const getCategoryLabel = useCallback(
+    (category: ShortcutCategory | "all"): string => {
+      switch (category) {
+        case "all":
+          return t("shortcuts:categories.all", "All");
+        case "playback":
+          return t("shortcuts:categories.playback", "Playback");
+        case "editing":
+          return t("shortcuts:categories.editing", "Editing");
+        case "selection":
+          return t("shortcuts:categories.selection", "Selection");
+        case "timeline":
+          return t("shortcuts:categories.timeline", "Timeline");
+        case "view":
+          return t("shortcuts:categories.view", "View");
+        case "file":
+          return t("shortcuts:categories.file", "File");
+        case "tools":
+          return t("shortcuts:categories.tools", "Tools");
+        default:
+          return category;
+      }
+    },
+    [t],
+  );
+
   const categories = keyboardShortcuts.getCategories();
   const categoryOptions: Array<{ label: string; value: ShortcutCategory | "all" }> = [
-    { value: "all", label: "All" },
+    { value: "all", label: getCategoryLabel("all") },
     ...categories.map((category) => ({
       value: category,
-      label: keyboardShortcuts.getCategoryName(category),
+      label: getCategoryLabel(category),
     })),
   ];
   const presets = keyboardShortcuts.getPresets();
@@ -155,7 +183,7 @@ export const KeyboardShortcutsOverlay: React.FC<
       <Layout
         header={
           <DialogHeader
-            title="Keyboard Shortcuts"
+            title={t("common:keyboardShortcuts.title", "Keyboard Shortcuts")}
             onOpenChange={(open) => !open && onClose()}
             startContent={<Keyboard size={20} className="text-primary" aria-hidden />}
           />
@@ -166,12 +194,12 @@ export const KeyboardShortcutsOverlay: React.FC<
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
             <ToolcraftTextInputControl
-              label="Search shortcuts"
+              label={t("common:keyboardShortcuts.search", "Search shortcuts...")}
               isLabelHidden
               type="text"
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Search shortcuts..."
+              placeholder={t("common:keyboardShortcuts.search", "Search shortcuts...")}
               startIcon={<Search size={16} aria-hidden />}
               width="100%"
             />
@@ -179,7 +207,7 @@ export const KeyboardShortcutsOverlay: React.FC<
 
           <div className="relative">
             <Button
-              label={presets.find((p) => p.id === activePreset)?.name || "Preset"}
+              label={presets.find((p) => p.id === activePreset)?.name || t("common:keyboardShortcuts.presets", "Presets")}
               onClick={() => setShowPresets(!showPresets)}
               variant="secondary"
               icon={<ChevronDown size={14} aria-hidden />}
@@ -211,7 +239,7 @@ export const KeyboardShortcutsOverlay: React.FC<
           </div>
 
           <Button
-            label="Reset All"
+            label={t("common:keyboardShortcuts.resetAll", "Reset All")}
             onClick={handleResetAll}
             variant="ghost"
             icon={<RotateCcw size={14} aria-hidden />}
@@ -240,9 +268,7 @@ export const KeyboardShortcutsOverlay: React.FC<
                   display="block"
                   className="mb-3 text-xs uppercase"
                 >
-                  {keyboardShortcuts.getCategoryName(
-                    category as ShortcutCategory,
-                  )}
+                  {getCategoryLabel(category as ShortcutCategory)}
                 </Text>
                 <div className="space-y-1">
                   {categoryShortcuts.map((shortcut) => (
@@ -269,7 +295,7 @@ export const KeyboardShortcutsOverlay: React.FC<
                             onKeyDown={(e) =>
                               handleShortcutCapture(e, shortcut.id)
                             }
-                            placeholder="Press keys..."
+                            placeholder={t("common:keyboardShortcuts.pressKeys", "Press keys...")}
                             hasAutoFocus
                             width={128}
                             size="sm"
@@ -285,7 +311,7 @@ export const KeyboardShortcutsOverlay: React.FC<
                         )}
                         {shortcut.currentKey !== shortcut.defaultKey && (
                           <IconButton
-                            label="Reset to default"
+                            label={t("common:keyboardShortcuts.resetToDefault", "Reset to default")}
                             onClick={() => handleResetShortcut(shortcut.id)}
                             variant="ghost"
                             size="sm"
@@ -303,7 +329,7 @@ export const KeyboardShortcutsOverlay: React.FC<
 
           {filteredShortcuts.length === 0 && (
             <EmptyState
-              title="No shortcuts found"
+              title={t("shortcuts:noShortcutsFound", "No shortcuts found")}
               icon={<Keyboard size={32} className="text-text-muted opacity-30" aria-hidden />}
               isCompact
             />
@@ -315,9 +341,9 @@ export const KeyboardShortcutsOverlay: React.FC<
         footer={
           <LayoutFooter hasDivider>
           <Text type="supporting" color="secondary" display="block" justify="center" className="text-[10px]">
-            Click a shortcut key to customize • Press{" "}
+            {t("shortcuts:footerClickHint", "Click a shortcut key to customize • Press")}{" "}
             <Kbd keys="?" />{" "}
-            to toggle this overlay
+            {t("shortcuts:footerToggleHint", "to toggle this overlay")}
           </Text>
           </LayoutFooter>
         }

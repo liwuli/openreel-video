@@ -1,0 +1,21 @@
+{
+  "home": "Back to home",
+  "theme": "Theme",
+  "themeAuto": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSwitch": "Theme: {{current}}. Switch to {{next}}",
+  "search": "Search tools, effects, or ask AI",
+  "record": "Screen recorder",
+  "history": "Action history",
+  "keyframeEditor": "Keyframe editor",
+  "audioMixer": "Audio mixer",
+  "aiEditor": "AI Editor chat",
+  "scriptView": "Project JSON / Comments",
+  "shortcuts": "Help & shortcuts (press ?)",
+  "settings": "Settings & API keys",
+  "tour": "Editor tour",
+  "motionTour": "Animation & effects tour",
+  "motionScene": "Create Motion Scene",
+  "moreActions": "More editor actions"
+}

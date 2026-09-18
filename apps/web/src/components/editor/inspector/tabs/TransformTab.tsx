@@ -14,6 +14,7 @@ import {
   MockSlider,
   NumberField,
 } from "../shell/InspectorControls";
+import { useTranslation } from "../../../../i18n";
 
 interface TransformTabClip {
   id: string;
@@ -56,6 +57,7 @@ export const TransformTab: React.FC<TransformTabProps> = ({
   canvasHeight,
   handleTransformChange,
 }) => {
+  const { t } = useTranslation("inspector");
   const usesNormalizedPosition =
     clipType === "text" ||
     clipType === "shape" ||
@@ -96,13 +98,13 @@ export const TransformTab: React.FC<TransformTabProps> = ({
       {showTransformControls && (
         <>
           <InspectorSection
-            title="Transform"
+            title={t("transformTab.title", "Transform")}
             sectionId="transform"
             defaultOpen
           >
             <div className="space-y-3">
               <NumberField
-                label="Position"
+                label={t("transformTab.position", "Position")}
                 fields={[
                   {
                     axis: "X",
@@ -126,14 +128,14 @@ export const TransformTab: React.FC<TransformTabProps> = ({
               />
               <div className="flex items-center gap-2">
                 <span className="w-[90px] flex-none text-[11px] font-medium text-fg-muted">
-                  {usesNormalizedPosition ? "Canvas pixels" : "Offset pixels"}
+                  {usesNormalizedPosition ? t("transformTab.canvasPixels", "Canvas pixels") : t("transformTab.offsetPixels", "Offset pixels")}
                 </span>
                 <div className="grid flex-1 grid-cols-4 gap-1" role="group" aria-label="Nudge position by one pixel">
                   {([
-                    ["Nudge left 1 pixel", ArrowLeft, -1, 0],
-                    ["Nudge up 1 pixel", ArrowUp, 0, -1],
-                    ["Nudge down 1 pixel", ArrowDown, 0, 1],
-                    ["Nudge right 1 pixel", ArrowRight, 1, 0],
+                    [t("transformTab.nudgeLeft", "Nudge left 1 pixel"), ArrowLeft, -1, 0],
+                    [t("transformTab.nudgeUp", "Nudge up 1 pixel"), ArrowUp, 0, -1],
+                    [t("transformTab.nudgeDown", "Nudge down 1 pixel"), ArrowDown, 0, 1],
+                    [t("transformTab.nudgeRight", "Nudge right 1 pixel"), ArrowRight, 1, 0],
                   ] as const).map(([label, Icon, x, y]) => (
                     <button
                       key={label}
@@ -151,7 +153,7 @@ export const TransformTab: React.FC<TransformTabProps> = ({
 
               <div className="flex items-center">
                 <span className="w-[90px] flex-none text-[13px] font-medium text-fg-3">
-                  Scale
+                  {t("transformTab.scale", "Scale")}
                 </span>
                 <MockSlider
                   className="flex-1"
@@ -170,7 +172,7 @@ export const TransformTab: React.FC<TransformTabProps> = ({
 
               <div className="flex items-center">
                 <span className="w-[90px] flex-none text-[13px] font-medium text-fg-3">
-                  Rotation
+                  {t("transformTab.rotation", "Rotation")}
                 </span>
                 <div className="flex flex-1 items-center justify-between rounded-[7px] border border-border px-[10px] py-[7px] focus-within:border-accent">
                   <input
@@ -266,7 +268,7 @@ export const TransformTab: React.FC<TransformTabProps> = ({
 
               <div className="flex items-center">
                 <span className="w-[90px] flex-none text-[13px] font-medium text-fg-3">
-                  Opacity
+                  {t("opacity", "Opacity")}
                 </span>
                 <MockSlider
                   className="flex-1"
@@ -362,7 +364,7 @@ export const TransformTab: React.FC<TransformTabProps> = ({
         clipType === "svg" ||
         clipType === "sticker") && (
         <InspectorSection
-          title="Alignment"
+          title={t("transformTab.alignment", "Alignment")}
           sectionId="alignment"
           defaultOpen={false}
         >

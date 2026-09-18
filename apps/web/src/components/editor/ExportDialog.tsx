@@ -39,6 +39,7 @@ import { ToolcraftSelectableCard as SelectableCard } from "@openreel/ui";
 import { ToolcraftSelectControl as Selector } from "@openreel/ui";
 import { ToolcraftSliderControl } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
+import { useTranslation } from "../../i18n";
 import {
   exportPresetsManager,
   type PlatformExportPreset,
@@ -150,6 +151,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   frameRate = 30,
   sourceMatch = null,
 }) => {
+  const { t } = useTranslation(["export", "common"]);
   const isDesktop =
     typeof window !== "undefined" && window.openreel?.platform === "desktop";
   const [activeTab, setActiveTab] = useState<"presets" | "custom" | "reduce">(
@@ -477,8 +479,8 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         className="h-[min(820px,calc(100vh-40px))]"
         header={
           <DialogHeader
-            title="Export Video"
-            subtitle="Choose a ready-made preset or fine-tune every setting."
+            title={t("export:title")}
+            subtitle={t("export:subtitle")}
             onOpenChange={(open) => !open && onClose()}
             startContent={
               <Download size={20} className="text-primary" aria-hidden />
@@ -494,9 +496,9 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                 onChange={setActiveTab}
                 className="max-w-[440px] bg-bg-2"
                 options={[
-                  { value: "presets", label: "Presets" },
-                  { value: "reduce", label: "Smaller File" },
-                  { value: "custom", label: "Custom Settings" },
+                  { value: "presets", label: t("export:tabs.presets") },
+                  { value: "reduce", label: t("export:tabs.reduce") },
+                  { value: "custom", label: t("export:tabs.custom") },
                 ]}
               />
 
@@ -511,7 +513,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                     </span>
                     <div className="min-w-0">
                       <div className="text-[13px] font-semibold text-fg">
-                        Match source
+                        {t("export:matchSource", "Match source")}
                       </div>
                       <div className="mt-0.5 truncate text-[11px] text-fg-muted">
                         {sourceMatch.width}×{sourceMatch.height}
@@ -537,7 +539,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                     </div>
                   </div>
                   <Button
-                    label="Quick Export"
+                    label={t("export:quickExport", "Quick Export")}
                     icon={<Download size={14} aria-hidden />}
                     variant="primary"
                     size="sm"
@@ -552,10 +554,10 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               <div className="flex min-h-0 flex-1 overflow-hidden">
                 <aside className="w-52 shrink-0 overflow-y-auto border-r border-border bg-bg-1 p-3">
                   <div className="px-2 pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-fg-muted">
-                    Browse presets
+                    {t("export:browsePresets", "Browse presets")}
                   </div>
                   <SelectableCard
-                    label="For Your Video"
+                    label={t("export:forYourVideo", "For Your Video")}
                     isSelected={selectedPlatform === "recommended"}
                     onClick={() => setSelectedPlatform("recommended")}
                     onChange={() => setSelectedPlatform("recommended")}
@@ -1530,19 +1532,19 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                       ]?.hardware && (
                         <div className="flex items-center gap-1 text-green-500">
                           <Zap size={12} />
-                          Hardware accelerated
+                          {t("export:hardwareAccelerated")}
                         </div>
                       )}
                   </>
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <Button label="Cancel" variant="ghost" onClick={onClose} />
+                <Button label={t("common:cancel")} variant="ghost" onClick={onClose} />
                 <Button
                   label={
                     activeTab === "reduce"
-                      ? "Compress & Export"
-                      : "Export Video"
+                      ? t("export:compressAndExport")
+                      : t("export:render")
                   }
                   icon={
                     activeTab === "reduce" ? (

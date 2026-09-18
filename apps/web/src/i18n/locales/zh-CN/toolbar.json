@@ -1,0 +1,54 @@
+{
+  "split": "分割",
+  "delete": "删除",
+  "rippleDelete": "波纹删除",
+  "zoomIn": "放大时间线",
+  "zoomOut": "缩小时间线",
+  "fitToScreen": "适应屏幕",
+  "snapping": "吸附开关",
+  "ripple": "波纹编辑模式",
+  "exportOptions": "导出选项",
+  "bestMatch": "最佳匹配",
+  "estTime": "预计 {{time}}",
+  "customExport": "自定义导出...",
+  "customExportDesc": "包含 AI 超分放大的完整设置",
+  "compressVideo": "压缩视频...",
+  "compressVideoDesc": "将任意视频压缩至目标体积大小",
+  "actionHistory": "操作历史",
+  "closeActionHistory": "关闭操作历史",
+  "projectName": "工程名称",
+  "presets": {
+    "mp4Standard": "MP4 标准格式",
+    "mp4StandardDesc": "{{res}} H.264 - 网络与社交媒体",
+    "4kStandard": "4K 超清标准",
+    "4kStandardDesc": "3840×2160 - YouTube 4K",
+    "1080pHigh": "1080p 高画质",
+    "1080pHighDesc": "1920×1080 30fps - 高码率",
+    "1080p60": "1080p 60fps",
+    "1080p60Desc": "1920×1080 - 流畅回放",
+    "wav": "仅音频 (WAV)",
+    "wavDesc": "无损未压缩音频"
+  },
+  "projectSwitcher": {
+    "currentProject": "当前工程",
+    "projectName": "工程名称",
+    "renameProject": "重命名工程",
+    "saveProjectName": "保存工程名称",
+    "newProject": "新建工程",
+    "newProjectDesc": "从全新空白画布开始创作",
+    "recentProjects": "最近项目",
+    "openProject": "打开 {{name}}",
+    "timeAgo": {
+      "justNow": "刚刚",
+      "minutesAgo": "{{count}} 分钟前",
+      "hoursAgo": "{{count}} 小时前",
+      "daysAgo": "{{count}} 天前"
+    }
+  },
+  "toasts": {
+    "importSuccess": "已导入 {{count}} 个录制文件！",
+    "screenWebcamAdded": "屏幕与摄像头录制已添加到素材库。请使用时间线进行合成。",
+    "screenOnlyAdded": "屏幕录制已添加到素材库。",
+    "importFailed": "导入失败"
+  }
+}

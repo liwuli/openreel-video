@@ -1,0 +1,77 @@
+{
+  "title": "Welcome to OpenReel",
+  "subtitle": "Professional audio, video, and image editing in your browser",
+  "startFromScratch": "Start from Scratch",
+  "recentProjects": "Recent Projects",
+  "templates": "Templates",
+  "newProject": "New Project",
+  "openProject": "Open Project",
+  "noRecentProjects": "No recent projects found",
+  "recoveryTitle": "Recover Unsaved Project",
+  "recoveryDescription": "Found an auto-saved draft from your previous session.",
+  "recover": "Recover",
+  "discard": "Discard",
+  "hero": {
+    "headline": "From idea to export.",
+    "subheadline": "In your browser.",
+    "pickFormat": "Pick a format and start creating. You can change this at any time."
+  },
+  "formats": {
+    "vertical": "Vertical",
+    "verticalDesc": "TikTok, Reels, Shorts",
+    "horizontal": "Horizontal",
+    "horizontalDesc": "YouTube, widescreen",
+    "square": "Square",
+    "squareDesc": "Feed posts, square format",
+    "startCreating": "Start creating"
+  },
+  "actions": {
+    "browseTemplates": "Browse templates",
+    "recentProjects": "Recent projects",
+    "openEditor": "Open editor",
+    "skipStartup": "Skip on startup",
+    "pressEscToSkip": "Press Esc to skip",
+    "back": "Back"
+  },
+  "recentList": {
+    "title": "Recent Projects ({{count}})",
+    "loading": "Loading recent projects…",
+    "noProjectsTitle": "No recent projects",
+    "noProjectsDesc": "Projects you open will appear here. Create a new project or choose a template to get started.",
+    "storedLocally": "Recent projects are stored locally in your browser",
+    "removeFromRecent": "Remove from recent",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{{count}}d ago",
+    "weeksAgo": "{{count}}w ago"
+  },
+  "recovery": {
+    "title": "Recover Your Work",
+    "subtitle": "We found unsaved work from a previous session",
+    "startFresh": "Start Fresh",
+    "recoverBtn": "Recover",
+    "recovering": "Recovering…",
+    "clearAll": "Clear all drafts",
+    "close": "Close"
+  },
+  "scratch": {
+    "title": "Start from Scratch",
+    "projectName": "Project Name",
+    "projectNamePlaceholder": "Enter project name...",
+    "createProject": "Create Project",
+    "categories": {
+      "vertical": "Vertical (9:16)",
+      "square": "Square (1:1)",
+      "horizontal": "Horizontal (16:9)",
+      "other": "Other"
+    }
+  },
+  "gallery": {
+    "searchTemplates": "Search templates...",
+    "loading": "Loading templates...",
+    "noTemplates": "No templates found",
+    "noTemplatesDesc": "Try adjusting your search or filter",
+    "useTemplate": "Use this template",
+    "preview": "Preview"
+  }
+}

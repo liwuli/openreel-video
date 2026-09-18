@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { subscribeWithSelector, persist } from "zustand/middleware";
 import { onSessionLock } from "../services/secure-storage";
+import i18n from "../i18n";
 
 export interface ServiceConfig {
   readonly id: string;
@@ -122,7 +123,7 @@ export const useSettingsStore = create<SettingsState>()(
       (set, get) => ({
         autoSave: true,
         autoSaveInterval: 5,
-        language: "en",
+        language: "zh-CN",
 
         defaultTtsProvider: "elevenlabs" as TtsProvider,
         defaultLlmProvider: null,
@@ -149,7 +150,10 @@ export const useSettingsStore = create<SettingsState>()(
         setAutoSaveInterval: (minutes: number) =>
           set({ autoSaveInterval: Math.max(1, Math.min(30, minutes)) }),
 
-        setLanguage: (lang: string) => set({ language: lang }),
+        setLanguage: (lang: string) => {
+          set({ language: lang });
+          void i18n.changeLanguage(lang);
+        },
 
         setDefaultTtsProvider: (provider: TtsProvider) =>
           set({ defaultTtsProvider: provider }),
@@ -231,7 +235,7 @@ export const useSettingsStore = create<SettingsState>()(
       }),
       {
         name: "openreel-settings",
-        version: 7,
+        version: 8,
         migrate: (persisted, version) => {
           const next = (persisted ?? {}) as Record<string, unknown>;
           if (version < 2) next.mcpAutoAllowTrustedLocal = true;
@@ -240,6 +244,9 @@ export const useSettingsStore = create<SettingsState>()(
           }
           if (version < 5 || next.defaultTtsProvider === "piper") {
             next.defaultTtsProvider = "elevenlabs";
+          }
+          if (version < 8) {
+            next.language = "zh-CN";
           }
           const previousProvider = next.defaultLlmProvider;
           if (!isLlmProvider(previousProvider)) {
@@ -263,6 +270,11 @@ export const useSettingsStore = create<SettingsState>()(
                   : "";
           }
           return next as unknown as SettingsState;
+        },
+        onRehydrateStorage: () => (state) => {
+          if (state?.language) {
+            void i18n.changeLanguage(state.language);
+          }
         },
         partialize: (state) => ({
           autoSave: state.autoSave,

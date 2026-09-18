@@ -1,0 +1,77 @@
+{
+  "title": "欢迎使用 OpenReel",
+  "subtitle": "浏览器中的专业级音视频与图像编辑工具",
+  "startFromScratch": "从头创建",
+  "recentProjects": "最近工程",
+  "templates": "模板预设",
+  "newProject": "新建工程",
+  "openProject": "打开工程",
+  "noRecentProjects": "暂无最近打开的工程",
+  "recoveryTitle": "恢复未保存的项目",
+  "recoveryDescription": "发现上次会话自动保存的工程草稿。",
+  "recover": "立即恢复",
+  "discard": "忽略放弃",
+  "hero": {
+    "headline": "从创意到导出。",
+    "subheadline": "在浏览器中尽情创作。",
+    "pickFormat": "挑选一种画幅格式，即刻开始创作。画幅随时可以修改。"
+  },
+  "formats": {
+    "vertical": "竖屏视频",
+    "verticalDesc": "TikTok、Shorts、视频号",
+    "horizontal": "横屏视频",
+    "horizontalDesc": "YouTube、B站、网页视频",
+    "square": "正方形视频",
+    "squareDesc": "小红书、朋友圈、社交媒体",
+    "startCreating": "开始创作"
+  },
+  "actions": {
+    "browseTemplates": "浏览模板",
+    "recentProjects": "最近项目",
+    "openEditor": "进入编辑器",
+    "skipStartup": "启动时跳过欢迎页",
+    "pressEscToSkip": "按 Esc 跳过",
+    "back": "返回"
+  },
+  "recentList": {
+    "title": "最近项目 ({{count}})",
+    "loading": "正在加载最近项目…",
+    "noProjectsTitle": "暂无最近项目",
+    "noProjectsDesc": "您最近打开过的项目将在此显示。新建项目或使用模板即可开始创作。",
+    "storedLocally": "最近项目数据保存在您的本地浏览器中",
+    "removeFromRecent": "从最近列表中移除",
+    "today": "今天",
+    "yesterday": "昨天",
+    "daysAgo": "{{count}} 天前",
+    "weeksAgo": "{{count}} 周前"
+  },
+  "recovery": {
+    "title": "恢复未保存的工作",
+    "subtitle": "发现上次异常退出的自动保存草稿",
+    "startFresh": "重新开始",
+    "recoverBtn": "恢复工程",
+    "recovering": "正在恢复…",
+    "clearAll": "清除所有草稿",
+    "close": "关闭"
+  },
+  "scratch": {
+    "title": "从零开始创建",
+    "projectName": "工程名称",
+    "projectNamePlaceholder": "输入新工程名称…",
+    "createProject": "创建并进入工程",
+    "categories": {
+      "vertical": "竖屏 (9:16)",
+      "square": "正方形 (1:1)",
+      "horizontal": "横屏 (16:9)",
+      "other": "其他画幅"
+    }
+  },
+  "gallery": {
+    "searchTemplates": "搜索模板…",
+    "loading": "正在加载模板…",
+    "noTemplates": "未找到匹配的模板",
+    "noTemplatesDesc": "请尝试更换关键词或筛选分类",
+    "useTemplate": "使用此模板",
+    "preview": "全屏预览"
+  }
+}

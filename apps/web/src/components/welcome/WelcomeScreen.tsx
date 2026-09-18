@@ -20,6 +20,7 @@ import { RecentProjects } from "./RecentProjects";
 import { useRouter } from "../../hooks/use-router";
 import { useEditorPreload } from "../../hooks/useEditorPreload";
 import { useAnalytics, AnalyticsEvents } from "../../hooks/useAnalytics";
+import { useTranslation } from "../../i18n";
 
 interface FormatOption {
   id: string;
@@ -137,6 +138,7 @@ interface WelcomeScreenProps {
 }
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
+  const { t } = useTranslation(["welcome", "common"]);
   const setSkipWelcomeScreen = useUIStore(
     (state) => state.setSkipWelcomeScreen,
   );
@@ -203,13 +205,13 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
       <div className="fixed inset-0 z-50 bg-background flex flex-col">
         <header className="flex items-center justify-between px-6 py-4 border-b border-border">
           <Button
-            label="Back"
+            label={t("welcome:actions.back", "Back")}
             variant="ghost"
             size="sm"
             icon={<ArrowRight className="rotate-180" size={16} aria-hidden />}
             onClick={() => setViewMode("home")}
           />
-          <Text type="label" color="primary" weight="medium" className="text-sm text-text-primary">Templates</Text>
+          <Text type="label" color="primary" weight="medium" className="text-sm text-text-primary">{t("welcome:templates", "Templates")}</Text>
           <div className="w-16" />
         </header>
         <div className="flex-1 overflow-y-auto p-6">
@@ -224,14 +226,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
       <div className="fixed inset-0 z-50 bg-background flex flex-col">
         <header className="flex items-center justify-between px-6 py-4 border-b border-border">
           <Button
-            label="Back"
+            label={t("welcome:actions.back", "Back")}
             variant="ghost"
             size="sm"
             icon={<ArrowRight className="rotate-180" size={16} aria-hidden />}
             onClick={() => setViewMode("home")}
           />
           <Text type="label" color="primary" weight="medium" className="text-sm text-text-primary">
-            Recent Projects
+            {t("welcome:recentProjects", "Recent Projects")}
           </Text>
           <div className="w-16" />
         </header>
@@ -260,13 +262,13 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
             </div>
 
             <Text type="body" color="primary" weight="bold" className="text-4xl sm:text-5xl text-text-primary tracking-tight mb-3">
-              From idea to export.
+              {t("welcome:hero.headline", "From idea to export.")}
             </Text>
             <Text type="supporting" color="secondary" className="text-xl text-text-secondary mb-8">
-              In your browser.
+              {t("welcome:hero.subheadline", "In your browser.")}
             </Text>
             <Text type="supporting" color="secondary" className="text-base text-text-muted max-w-md">
-              Pick a format and start creating. You can change this anytime.
+              {t("welcome:hero.pickFormat", "Pick a format and start creating. You can change this anytime.")}
             </Text>
           </div>
 
@@ -274,11 +276,13 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
             {FORMAT_OPTIONS.map((option) => {
               const Icon = option.icon;
               const isHovered = hoveredFormat === option.id;
+              const optionLabel = t(`welcome:formats.${option.id}`, option.label);
+              const optionDesc = t(`welcome:formats.${option.id}Desc`, option.description);
 
               return (
                 <ClickableCard
                   key={option.id}
-                  label={`Create ${option.label} project`}
+                  label={`Create ${optionLabel} project`}
                   onClick={() => handleCreateProject(option)}
                   onMouseEnter={() => setHoveredFormat(option.id)}
                   onMouseLeave={() => setHoveredFormat(null)}
@@ -314,10 +318,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
                     </div>
 
                     <Text type="body" color="primary" weight="semibold" className="text-lg text-text-primary mb-1">
-                      {option.label}
+                      {optionLabel}
                     </Text>
                     <Text type="supporting" color="secondary" className="text-sm text-text-muted mb-3">
-                      {option.description}
+                      {optionDesc}
                     </Text>
                     <span className="text-xs font-mono text-text-muted/70 bg-background-tertiary px-2 py-1 rounded">
                       {option.dimensions}
@@ -332,7 +336,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
                     transition-all duration-200
                   `}
                   >
-                    Start creating
+                    {t("welcome:formats.startCreating", "Start creating")}
                     <ArrowRight size={14} />
                   </div>
                 </ClickableCard>
@@ -342,21 +346,21 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
 
           <div className="flex items-center justify-center gap-3">
             <Button
-              label="Browse templates"
+              label={t("welcome:actions.browseTemplates", "Browse templates")}
               variant="secondary"
               icon={<Layers size={16} aria-hidden />}
               onClick={() => setViewMode("templates")}
               className="rounded-xl"
             />
             <Button
-              label="Recent projects"
+              label={t("welcome:actions.recentProjects", "Recent projects")}
               variant="secondary"
               icon={<Clock size={16} aria-hidden />}
               onClick={() => setViewMode("recent")}
               className="rounded-xl"
             />
             <Button
-              label="Open editor"
+              label={t("welcome:actions.openEditor", "Open editor")}
               variant="secondary"
               icon={<FolderOpen size={16} aria-hidden />}
               onClick={() => navigate("editor")}
@@ -368,7 +372,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4">
           <div className="flex items-center gap-2">
             <ToolcraftSwitchControl
-              label="Skip on startup"
+              label={t("welcome:actions.skipStartup", "Skip on startup")}
               checked={skipWelcomeScreen}
               onCheckedChange={setSkipWelcomeScreen}
             />
@@ -377,11 +381,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
           <span className="text-text-muted/30">·</span>
 
           <Text type="supporting" color="secondary" className="text-xs text-text-muted/60">
-            Press{" "}
-            <kbd className="px-1.5 py-0.5 bg-background-tertiary border border-border rounded text-text-muted font-mono text-[10px]">
-              Esc
-            </kbd>{" "}
-            to skip
+            {t("welcome:actions.pressEscToSkip", "Press Esc to skip")}
           </Text>
         </div>
       </div>

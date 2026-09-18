@@ -362,3 +362,14 @@ Object.defineProperty(globalThis, "OffscreenCanvas", {
   writable: true,
   value: OffscreenCanvasMock,
 });
+
+import i18n from "../i18n";
+import { beforeEach } from "vitest";
+
+void i18n.changeLanguage("en");
+
+beforeEach(() => {
+  if (i18n.language !== "en") {
+    void i18n.changeLanguage("en");
+  }
+});

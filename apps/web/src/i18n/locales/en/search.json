@@ -1,0 +1,14 @@
+{
+  "title": "Search Effects",
+  "subtitleSelected": "Find tools for the selected {{type}} clip.",
+  "subtitleGeneral": "Find effects and tools across the inspector.",
+  "placeholderSelected": "Search effects for {{type}} clip...",
+  "placeholderGeneral": "Search all effects and tools...",
+  "clearSearch": "Clear search",
+  "noEffectsFound": "No effects found",
+  "noEffectsFoundDesc": "Try a different search term or category.",
+  "effectsAvailable": "{{count}} effects available",
+  "navigate": "Navigate",
+  "select": "Select",
+  "openEffect": "Open {{name}}"
+}

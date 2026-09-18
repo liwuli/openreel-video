@@ -1,0 +1,19 @@
+{
+  "play": "Play",
+  "pause": "Pause",
+  "skipBack": "Skip back 5s",
+  "skipForward": "Skip forward 5s",
+  "mute": "Mute",
+  "unmute": "Unmute",
+  "aspectRatio": "Aspect ratio",
+  "playbackQuality": "Playback quality",
+  "previewZoom": "Preview Zoom",
+  "canvasSnapping": "Canvas snapping",
+  "compositionGrid": "Composition grid",
+  "safeMargins": "Title and action safe margins",
+  "fullscreen": "Full Screen",
+  "exitFullscreen": "Exit Full Screen",
+  "maximize": "Maximize Preview",
+  "restore": "Restore Size",
+  "auto": "Auto"
+}

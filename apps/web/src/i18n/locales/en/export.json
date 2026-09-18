@@ -1,0 +1,102 @@
+{
+  "title": "Export Video",
+  "subtitle": "Render your timeline project into video files, image sequences, or compressed assets.",
+  "tabs": {
+    "presets": "Presets",
+    "custom": "Custom",
+    "reduce": "Reduce Size"
+  },
+  "sections": {
+    "platformPresets": "Platform & Format Presets",
+    "exportSettings": "Export Settings",
+    "advanced": "Advanced Encoding Settings",
+    "compressPlan": "Compression Plan"
+  },
+  "resolution": "Resolution",
+  "format": "Format",
+  "frameRate": "Frame Rate",
+  "quality": "Quality",
+  "bitrate": "Bitrate",
+  "codec": "Codec",
+  "audio": "Audio",
+  "hardwareAccelerated": "Hardware Accelerated",
+  "softwareEncoding": "Software Encoding",
+  "render": "Render Video",
+  "compressAndExport": "Compress & Export",
+  "rendering": "Rendering video…",
+  "cancel": "Cancel",
+  "completed": "Export completed",
+  "download": "Download video file",
+  "bestMatch": "Best Match",
+  "timeRemaining": "Time remaining: {{time}}",
+  "estimatedSize": "Estimated size: ~{{size}}",
+  "matchSource": "Match source media",
+  "quickExport": "Quick Export",
+  "browsePresets": "Browse Presets",
+  "forYourVideo": "For your video",
+  "platforms": {
+    "all": "All",
+    "recommended": "Recommended",
+    "youtube": "YouTube",
+    "tiktok": "TikTok",
+    "instagram": "Instagram",
+    "twitter": "Twitter / X",
+    "podcast": "Podcast Audio",
+    "web": "Web",
+    "prores": "ProRes Master"
+  },
+  "reduce": {
+    "mode": "Mode",
+    "modes": {
+      "quality": "Quality",
+      "size": "Target size"
+    },
+    "quality": "Quality",
+    "targetSize": "Target size",
+    "qualityLevels": {
+      "light": "Light",
+      "lightHint": "Trim a little, top quality",
+      "balanced": "Balanced",
+      "balancedHint": "Best of both size and quality",
+      "strong": "Strong",
+      "strongHint": "Smallest file size"
+    },
+    "savings": "Saves ~{{percent}}% of file size",
+    "originalSize": "Original estimate: {{size}}",
+    "compressedSize": "Compressed estimate: {{size}}"
+  },
+  "custom": {
+    "videoSettings": "Video Encoding Settings",
+    "audioSettings": "Audio Encoding Settings",
+    "bitrateMode": "Bitrate Mode",
+    "keyframeInterval": "Keyframe Interval (GOP)",
+    "audioFormat": "Audio Format",
+    "sampleRate": "Sample Rate",
+    "channels": "Channels",
+    "audioBitrate": "Audio Bitrate",
+    "upscaling": "AI Upscaling",
+    "upscalingQuality": "Upscaling Quality",
+    "sharpening": "Sharpening"
+  },
+  "compressDialog": {
+    "title": "Compress Video",
+    "dropzone": "Choose or drop a video file to compress…",
+    "reading": "Reading video…",
+    "modes": {
+      "quality": "Quality first",
+      "size": "Target size"
+    },
+    "qualityTiers": {
+      "light": "Light compression",
+      "lightHint": "Quality priority",
+      "balanced": "Balanced compression",
+      "balancedHint": "≈720p commonly used",
+      "strong": "Strong compression",
+      "strongHint": "Smallest size"
+    },
+    "customSize": "Custom target size",
+    "custom": "Custom",
+    "compressBtn": "Start Compress",
+    "close": "Close"
+  }
+}

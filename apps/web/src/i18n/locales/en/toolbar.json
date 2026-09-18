@@ -1,0 +1,55 @@
+{
+  "split": "Split",
+  "delete": "Delete",
+  "rippleDelete": "Ripple Delete",
+  "zoomIn": "Zoom In",
+  "zoomOut": "Zoom Out",
+  "fitToScreen": "Fit to Screen",
+  "snapping": "Toggle Snapping",
+  "ripple": "Toggle Ripple Mode",
+  "exportOptions": "Export options",
+  "bestMatch": "Best match",
+  "estTime": "Est. {{time}}",
+  "customExport": "Custom export...",
+  "customExportDesc": "Full settings with AI upscaling",
+  "compressVideo": "Compress video...",
+  "compressVideoDesc": "Shrink any video to a target size",
+  "actionHistory": "Action history",
+  "closeActionHistory": "Close action history",
+  "projectName": "Project name",
+  "presets": {
+    "mp4Standard": "MP4 Standard",
+    "mp4StandardDesc": "{{res}} H.264 - Web & social",
+    "4kStandard": "4K Standard",
+    "4kStandardDesc": "3840×2160 - YouTube 4K",
+    "1080pHigh": "1080p High Quality",
+    "1080pHighDesc": "1920×1080 30fps - High bitrate",
+    "1080p60": "1080p 60fps",
+    "1080p60Desc": "1920×1080 - Smooth playback",
+    "wav": "Audio Only (WAV)",
+    "wavDesc": "Uncompressed audio"
+  },
+  "projectSwitcher": {
+    "currentProject": "Current Project",
+    "projectName": "Project name",
+    "renameProject": "Rename project",
+    "saveProjectName": "Save project name",
+    "newProject": "New Project",
+    "newProjectDesc": "Start fresh with a new canvas",
+    "recentProjects": "Recent Projects",
+    "openProject": "Open {{name}}",
+    "timeAgo": {
+      "justNow": "just now",
+      "minutesAgo": "{{count}}m ago",
+      "hoursAgo": "{{count}}h ago",
+      "daysAgo": "{{count}}d ago"
+    }
+  },
+  "toasts": {
+    "importSuccess": "{{count}} recording imported!",
+    "importSuccessPlural": "{{count}} recordings imported!",
+    "screenWebcamAdded": "Screen and webcam added to assets. Use the timeline to composite them.",
+    "screenOnlyAdded": "Screen recording added to assets.",
+    "importFailed": "Import failed"
+  }
+}

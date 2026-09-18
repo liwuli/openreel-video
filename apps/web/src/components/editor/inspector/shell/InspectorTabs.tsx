@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@openreel/ui";
+import { useTranslation } from "../../../../i18n";
 import type { InspectorTabDef, InspectorTabId } from "../clip-tabs.config";
 
 export interface InspectorTabsProps {
@@ -9,6 +10,7 @@ export interface InspectorTabsProps {
 }
 
 export const InspectorTabs: React.FC<InspectorTabsProps> = ({ tabs, activeId, onSelect }) => {
+  const { t } = useTranslation("inspector");
   return (
     <Tabs
       value={activeId}
@@ -30,7 +32,7 @@ export const InspectorTabs: React.FC<InspectorTabsProps> = ({ tabs, activeId, on
               className="h-7 gap-1.5 rounded-[7px] px-2 text-[12px] text-fg-3 data-[state=active]:text-fg"
             >
               <Icon size={13} aria-hidden />
-              {tab.label}
+              {t(`tabs.${tab.id}`, tab.label)}
             </TabsTrigger>
           );
         })}

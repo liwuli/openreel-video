@@ -28,6 +28,7 @@ import {
 import { getNoiseReductionPreset } from "./inspector/noise-reduction-presets";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftCard as Card } from "@openreel/ui";
+import { useTranslation } from "../../i18n";
 import { ToolcraftFileDropControl as FileInput } from "@openreel/ui";
 import { ToolcraftNumberInputControl } from "@openreel/ui";
 import { ToolcraftSelectableCard as SelectableCard } from "@openreel/ui";
@@ -103,18 +104,22 @@ const rgbaFromHex = (hex: string, alpha: string): string => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-const EmptyState: React.FC = () => (
-  <div className="flex-1 flex flex-col items-center justify-center p-10 text-center">
-    <Text type="body" weight="semibold" display="block" className="mb-1.5 text-sm text-fg">
-      No selection
-    </Text>
-    <Text type="supporting" display="block" className="text-xs text-fg-muted">
-      Select a clip to view its properties
-    </Text>
-  </div>
-);
+const EmptyState: React.FC = () => {
+  const { t } = useTranslation("common");
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center p-10 text-center">
+      <Text type="body" weight="semibold" display="block" className="mb-1.5 text-sm text-fg">
+        {t("noSelection", "No selection")}
+      </Text>
+      <Text type="supporting" display="block" className="text-xs text-fg-muted">
+        {t("selectClipToViewProperties", "Select a clip to view its properties")}
+      </Text>
+    </div>
+  );
+};
 
 export const InspectorPanel: React.FC = () => {
+  const { t } = useTranslation(["inspector", "common"]);
   // Stores
   const {
     getClip,
@@ -1246,10 +1251,10 @@ export const InspectorPanel: React.FC = () => {
                 />
                 <div className="flex items-center justify-between">
                   <Text type="supporting" color="secondary" className="text-[10px]">
-                    Font Size
+                    {t("inspector:subtitle.fontSize", "Font Size")}
                   </Text>
                   <ToolcraftNumberInputControl
-                    label="Font Size"
+                    label={t("inspector:subtitle.fontSize", "Font Size")}
                     isLabelHidden
                     min={12}
                     max={72}
@@ -1270,16 +1275,16 @@ export const InspectorPanel: React.FC = () => {
             </Section>
 
             {/* Subtitle Colors */}
-            <Section title="Colors">
+            <Section title={t("inspector:subtitle.colors", "Colors")}>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <Text type="supporting" color="secondary" className="text-[10px]">
-                    Text Color
+                    {t("inspector:subtitle.textColor", "Text Color")}
                   </Text>
                   <div className="flex items-center gap-2">
                     <ColorSelector
                       value={selectedSubtitle.style?.color || "#ffffff"}
-                      label="Select subtitle text color"
+                      label={t("inspector:subtitle.selectTextColor", "Select subtitle text color")}
                       onChange={(color) =>
                         updateSubtitle(selectedSubtitle.id, {
                           style: {
@@ -1293,7 +1298,7 @@ export const InspectorPanel: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <Text type="supporting" color="secondary" className="text-[10px]">
-                    Background
+                    {t("inspector:subtitle.background", "Background")}
                   </Text>
                   <div className="flex items-center gap-2">
                     <ColorSelector
@@ -1301,7 +1306,7 @@ export const InspectorPanel: React.FC = () => {
                         selectedSubtitle.style?.backgroundColor,
                         "#000000",
                       )}
-                      label="Select subtitle background color"
+                      label={t("inspector:subtitle.selectBgColor", "Select subtitle background color")}
                       onChange={(hex) => {
                         updateSubtitle(selectedSubtitle.id, {
                           style: {
@@ -1317,7 +1322,7 @@ export const InspectorPanel: React.FC = () => {
                       }}
                     />
                     <Selector
-                      label="Background opacity"
+                      label={t("inspector:subtitle.backgroundOpacity", "Background opacity")}
                       isLabelHidden
                       value={
                         cssColorAlpha(selectedSubtitle.style?.backgroundColor)
@@ -1339,10 +1344,10 @@ export const InspectorPanel: React.FC = () => {
                         });
                       }}
                       options={[
-                        { value: "0", label: "None" },
-                        { value: "0.5", label: "50%" },
-                        { value: "0.7", label: "70%" },
-                        { value: "1", label: "100%" },
+                        { value: "0", label: t("inspector:subtitle.opacityNone", "None") },
+                        { value: "0.5", label: t("inspector:subtitle.opacity50", "50%") },
+                        { value: "0.7", label: t("inspector:subtitle.opacity70", "70%") },
+                        { value: "1", label: t("inspector:subtitle.opacity100", "100%") },
                       ]}
                       size="sm"
                       width={80}
@@ -1355,7 +1360,7 @@ export const InspectorPanel: React.FC = () => {
             {/* Delete Subtitle */}
             <div className="pt-4 border-t border-border">
               <Button
-                label="Delete Subtitle"
+                label={t("inspector:subtitle.deleteSubtitle", "Delete Subtitle")}
                 onClick={() => {
                   const { removeSubtitle } = useProjectStore.getState();
                   removeSubtitle(selectedSubtitle.id);

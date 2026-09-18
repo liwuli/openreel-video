@@ -1,0 +1,21 @@
+{
+  "home": "返回主页",
+  "theme": "外观主题",
+  "themeAuto": "跟随系统",
+  "themeLight": "浅色",
+  "themeDark": "深色",
+  "themeSwitch": "当前主题：{{current}}。点击切换至{{next}}",
+  "search": "搜索工具、特效或向 AI 提问",
+  "record": "屏幕录制",
+  "history": "操作历史",
+  "keyframeEditor": "关键帧编辑器",
+  "audioMixer": "音频混音器",
+  "aiEditor": "AI 剪辑助手对话",
+  "scriptView": "项目工程脚本 / 批注",
+  "shortcuts": "快捷键帮助 (按 ?)",
+  "settings": "设置与 API 密钥",
+  "tour": "编辑器新手教程",
+  "motionTour": "动效与特技教程",
+  "motionScene": "创建动效场景",
+  "moreActions": "更多编辑器操作"
+}

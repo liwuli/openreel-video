@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from "@openreel/ui";
 import { ToolcraftDialog as Dialog, ToolcraftDialogHeader as DialogHeader } from "@openreel/ui";
 import { ToolcraftLayout as Layout, ToolcraftLayoutContent as LayoutContent } from "@openreel/ui";
 import { useSettingsStore, type SettingsTab } from "../../../stores/settings-store";
+import { useTranslation } from "../../../i18n";
 import { GeneralPanel } from "./GeneralPanel";
 import { ApiKeysPanel } from "./ApiKeysPanel";
 import { McpPanel } from "./McpPanel";
@@ -20,11 +21,23 @@ const TABS: readonly { id: SettingsTab; label: string; icon: typeof Settings }[]
 ];
 
 export const SettingsDialog: React.FC = () => {
+  const { t } = useTranslation(["settings", "common"]);
   const { settingsOpen, settingsTab, closeSettings, openSettings } = useSettingsStore();
 
   const setTab = useCallback((tab: SettingsTab) => {
     openSettings(tab);
   }, [openSettings]);
+
+  const getTabLabel = (id: SettingsTab) => {
+    switch (id) {
+      case "general":
+        return t("settings:tabs.general");
+      case "api-keys":
+        return t("settings:tabs.apiKeys");
+      case "mcp":
+        return t("settings:tabs.mcp");
+    }
+  };
 
   return (
     <Dialog
@@ -36,8 +49,8 @@ export const SettingsDialog: React.FC = () => {
       <Layout
         header={
           <DialogHeader
-            title="Settings"
-            subtitle="Configure preferences and manage API keys for external services."
+            title={t("settings:title")}
+            subtitle={t("settings:subtitle", "Configure preferences and manage API keys for external services.")}
             onOpenChange={(open) => !open && closeSettings()}
             startContent={<Settings size={18} className="text-primary" aria-hidden />}
           />
@@ -70,7 +83,7 @@ export const SettingsDialog: React.FC = () => {
                       id={`settings-tab-${tab.id}`}
                     >
                       <Icon size={14} aria-hidden />
-                      <span className="truncate">{tab.label}</span>
+                      <span className="truncate">{getTabLabel(tab.id)}</span>
                     </TabsTrigger>
                   );
                 })}

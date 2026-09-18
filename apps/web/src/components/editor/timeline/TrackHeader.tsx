@@ -13,6 +13,7 @@ import {
 } from "@openreel/core";
 import { useProjectStore } from "../../../stores/project-store";
 import { useTimelineStore } from "../../../stores/timeline-store";
+import { useTranslation } from "../../../i18n";
 import { getTrackInfo } from "./utils";
 
 interface TrackHeaderProps {
@@ -33,6 +34,7 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
   onDrop,
   onDragEnd,
 }) => {
+  const { t } = useTranslation(["timeline", "common"]);
   const {
     lockTrack,
     hideTrack,
@@ -109,12 +111,12 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
 
   const menuItems: ContextMenuOption[] = [
     {
-      label: "Rename Track",
+      label: t("timeline:trackMenu.renameTrack", "Rename Track"),
       icon: <Pencil size={14} aria-hidden />,
       onClick: startRename,
     },
     {
-      label: "Remove Gaps",
+      label: t("timeline:trackMenu.removeGaps", "Remove Gaps"),
       icon: <AlignLeft size={14} aria-hidden />,
       isDisabled: !hasGaps,
       onClick: handleRemoveGaps,
@@ -122,7 +124,7 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
     ...(track.groupId
       ? [
           {
-            label: "Ungroup Track",
+            label: t("timeline:trackMenu.ungroupTrack", "Ungroup Track"),
             icon: <Unlink size={14} aria-hidden />,
             onClick: () => groupTracks(track.id),
           } satisfies ContextMenuOption,
@@ -132,9 +134,9 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
       ? [
           {
             type: "section" as const,
-            title: "Move & trim together",
+            title: t("timeline:trackMenu.groupSection", "Move & trim together"),
             items: groupCandidates.map((candidate) => ({
-              label: `Group with ${candidate.name}`,
+              label: t("timeline:trackMenu.groupWith", { name: candidate.name, defaultValue: `Group with ${candidate.name}` }),
               icon: <Link2 size={14} aria-hidden />,
               onClick: () => groupTracks(track.id, candidate.id),
             })),
@@ -143,7 +145,7 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
       : []),
     { type: "divider" },
     {
-      label: "Delete Track",
+      label: t("timeline:trackMenu.deleteTrack", "Delete Track"),
       icon: <Trash2 size={14} aria-hidden />,
       onClick: handleRemoveTrack,
     },

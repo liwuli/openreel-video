@@ -9,15 +9,16 @@ import { ToolcraftTextInputControl as TextInput } from "@openreel/ui";
 import { useSettingsStore, SERVICE_REGISTRY, type TtsProvider, type LlmProvider, type AggregatorProvider } from "../../../stores/settings-store";
 import { useProjectStore } from "../../../stores/project-store";
 import { EDITING_FRAME_RATE_OPTIONS } from "../editing-frame-rate";
+import { useTranslation, SUPPORTED_LANGUAGES } from "../../../i18n";
 
-const ASPECT_PRESETS: Array<{ label: string; width: number; height: number }> = [
-  { label: "16:9 Landscape (1080p)", width: 1920, height: 1080 },
-  { label: "9:16 Vertical (TikTok/Reels)", width: 1080, height: 1920 },
-  { label: "1:1 Square", width: 1080, height: 1080 },
-  { label: "4:5 Portrait", width: 1080, height: 1350 },
-  { label: "4:3 Standard", width: 1440, height: 1080 },
-  { label: "21:9 Cinematic", width: 2560, height: 1080 },
-  { label: "4K Landscape", width: 3840, height: 2160 },
+const ASPECT_PRESETS: Array<{ key: string; label: string; width: number; height: number }> = [
+  { key: "16_9", label: "16:9 Landscape (1080p)", width: 1920, height: 1080 },
+  { key: "9_16", label: "9:16 Vertical (TikTok/Reels)", width: 1080, height: 1920 },
+  { key: "1_1", label: "1:1 Square", width: 1080, height: 1080 },
+  { key: "4_5", label: "4:5 Portrait", width: 1080, height: 1350 },
+  { key: "4_3", label: "4:3 Standard", width: 1440, height: 1080 },
+  { key: "21_9", label: "21:9 Cinematic", width: 2560, height: 1080 },
+  { key: "4k", label: "4K Landscape", width: 3840, height: 2160 },
 ];
 
 const BACKGROUND_SWATCHES = [
@@ -34,7 +35,9 @@ const BACKGROUND_SWATCHES = [
 ];
 
 export const GeneralPanel: React.FC = () => {
+  const { t } = useTranslation(["settings", "common"]);
   const {
+    language,
     autoSave,
     autoSaveInterval,
     defaultTtsProvider,
@@ -43,6 +46,7 @@ export const GeneralPanel: React.FC = () => {
     llmModel,
     defaultAggregator,
     configuredServices,
+    setLanguage,
     setAutoSave,
     setAutoSaveInterval,
     setDefaultTtsProvider,
@@ -105,15 +109,42 @@ export const GeneralPanel: React.FC = () => {
   );
   return (
     <div className="space-y-6 pb-4">
+      {/* Language Preferences */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <Text type="body" color="primary" className="text-sm font-medium">
+              {t("settings:general.language")}
+            </Text>
+            <Text type="supporting" color="secondary" className="mt-0.5 text-xs">
+              {t("settings:general.languageDescription")}
+            </Text>
+          </div>
+          <Selector
+            label={t("settings:general.language")}
+            isLabelHidden
+            size="md"
+            width={180}
+            value={language}
+            onChange={(value) => setLanguage(value)}
+            options={SUPPORTED_LANGUAGES.map((lang) => ({
+              label: lang.nativeName,
+              value: lang.code,
+            }))}
+          />
+        </div>
+      </div>
+
+      <div className="h-px bg-border" />
+
       {/* Project Composition */}
       <div className="space-y-4">
         <div>
           <Text type="body" color="primary" className="text-sm font-medium">
-            Project Composition
+            {t("settings:general.projectComposition")}
           </Text>
           <Text type="supporting" color="secondary" className="mt-0.5 text-xs">
-            Set the canvas dimensions for your project. Pick a preset for TikTok,
-            Reels, YouTube, or enter custom values.
+            {t("settings:general.projectCompositionDescription")}
           </Text>
         </div>
 
@@ -121,10 +152,11 @@ export const GeneralPanel: React.FC = () => {
           {ASPECT_PRESETS.map((preset) => {
             const isActive =
                 preset.width === projectWidth && preset.height === projectHeight;
+            const presetLabel = t(`settings:general.presets.${preset.key}`, preset.label);
             return (
               <ClickableCard
-                key={preset.label}
-                label={preset.label}
+                key={preset.key}
+                label={presetLabel}
                 onClick={() => applyDimensions(preset.width, preset.height)}
                 padding={3}
                 variant={isActive ? "green" : "muted"}
@@ -135,7 +167,7 @@ export const GeneralPanel: React.FC = () => {
                 }`}
               >
                 <Text type="supporting" color="inherit" className="font-medium">
-                  {preset.label}
+                  {presetLabel}
                 </Text>
                 <Text type="supporting" color="secondary" className="mt-0.5 text-[10px]">
                   {preset.width} × {preset.height}
@@ -147,7 +179,7 @@ export const GeneralPanel: React.FC = () => {
 
         <div className="flex items-end gap-2">
           <ToolcraftNumberInputControl
-            label="Width"
+            label={t("settings:general.width")}
             size="md"
             width="100%"
             min={16}
@@ -156,7 +188,7 @@ export const GeneralPanel: React.FC = () => {
             onChange={(value) => setDraftWidth(String(value))}
           />
           <ToolcraftNumberInputControl
-            label="Height"
+            label={t("settings:general.height")}
             size="md"
             width="100%"
             min={16}
@@ -165,7 +197,7 @@ export const GeneralPanel: React.FC = () => {
             onChange={(value) => setDraftHeight(String(value))}
           />
           <Button
-            label="Apply"
+            label={t("common:apply")}
             onClick={handleApplyCustom}
             variant="primary"
             size="md"
@@ -175,15 +207,14 @@ export const GeneralPanel: React.FC = () => {
         <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-background-tertiary p-3">
           <div>
             <Text type="supporting" color="primary" className="text-sm font-medium">
-              Editing frame rate
+              {t("settings:general.editingFrameRate")}
             </Text>
             <Text type="supporting" color="secondary" className="mt-0.5 block text-[11px]">
-              Controls preview playback, frame stepping, and the default export rate.
-              Existing clip timing stays unchanged.
+              {t("settings:general.editingFrameRateDescription")}
             </Text>
           </div>
           <Selector
-            label="Editing frame rate"
+            label={t("settings:general.editingFrameRate")}
             isLabelHidden
             size="md"
             width={160}
@@ -203,14 +234,14 @@ export const GeneralPanel: React.FC = () => {
 
         <div className="space-y-2">
           <Text type="supporting" color="secondary" className="text-xs font-medium">
-            Background fill
+            {t("settings:general.backgroundFill")}
           </Text>
           <Text type="supporting" color="secondary" className="text-[11px]">
-            Fills the canvas around clips that don&apos;t match the aspect ratio.
+            {t("settings:general.backgroundFillDescription")}
           </Text>
           <div className="flex flex-wrap items-center gap-2">
             <ClickableCard
-              label="No background fill"
+              label={t("settings:general.fillNone")}
               onClick={() => setCanvasBackground(undefined, undefined)}
               padding={2}
               variant={!backgroundFillMode ? "green" : "muted"}
@@ -220,10 +251,10 @@ export const GeneralPanel: React.FC = () => {
                   : "border-border bg-background-tertiary text-text-secondary hover:text-text-primary"
               }`}
             >
-              None
+              {t("settings:general.fillNone")}
             </ClickableCard>
             <ClickableCard
-              label="Blur background fill"
+              label={t("settings:general.fillBlur")}
               onClick={() =>
                 setCanvasBackground("blur", layoutBackgroundColor)
               }
@@ -235,7 +266,7 @@ export const GeneralPanel: React.FC = () => {
                   : "border-border bg-background-tertiary text-text-secondary hover:text-text-primary"
               }`}
             >
-              Blur
+              {t("settings:general.fillBlur")}
             </ClickableCard>
             {BACKGROUND_SWATCHES.map((hex) => {
               const isActive =
@@ -266,20 +297,20 @@ export const GeneralPanel: React.FC = () => {
       {/* Auto-save */}
       <div className="space-y-4">
         <Text type="body" color="primary" className="text-sm font-medium">
-          Auto-Save
+          {t("settings:general.autoSaveTitle")}
         </Text>
 
         <div className="flex items-center justify-between">
           <div>
             <Text type="supporting" color="secondary" className="text-sm">
-              Enable auto-save
+              {t("settings:general.autoSave")}
             </Text>
             <Text type="supporting" color="secondary" className="mt-0.5 text-xs">
-              Automatically save your project at regular intervals
+              {t("settings:general.autoSaveDescription")}
             </Text>
           </div>
           <ToolcraftSwitchControl
-            ariaLabel="Enable auto-save"
+            ariaLabel={t("settings:general.autoSave")}
             checked={autoSave}
             onCheckedChange={setAutoSave}
             showLabel={false}
@@ -289,22 +320,22 @@ export const GeneralPanel: React.FC = () => {
         {autoSave && (
           <div className="flex items-center gap-3">
             <Text type="supporting" color="secondary" className="whitespace-nowrap text-sm">
-              Save every
+              {t("settings:general.saveEvery")}
             </Text>
             <Selector
-              label="Auto-save interval"
+              label={t("settings:general.saveEvery")}
               isLabelHidden
               size="md"
               width={150}
               value={String(autoSaveInterval)}
               onChange={(value) => setAutoSaveInterval(Number(value))}
               options={[
-                { label: "1 minute", value: "1" },
-                { label: "2 minutes", value: "2" },
-                { label: "5 minutes", value: "5" },
-                { label: "10 minutes", value: "10" },
-                { label: "15 minutes", value: "15" },
-                { label: "30 minutes", value: "30" },
+                { label: t("settings:general.intervals.1"), value: "1" },
+                { label: t("settings:general.intervals.2"), value: "2" },
+                { label: t("settings:general.intervals.5"), value: "5" },
+                { label: t("settings:general.intervals.10"), value: "10" },
+                { label: t("settings:general.intervals.15"), value: "15" },
+                { label: t("settings:general.intervals.30"), value: "30" },
               ]}
             />
           </div>
@@ -316,19 +347,19 @@ export const GeneralPanel: React.FC = () => {
       {/* AI connections */}
       <div className="space-y-4">
         <Text type="body" color="primary" className="text-sm font-medium">
-          AI Connections
+          {t("settings:general.aiConnections")}
         </Text>
         <Text type="supporting" color="secondary" className="text-xs">
-          Connect a compatible endpoint you control. OpenReel does not choose a vendor or model for you.
+          {t("settings:general.aiConnectionsDescription")}
         </Text>
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Text type="supporting" color="secondary" className="text-sm">
-              Text to Speech/Voice To Speech/Sound Effects
+              {t("settings:general.ttsProvider")}
             </Text>
             <Selector
-              label="Text to Speech provider"
+              label={t("settings:general.ttsProvider")}
               isLabelHidden
               size="md"
               width={180}
@@ -340,10 +371,10 @@ export const GeneralPanel: React.FC = () => {
 
           <div className="flex items-center justify-between">
             <Text type="supporting" color="secondary" className="text-sm">
-              AI Assistant API format
+              {t("settings:general.llmFormat")}
             </Text>
             <Selector
-              label="AI Assistant API format"
+              label={t("settings:general.llmFormat")}
               isLabelHidden
               size="md"
               width={180}
@@ -352,7 +383,7 @@ export const GeneralPanel: React.FC = () => {
                 setDefaultLlmProvider((value || null) as LlmProvider | null)
               }
               options={[
-                { label: "Choose API format…", value: "" },
+                { label: t("settings:general.chooseApiFormat"), value: "" },
                 ...llmProviders.map((s) => ({ label: s.label, value: s.id })),
               ]}
             />
@@ -363,15 +394,15 @@ export const GeneralPanel: React.FC = () => {
               <div>
                 <Text type="supporting" color="secondary" className="text-sm font-medium">
                   {defaultLlmProvider === "anthropic-compatible"
-                    ? "Anthropic-compatible endpoint"
-                    : "OpenAI-compatible endpoint"}
+                    ? t("settings:general.anthropicEndpoint")
+                    : t("settings:general.openAiEndpoint")}
                 </Text>
                 <Text type="supporting" color="secondary" className="mt-0.5 block text-xs">
-                  Enter your API host and the exact tool-capable model ID exposed by that host.
+                  {t("settings:general.endpointDescription")}
                 </Text>
               </div>
               <TextInput
-                label="Base URL"
+                label={t("settings:general.baseUrl")}
                 value={llmBaseUrl}
                 onChange={setLlmBaseUrl}
                 placeholder={
@@ -382,20 +413,20 @@ export const GeneralPanel: React.FC = () => {
                 width="100%"
               />
               <TextInput
-                label="Model ID"
+                label={t("settings:general.modelId")}
                 value={llmModel}
                 onChange={setLlmModel}
-                placeholder="Enter any model ID from your endpoint"
+                placeholder={t("settings:general.modelIdPlaceholder")}
                 width="100%"
               />
               <Text type="supporting" color="secondary" className="block text-[11px] leading-relaxed">
-                Load available models from the AI chat settings, or enter an ID manually when discovery is unavailable. API keys are optional.
+                {t("settings:general.modelDiscoveryHelp")}
               </Text>
             </div>
           ) : (
             <div className="rounded-lg border border-dashed border-border bg-background-tertiary p-3">
               <Text type="supporting" color="secondary" className="block text-xs">
-                Choose an API format to configure your host and model.
+                {t("settings:general.chooseApiFormat")}
               </Text>
             </div>
           )}
@@ -403,14 +434,14 @@ export const GeneralPanel: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <Text type="supporting" color="secondary" className="text-sm">
-                AI Aggregator
+                {t("settings:general.aiAggregator")}
               </Text>
               <Text type="supporting" color="secondary" className="mt-0.5 text-xs">
-                Video/image generation, upscaling, and creative AI tools
+                {t("settings:general.aiAggregatorDescription")}
               </Text>
             </div>
             <Selector
-              label="AI Aggregator provider"
+              label={t("settings:general.aiAggregator")}
               isLabelHidden
               size="md"
               width={180}
