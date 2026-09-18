@@ -73,7 +73,38 @@
     "resume": "继续",
     "cancel": "取消",
     "recording": "正在录制中...",
-    "paused": "已暂停录制"
+    "paused": "已暂停录制",
+    "dialogTitle": "屏幕录制",
+    "notSupported": "当前浏览器不支持屏幕录制",
+    "notSupportedDesc": "您的浏览器不支持屏幕录制功能，请改用 Chrome、Edge 或 Firefox 浏览器。",
+    "errorTitle": "录制出错",
+    "videoSettings": "视频设置",
+    "audioSettings": "音频设置",
+    "systemAudioHint": "仅 Chrome 与 Edge 浏览器支持采集系统声音。",
+    "webcamRecording": "摄像头录制",
+    "webcamToggle": "启用摄像头录制",
+    "webcamResolution": "摄像头分辨率",
+    "webcamHint": "摄像头画面将录制为独立文件，方便您在剪辑时自由调整。",
+    "countdownHint": "倒计时 3 秒后开始录制",
+    "requestingAccess": "正在请求权限...",
+    "resolutions": {
+      "720p": {
+        "label": "720p 高清",
+        "desc": "1280×720 - 文件体积更小"
+      },
+      "1080p": {
+        "label": "1080p 全高清",
+        "desc": "1920×1080 - 推荐使用"
+      },
+      "1440p": {
+        "label": "1440p 高清 (QHD)",
+        "desc": "2560×1440 - 画质细腻"
+      },
+      "4k": {
+        "label": "4K 超高清",
+        "desc": "3840×2160 - 极致画质"
+      }
+    }
   },
   "processing": {
     "title": "正在处理特效",
@@ -119,7 +150,7 @@
     "fileInputLabel": "项目 JSON 文件",
     "dropPlaceholder": "将 JSON 文件拖放到此处或点击浏览",
     "dropDescription": "支持 .json 项目文件",
-    "charsLoaded": "已加载 {{count}} 个字符",
+    "charsLoaded": "已加载 {{count, number}} 个字符",
     "clear": "清空",
     "validating": "验证中...",
     "reValidate": "重新验证",
@@ -200,5 +231,101 @@
     "tableTime": "时间",
     "tableValue": "数值",
     "tableEasing": "缓动"
+  },
+  "toast": {
+    "notifications": "通知",
+    "dismiss": "关闭通知"
+  },
+  "mobileBlocker": {
+    "desktopOnly": "仅限桌面端使用",
+    "description": "OpenReel 是一款专业视频剪辑工具，需要配合台式机或笔记本电脑使用。",
+    "hint": "请在台式机或笔记本电脑上访问本页面，开始创作精彩视频。",
+    "learnMore": "了解更多"
+  },
+  "errorBoundary": {
+    "title": "出现了一些问题",
+    "unexpectedError": "发生了未知错误",
+    "retry": "重试",
+    "panelFailed": "{{name}} 加载失败，请刷新页面。"
+  },
+  "audioMixer": {
+    "title": "音频混音台",
+    "console": "音频混音控制台",
+    "master": "主输出",
+    "masterVolumeFader": "主音量推子",
+    "close": "关闭混音台",
+    "noTracks": "时间线中暂无音频轨道。添加音频或视频轨道后即可显示声道条。",
+    "channelCount": "{{count}} 个声道",
+    "channelCount_plural": "{{count}} 个声道",
+    "soloActive": "• 独奏已开启",
+    "sampleRateInfo": "采样率：{{rate}}Hz | 声道数：{{channels}}"
+  },
+  "recorder": {
+    "resumeRecording": "继续录制",
+    "pauseRecording": "暂停录制",
+    "stopRecording": "停止录制",
+    "cancelRecording": "取消录制",
+    "minimizeControls": "收起控制栏"
+  },
+  "editorTools": "编辑器工具栏",
+  "aspectRatio": {
+    "title": "匹配视频尺寸？",
+    "subtitle": "您正在添加的视频与当前项目的尺寸设置不一致。",
+    "videoDimensions": "视频尺寸",
+    "currentProject": "当前项目",
+    "aspectRatioValue": "宽高比：{{value}}",
+    "description": "可将项目尺寸调整为与该视频一致以获得最佳适配效果，也可保留当前画布。视频将按原始尺寸放置，您可以随时自由缩放。",
+    "keepCurrent": "保留当前设置",
+    "matchVideo": "匹配视频"
+  },
+  "creationReview": {
+    "title": "创作检查",
+    "close": "关闭创作检查",
+    "sceneStats": "{{objects}} 个对象 · {{cameras}} 个相机 · {{animations}} 个动画",
+    "reviewStats": "{{assets}} 个素材 · {{scenes}} 个场景",
+    "empty": "暂无由 AI 创建的 3D 场景。使用创作工具即可生成产品、角色或场景。"
+  },
+  "recipes": {
+    "selectClipTitle": "请选择片段",
+    "selectClipDesc": "配方只能应用于单个已选中的视频或图像片段。",
+    "applyFailedTitle": "无法应用配方",
+    "applyFailedDesc": "该配方无法应用到当前片段。",
+    "appliedTitle": "配方已应用",
+    "appliedDesc": "已将 {{name}} 添加到 {{target}}。",
+    "selectedClip": "所选片段",
+    "selectFirstTitle": "请先选择片段",
+    "selectFirstDesc": "在时间线中选择一个视频或图像片段，即可应用针对片段生效的配方、影调与字幕处理。",
+    "video": "视频",
+    "image": "图像",
+    "selectedClipName": "所选片段",
+    "appliedCount": "{{duration}} 秒 • 已应用 {{count}} 个配方",
+    "searchLabel": "搜索配方",
+    "searchPlaceholder": "搜索配方...",
+    "all": "全部",
+    "noMatch": "未找到匹配的配方",
+    "noMatchDesc": "请尝试更换关键词或切换分类。",
+    "editControls": "编辑配方参数",
+    "applying": "应用中"
+  },
+  "templatesTab": {
+    "replaceConfirm": "应用模板将替换当前项目，是否继续？",
+    "loading": "正在加载模板...",
+    "searchLabel": "搜索模板",
+    "searchPlaceholder": "搜索模板...",
+    "all": "全部",
+    "motionCreatorTitle": "从动态图形模板开始",
+    "motionCreatorDesc": "广告、应用界面演示、下三分之一字幕条、社交开场、Logo 揭幕与片尾。",
+    "noTemplates": "未找到模板",
+    "applying": "应用中..."
+  },
+  "moGraphTour": {
+    "skip": "跳过引导",
+    "skipTour": "跳过引导",
+    "stepIndicator": "动态图形引导 • 第 {{current}} 步，共 {{total}} 步",
+    "proTips": "实用技巧",
+    "goToStep": "跳转到第 {{step}} 步",
+    "back": "上一步",
+    "next": "下一步",
+    "getStarted": "开始使用"
   }
 }

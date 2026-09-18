@@ -5,6 +5,7 @@ import type { ResolvedTransitionHandle } from "./transition-handles";
 import { useProjectStore } from "../../../stores/project-store";
 import { getTransitionBridge } from "../../../bridges/transition-bridge";
 import { toast } from "../../../stores/notification-store";
+import { useTranslation } from "../../../i18n";
 
 const BADGE_SIZE = 18;
 const MENU_WIDTH = 200;
@@ -22,6 +23,7 @@ export const TransitionHandle: React.FC<TransitionHandleProps> = ({
   isSelected,
   onSelect,
 }) => {
+  const { t } = useTranslation("timeline");
   const { centerX, transition, clipA, clipB, edge } = handle;
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState<{
@@ -58,11 +60,14 @@ export const TransitionHandle: React.FC<TransitionHandleProps> = ({
       setOpen(false);
       if (transition) {
         await updateClipTransition(transition.id, { type });
-        toast.success("Transition updated", type);
+        toast.success(t("timeline:transitionHandle.updated", "Transition updated"), type);
         return;
       }
       if (!bridge.isInitialized()) {
-        toast.error("Transition engine not ready", "Try again in a moment.");
+        toast.error(
+          t("timeline:transitionHandle.engineNotReady", "Transition engine not ready"),
+          t("timeline:transitionHandle.tryAgain", "Try again in a moment."),
+        );
         return;
       }
       const params = bridge.getDefaultParams(type);
@@ -73,13 +78,16 @@ export const TransitionHandle: React.FC<TransitionHandleProps> = ({
         const created = bridge.getTransition(result.transitionId);
         if (created) {
           await addClipTransition(created);
-          toast.success("Transition added", `${type} · 1.0s`);
+          toast.success(
+            t("timeline:transitionHandle.added", "Transition added"),
+            `${type} · 1.0s`,
+          );
           return;
         }
       }
       toast.error(
-        "Transition failed",
-        result.error || "Could not create transition",
+        t("timeline:transitionHandle.failed", "Transition failed"),
+        result.error || t("timeline:transitionHandle.couldNotCreate", "Could not create transition"),
       );
     },
     [
@@ -90,6 +98,7 @@ export const TransitionHandle: React.FC<TransitionHandleProps> = ({
       addClipTransition,
       updateClipTransition,
       bridge,
+      t,
     ],
   );
 
@@ -97,19 +106,30 @@ export const TransitionHandle: React.FC<TransitionHandleProps> = ({
     setOpen(false);
     if (!transition) return;
     await removeClipTransition(transition.id);
-    toast.success("Transition removed", "Hard cut restored");
-  }, [transition, removeClipTransition]);
+    toast.success(
+      t("timeline:transitionHandle.removed", "Transition removed"),
+      t("timeline:transitionHandle.hardCutRestored", "Hard cut restored"),
+    );
+  }, [transition, removeClipTransition, t]);
 
   const label = transition
     ? `${transition.type} · ${transition.duration.toFixed(1)}s`
     : edge === "in"
-      ? "Add intro transition"
+      ? t("timeline:transitionHandle.addIntro", "Add intro transition")
       : edge === "out"
-        ? "Add outro transition"
-        : "Add transition";
+        ? t("timeline:transitionHandle.addOutro", "Add outro transition")
+        : t("timeline:transitionHandle.addTransition", "Add transition");
   const ariaLabel = edge
-    ? `Edit ${edge === "in" ? "intro" : "outro"} transition: ${label}`
-    : `Edit transition between clips: ${label}`;
+    ? t(
+        edge === "in"
+          ? "timeline:transitionHandle.editIntro"
+          : "timeline:transitionHandle.editOutro",
+        { label, defaultValue: edge === "in" ? "Edit intro transition: {{label}}" : "Edit outro transition: {{label}}" },
+      )
+    : t("timeline:transitionHandle.editBetween", {
+        label,
+        defaultValue: "Edit transition between clips: {{label}}",
+      });
   const isActive = Boolean(transition) || isSelected || open;
 
   const menu =
@@ -137,7 +157,7 @@ export const TransitionHandle: React.FC<TransitionHandleProps> = ({
             >
               <div className="py-1 max-h-72 overflow-y-auto">
                 <div className="px-3 py-1.5 text-[11px] font-semibold text-fg-muted uppercase tracking-wide">
-                  Transition
+                  {t("timeline:transitionHandle.menuTitle", "Transition")}
                 </div>
                 {transition && (
                   <button
@@ -145,27 +165,27 @@ export const TransitionHandle: React.FC<TransitionHandleProps> = ({
                     onClick={handleRemove}
                     className="w-full flex items-center px-3 py-2 text-[12px] font-medium text-destructive hover:bg-hover transition-colors text-left"
                   >
-                    Remove transition
+                    {t("timeline:transitionHandle.remove", "Remove transition")}
                   </button>
                 )}
-                {types.map((t) => (
+                {types.map((option) => (
                   <button
-                    key={t.type}
+                    key={option.type}
                     type="button"
-                    onClick={() => applyType(t.type)}
+                    onClick={() => applyType(option.type)}
                     className={`w-full flex flex-col px-3 py-1.5 hover:bg-hover transition-colors text-left ${
-                      transition?.type === t.type ? "bg-selected" : ""
+                      transition?.type === option.type ? "bg-selected" : ""
                     }`}
                   >
                     <span
                       className={`text-[12px] font-medium ${
-                        transition?.type === t.type ? "text-accent" : "text-fg"
+                        transition?.type === option.type ? "text-accent" : "text-fg"
                       }`}
                     >
-                      {t.name}
+                      {option.name}
                     </span>
                     <span className="text-[11px] text-fg-muted leading-tight">
-                      {t.description}
+                      {option.description}
                     </span>
                   </button>
                 ))}

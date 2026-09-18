@@ -22,6 +22,7 @@ import {
 import { toast } from "../../../stores/notification-store";
 import { useProcessingStore } from "../../../services/processing-manager";
 import { ColorSelector } from "../../../motion/components/primitives";
+import { useTranslation } from "../../../i18n";
 
 interface BackgroundRemovalSectionProps {
   clipId: string;
@@ -30,13 +31,34 @@ interface BackgroundRemovalSectionProps {
 
 const BACKGROUND_MODES: {
   value: BackgroundMode;
+  labelKey: string;
   label: string;
   icon: React.ElementType;
 }[] = [
-  { value: "blur", label: "Blur", icon: Droplets },
-  { value: "color", label: "Color", icon: Palette },
-  { value: "image", label: "Image", icon: ImageIcon },
-  { value: "transparent", label: "Transparent", icon: User },
+  {
+    value: "blur",
+    labelKey: "inspector:backgroundRemoval.modeBlur",
+    label: "Blur",
+    icon: Droplets,
+  },
+  {
+    value: "color",
+    labelKey: "inspector:backgroundRemoval.modeColor",
+    label: "Color",
+    icon: Palette,
+  },
+  {
+    value: "image",
+    labelKey: "inspector:backgroundRemoval.modeImage",
+    label: "Image",
+    icon: ImageIcon,
+  },
+  {
+    value: "transparent",
+    labelKey: "inspector:backgroundRemoval.modeTransparent",
+    label: "Transparent",
+    icon: User,
+  },
 ];
 
 const PRESET_COLORS = [
@@ -53,6 +75,7 @@ const PRESET_COLORS = [
 export const BackgroundRemovalSection: React.FC<
   BackgroundRemovalSectionProps
 > = ({ clipId, onSettingsChange }) => {
+  const { t } = useTranslation("inspector");
   const [settings, setSettings] = useState<BackgroundRemovalSettings>(
     DEFAULT_BACKGROUND_SETTINGS,
   );
@@ -104,33 +127,66 @@ export const BackgroundRemovalSection: React.FC<
     setIsProcessing(true);
 
     try {
-      updateTaskProgress(taskId, 10, "Initializing AI model...");
+      updateTaskProgress(
+        taskId,
+        10,
+        t("inspector:backgroundRemoval.taskModel", "Initializing AI model..."),
+      );
 
       if (!isInitialized) {
         await handleInitialize();
       }
 
-      updateTaskProgress(taskId, 30, "Preparing background detection...");
+      updateTaskProgress(
+        taskId,
+        30,
+        t(
+          "inspector:backgroundRemoval.taskDetection",
+          "Preparing background detection...",
+        ),
+      );
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      updateTaskProgress(taskId, 60, "Configuring effect pipeline...");
+      updateTaskProgress(
+        taskId,
+        60,
+        t(
+          "inspector:backgroundRemoval.taskPipeline",
+          "Configuring effect pipeline...",
+        ),
+      );
       await new Promise((resolve) => setTimeout(resolve, 400));
 
-      updateTaskProgress(taskId, 90, "Finalizing setup...");
+      updateTaskProgress(
+        taskId,
+        90,
+        t("inspector:backgroundRemoval.taskFinalizing", "Finalizing setup..."),
+      );
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       updateSettings({ enabled: true });
       completeTask(taskId);
       toast.success(
-        "Background Removal Ready",
-        "Effect will be applied during playback",
+        t("inspector:backgroundRemoval.ready", "Background Removal Ready"),
+        t(
+          "inspector:backgroundRemoval.readyDescription",
+          "Effect will be applied during playback",
+        ),
       );
     } catch (error) {
       failTask(
         taskId,
-        error instanceof Error ? error.message : "Unknown error",
+        error instanceof Error
+          ? error.message
+          : t("inspector:backgroundRemoval.unknownError", "Unknown error"),
       );
-      toast.error("Processing Failed", "Could not enable background removal");
+      toast.error(
+        t("inspector:backgroundRemoval.processingFailed", "Processing Failed"),
+        t(
+          "inspector:backgroundRemoval.enableFailed",
+          "Could not enable background removal",
+        ),
+      );
     } finally {
       setIsProcessing(false);
     }
@@ -143,22 +199,28 @@ export const BackgroundRemovalSection: React.FC<
     updateTaskProgress,
     completeTask,
     failTask,
+    t,
   ]);
 
   const handleToggleEnabled = useCallback(() => {
     if (settings.enabled) {
       updateSettings({ enabled: false });
-      toast.info("Background Removal Disabled");
+      toast.info(
+        t(
+          "inspector:backgroundRemoval.disabled",
+          "Background Removal Disabled",
+        ),
+      );
     } else {
       processBackgroundRemoval();
     }
-  }, [settings.enabled, updateSettings, processBackgroundRemoval]);
+  }, [settings.enabled, updateSettings, processBackgroundRemoval, t]);
 
   return (
     <div className="space-y-3">
       <div className="flex justify-end">
         <Button
-          label={settings.enabled ? "On" : "Off"}
+          label={settings.enabled ? t("inspector:backgroundRemoval.on", "On") : t("inspector:backgroundRemoval.off", "Off")}
           icon={
             isInitializing || isProcessing ? (
               <Loader2 size={12} className="animate-spin" />
@@ -175,7 +237,7 @@ export const BackgroundRemovalSection: React.FC<
         <Card variant="muted" padding={3} className="space-y-3">
           <div>
             <Text type="supporting" color="secondary" className="mb-2 block text-[10px]">
-              Background Mode
+              {t("inspector:backgroundRemoval.backgroundMode", "Background Mode")}
             </Text>
             <div className="grid grid-cols-4 gap-1">
               {BACKGROUND_MODES.map((mode) => {
@@ -183,7 +245,11 @@ export const BackgroundRemovalSection: React.FC<
                 return (
                   <ClickableCard
                     key={mode.value}
-                    label={`${mode.label} background mode`}
+                    label={t(
+                      "inspector:backgroundRemoval.modeLabel",
+                      "{{mode}} background mode",
+                      { mode: t(mode.labelKey, mode.label) },
+                    )}
                     onClick={() => updateSettings({ mode: mode.value })}
                     className={`flex flex-col items-center gap-1 rounded p-2 transition-colors ${
                       settings.mode === mode.value
@@ -193,7 +259,7 @@ export const BackgroundRemovalSection: React.FC<
                   >
                     <ModeIcon size={14} />
                     <Text type="supporting" color="primary" className="text-[9px]">
-                      {mode.label}
+                      {t(mode.labelKey, mode.label)}
                     </Text>
                   </ClickableCard>
                 );
@@ -203,7 +269,7 @@ export const BackgroundRemovalSection: React.FC<
 
           {settings.mode === "blur" && (
             <PropertySlider
-              label="Blur Amount"
+              label={t("inspector:backgroundRemoval.blurAmount", "Blur Amount")}
               min={0}
               max={50}
               step={1}
@@ -216,13 +282,20 @@ export const BackgroundRemovalSection: React.FC<
           {settings.mode === "color" && (
             <div>
               <Text type="supporting" color="secondary" className="mb-2 block text-[10px]">
-                Background Color
+                {t(
+                  "inspector:backgroundRemoval.backgroundColor",
+                  "Background Color",
+                )}
               </Text>
               <div className="grid grid-cols-8 gap-1 mb-2">
                 {PRESET_COLORS.map((color) => (
                   <ClickableCard
                     key={color}
-                    label={`Use ${color} background color`}
+                    label={t(
+                      "inspector:backgroundRemoval.useColor",
+                      "Use {{color}} background color",
+                      { color },
+                    )}
                     onClick={() => updateSettings({ backgroundColor: color })}
                     className={`w-6 h-6 rounded border-2 transition-all ${
                       settings.backgroundColor === color
@@ -236,7 +309,10 @@ export const BackgroundRemovalSection: React.FC<
               <ColorSelector
                 value={settings.backgroundColor}
                 onChange={(value) => updateSettings({ backgroundColor: value })}
-                label="Select replacement background color"
+                label={t(
+                  "inspector:backgroundRemoval.selectBackgroundColor",
+                  "Select replacement background color",
+                )}
               />
             </div>
           )}
@@ -244,10 +320,13 @@ export const BackgroundRemovalSection: React.FC<
           {settings.mode === "image" && (
             <div>
               <Text type="supporting" color="secondary" className="mb-2 block text-[10px]">
-                Background Image
+                {t(
+                  "inspector:backgroundRemoval.backgroundImage",
+                  "Background Image",
+                )}
               </Text>
               <Button
-                label="Choose Image"
+                label={t("inspector:backgroundRemoval.chooseImage", "Choose Image")}
                 icon={<ImageIcon size={14} />}
                 variant="secondary"
                 size="sm"
@@ -272,14 +351,14 @@ export const BackgroundRemovalSection: React.FC<
               />
               {settings.backgroundImageUrl && (
                 <Text type="supporting" color="secondary" className="mt-2 truncate text-[9px]">
-                  Image loaded
+                  {t("inspector:backgroundRemoval.imageLoaded", "Image loaded")}
                 </Text>
               )}
             </div>
           )}
 
           <PropertySlider
-            label="Edge Smoothing"
+            label={t("inspector:backgroundRemoval.edgeSmoothing", "Edge Smoothing")}
             min={0}
             max={10}
             step={1}
@@ -289,7 +368,10 @@ export const BackgroundRemovalSection: React.FC<
           />
 
           <PropertySlider
-            label="Detection Threshold"
+            label={t(
+              "inspector:backgroundRemoval.detectionThreshold",
+              "Detection Threshold",
+            )}
             min={0}
             max={100}
             step={1}
@@ -301,8 +383,10 @@ export const BackgroundRemovalSection: React.FC<
           <div className="flex items-start gap-2 p-2 bg-primary/10 rounded border border-primary/20">
             <Info size={14} className="text-primary flex-shrink-0 mt-0.5" />
             <Text type="supporting" color="secondary" className="text-[9px]">
-              Background removal is processed in real-time. For best results,
-              export your video after previewing.
+              {t(
+                "inspector:backgroundRemoval.hint",
+                "Background removal is processed in real-time. For best results, export your video after previewing.",
+              )}
             </Text>
           </div>
         </Card>

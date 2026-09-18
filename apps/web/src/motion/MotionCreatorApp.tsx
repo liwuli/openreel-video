@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import i18n, { useTranslation } from "../i18n";
 import { useRouter } from "../hooks/use-router";
 import { useProjectStore } from "../stores/project-store";
 import {
@@ -15,6 +16,7 @@ interface MotionCreatorAppProps {
 }
 
 export function MotionCreatorApp({ embedded = false }: MotionCreatorAppProps) {
+  const { t } = useTranslation("motion");
   const { params } = useRouter();
   const hasOpenProject = useProjectStore((state) => state.hasOpenProject);
   const createNewProject = useProjectStore((state) => state.createNewProject);
@@ -36,7 +38,9 @@ export function MotionCreatorApp({ embedded = false }: MotionCreatorAppProps) {
 
   useEffect(() => {
     if (!hasOpenProject) {
-      createNewProject("New Motion Project");
+      createNewProject(
+        i18n.t("motion:motionApp.newProjectName", "New Motion Project"),
+      );
     }
   }, [createNewProject, hasOpenProject]);
 
@@ -62,7 +66,9 @@ export function MotionCreatorApp({ embedded = false }: MotionCreatorAppProps) {
       return;
     }
     creatingRef.current = true;
-    void createMotionComposition("Motion Scene").then((composition) => {
+    void createMotionComposition(
+      i18n.t("motion:motionApp.defaultSceneName", "Motion Scene"),
+    ).then((composition) => {
       if (composition) {
         setActiveCompositionId(composition.id);
         setPlayhead(Math.min(0.6, composition.duration / 2));
@@ -111,7 +117,7 @@ export function MotionCreatorApp({ embedded = false }: MotionCreatorAppProps) {
       <div
         className={`flex ${embedded ? "h-full w-full" : "h-screen w-screen"} items-center justify-center bg-[#0c0f14] text-sm text-white/60`}
       >
-        Preparing Motion Creator...
+        {t("motion:motionApp.preparing", "Preparing Motion Creator...")}
       </div>
     );
   }

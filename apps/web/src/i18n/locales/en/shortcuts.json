@@ -18,5 +18,61 @@
     "view": "View",
     "selection": "Selection",
     "file": "File"
+  },
+  "descriptions": {
+    "playback": {
+      "playPause": "Toggle playback",
+      "frameBack": "Move back one frame",
+      "frameForward": "Move forward one frame",
+      "secondBack": "Move back one second",
+      "secondForward": "Move forward one second",
+      "jump5Back": "Move back 5 seconds",
+      "jump5Forward": "Move forward 5 seconds",
+      "goToStart": "Jump to timeline start",
+      "goToEnd": "Jump to timeline end",
+      "prevClip": "Jump to previous clip edge",
+      "nextClip": "Jump to next clip edge"
+    },
+    "editing": {
+      "undo": "Undo last action",
+      "redo": "Redo last undone action",
+      "cut": "Cut selected clips",
+      "copy": "Copy selected clips",
+      "paste": "Paste clips at playhead",
+      "duplicate": "Duplicate selected clip",
+      "delete": "Delete selected clips",
+      "rippleDelete": "Delete and close gap",
+      "split": "Split clip at playhead",
+      "trimStart": "Trim clip start to playhead",
+      "trimEnd": "Trim clip end to playhead"
+    },
+    "selection": {
+      "selectAll": "Select all clips",
+      "deselect": "Clear selection"
+    },
+    "timeline": {
+      "toggleSnap": "Toggle snapping",
+      "zoomIn": "Zoom in timeline",
+      "zoomOut": "Zoom out timeline",
+      "fitTimeline": "Fit timeline to view"
+    },
+    "view": {
+      "showShortcuts": "Show keyboard shortcuts"
+    },
+    "file": {
+      "save": "Save project",
+      "export": "Export video"
+    },
+    "tools": {
+      "addText": "Add text clip",
+      "addMarker": "Add marker at playhead"
+    }
+  },
+  "presetDescriptions": {
+    "openreel": "Default OpenReel shortcuts",
+    "capcut": "CapCut-style shortcuts",
+    "premiere": "Premiere Pro-style shortcuts",
+    "finalcut": "Final Cut Pro-style shortcuts",
+    "davinci": "DaVinci Resolve-style shortcuts"
   }
 }

@@ -170,7 +170,7 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
             {isRenaming ? (
               <ToolcraftTextInputControl
                 ref={inputRef}
-                label="Track name"
+                label={t("timeline:trackHeader.name", "Track name")}
                 isLabelHidden
                 size="sm"
                 width="100%"
@@ -199,13 +199,17 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
               <Link2
                 size={13}
                 className="text-accent"
-                aria-label="Track is grouped"
+                aria-label={t("timeline:trackHeader.grouped", "Track is grouped")}
               />
             )}
             {isVisual && (
               <button
                 type="button"
-                aria-label={track.hidden ? "Show track" : "Hide track"}
+                aria-label={
+                  track.hidden
+                    ? t("timeline:trackHeader.showTrack", "Show track")
+                    : t("timeline:trackHeader.hideTrack", "Hide track")
+                }
                 className="text-fg-muted hover:text-fg-2 transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -223,9 +227,23 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
               <>
                 <button
                   type="button"
-                  aria-label={track.muted ? `Unmute ${track.name}` : `Mute ${track.name}`}
+                  aria-label={
+                    track.muted
+                      ? t("timeline:trackHeader.unmuteTrackName", {
+                          name: track.name,
+                          defaultValue: "Unmute {{name}}",
+                        })
+                      : t("timeline:trackHeader.muteTrackName", {
+                          name: track.name,
+                          defaultValue: "Mute {{name}}",
+                        })
+                  }
                   aria-pressed={track.muted}
-                  title={track.muted ? "Unmute track" : "Mute track"}
+                  title={
+                    track.muted
+                      ? t("timeline:trackHeader.unmuteTrack", "Unmute track")
+                      : t("timeline:trackHeader.muteTrack", "Mute track")
+                  }
                   className={`transition-colors ${
                     track.muted ? "text-destructive" : "text-fg-muted hover:text-fg-2"
                   }`}
@@ -242,9 +260,23 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
                 </button>
                 <button
                   type="button"
-                  aria-label={track.solo ? `Clear solo ${track.name}` : `Solo ${track.name}`}
+                  aria-label={
+                    track.solo
+                      ? t("timeline:trackHeader.clearSoloName", {
+                          name: track.name,
+                          defaultValue: "Clear solo {{name}}",
+                        })
+                      : t("timeline:trackHeader.soloTrackName", {
+                          name: track.name,
+                          defaultValue: "Solo {{name}}",
+                        })
+                  }
                   aria-pressed={track.solo}
-                  title={track.solo ? "Clear solo" : "Solo track"}
+                  title={
+                    track.solo
+                      ? t("timeline:trackHeader.clearSolo", "Clear solo")
+                      : t("timeline:trackHeader.soloTrack", "Solo track")
+                  }
                   className={`flex h-[18px] min-w-[18px] items-center justify-center rounded px-1 text-[9px] font-black transition-colors ${
                     track.solo
                       ? "bg-status-warning text-black"
@@ -261,7 +293,11 @@ export const TrackHeader: React.FC<TrackHeaderProps> = ({
             )}
             <button
               type="button"
-              aria-label={track.locked ? "Unlock" : "Lock"}
+              aria-label={
+                track.locked
+                  ? t("timeline:trackHeader.unlock", "Unlock")
+                  : t("timeline:trackHeader.lock", "Lock")
+              }
               className={`transition-colors ${
                 track.locked ? "text-fg-2" : "text-fg-muted hover:text-fg-2"
               }`}

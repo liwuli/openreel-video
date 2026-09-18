@@ -23,7 +23,8 @@
     "horizontalDesc": "YouTube, widescreen",
     "square": "Square",
     "squareDesc": "Feed posts, square format",
-    "startCreating": "Start creating"
+    "startCreating": "Start creating",
+    "createProjectLabel": "Create {{name}} project"
   },
   "actions": {
     "browseTemplates": "Browse templates",

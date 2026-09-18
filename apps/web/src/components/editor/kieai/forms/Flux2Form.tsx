@@ -3,6 +3,7 @@ import { ToolcraftSelectControl as Selector } from "@openreel/ui";
 import { ToolcraftTextAreaControl } from "@openreel/ui";
 import type { Flux2Input } from "../../../../services/kieai/image-generation";
 import { ASPECT_RATIO_OPTIONS } from "./shared";
+import { useTranslation } from "../../../../i18n";
 
 interface Props {
   value: Flux2Input;
@@ -12,14 +13,19 @@ interface Props {
 }
 
 export function Flux2Form({ value, onChange, onSubmit, isLoading }: Props) {
+  const { t } = useTranslation("ai");
+
   return (
     <div className="space-y-4">
       <ToolcraftTextAreaControl
-        label="Prompt"
+        label={t("kieai.form.prompt", "Prompt")}
         isRequired
         value={value.prompt}
         onChange={(prompt) => onChange({ ...value, prompt })}
-        placeholder="Describe the image you want to generate..."
+        placeholder={t(
+          "kieai.form.promptPlaceholder",
+          "Describe the image you want to generate...",
+        )}
         maxLength={2000}
         rows={4}
         width="100%"
@@ -27,7 +33,7 @@ export function Flux2Form({ value, onChange, onSubmit, isLoading }: Props) {
 
       <div className="grid grid-cols-2 gap-3">
         <Selector
-          label="Aspect Ratio"
+          label={t("kieai.form.aspectRatio", "Aspect Ratio")}
           value={value.aspect_ratio}
           onChange={(aspect_ratio) =>
             onChange({ ...value, aspect_ratio: aspect_ratio as Flux2Input["aspect_ratio"] })
@@ -38,7 +44,7 @@ export function Flux2Form({ value, onChange, onSubmit, isLoading }: Props) {
         />
 
         <Selector
-          label="Resolution"
+          label={t("kieai.form.resolution", "Resolution")}
           value={value.resolution}
           onChange={(resolution) =>
             onChange({ ...value, resolution: resolution as Flux2Input["resolution"] })
@@ -53,7 +59,11 @@ export function Flux2Form({ value, onChange, onSubmit, isLoading }: Props) {
       </div>
 
       <Button
-        label={isLoading ? "Generating..." : "Generate with Flux 2"}
+        label={
+          isLoading
+            ? t("kieai.form.generating", "Generating...")
+            : t("kieai.form.generateWithFlux2", "Generate with Flux 2")
+        }
         onClick={onSubmit}
         isDisabled={isLoading || !value.prompt.trim()}
         variant="primary"

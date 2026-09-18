@@ -14,6 +14,7 @@ import { ToolcraftIconButton as IconButton } from "@openreel/ui";
 import { ToolcraftSlider as Slider } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { X } from "@/icons/lucide-compat";
+import { useTranslation } from "../../i18n";
 
 export interface AudioMixerProps {
   /** Whether the mixer panel is visible */
@@ -31,6 +32,7 @@ const MasterChannel: React.FC<{
   rmsLevel: number;
   onVolumeChange: (volume: number) => void;
 }> = ({ volume, peakLevel, rmsLevel, onVolumeChange }) => {
+  const { t } = useTranslation("common");
   const dbValue = volumeToDb(volume);
   const levelPercent = Math.min(100, Math.max(0, rmsLevel * 100));
   const peakPercent = Math.min(100, Math.max(0, peakLevel * 100));
@@ -43,7 +45,9 @@ const MasterChannel: React.FC<{
 
   return (
     <div className="flex flex-col items-center gap-2 p-3 bg-gray-900 rounded-lg min-w-[100px] border border-gray-700">
-      <Text type="label" weight="bold" className="text-xs text-gray-300">MASTER</Text>
+      <Text type="label" weight="bold" className="text-xs text-gray-300">
+        {t("common:audioMixer.master", "MASTER")}
+      </Text>
 
       {/* Stereo level meter */}
       <div className="flex gap-1 h-32 w-6">
@@ -79,7 +83,7 @@ const MasterChannel: React.FC<{
           {formatDb(dbValue)} dB
         </span>
         <Slider
-          label="Master volume fader"
+          label={t("common:audioMixer.masterVolumeFader", "Master volume fader")}
           isLabelHidden
           min={0}
           max={4}
@@ -119,6 +123,7 @@ export const AudioMixer: React.FC<AudioMixerProps> = ({
   visible = true,
   onClose,
 }) => {
+  const { t } = useTranslation("common");
   const project = useProjectStore((state) => state.project);
   const muteTrack = useProjectStore((state) => state.muteTrack);
   const soloTrack = useProjectStore((state) => state.soloTrack);
@@ -297,14 +302,16 @@ export const AudioMixer: React.FC<AudioMixerProps> = ({
       className="bg-gray-900 border-t border-gray-700 p-4"
       data-testid="audio-mixer"
       role="region"
-      aria-label="Audio Mixing Console"
+      aria-label={t("common:audioMixer.console", "Audio Mixing Console")}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <Text type="body" weight="semibold" className="text-lg text-white">Audio Mixer</Text>
+        <Text type="body" weight="semibold" className="text-lg text-white">
+          {t("common:audioMixer.title", "Audio Mixer")}
+        </Text>
         {onClose && (
           <IconButton
-            label="Close mixer"
+            label={t("common:audioMixer.close", "Close mixer")}
             onClick={onClose}
             icon={<X size={16} aria-hidden />}
             variant="ghost"
@@ -331,8 +338,10 @@ export const AudioMixer: React.FC<AudioMixerProps> = ({
           ))
         ) : (
           <Text type="supporting" color="secondary" className="text-gray-500 text-sm py-8 px-4">
-            No audio tracks in timeline. Add audio or video tracks to see
-            channel strips.
+            {t(
+              "common:audioMixer.noTracks",
+              "No audio tracks in timeline. Add audio or video tracks to see channel strips.",
+            )}
           </Text>
         )}
 
@@ -353,14 +362,22 @@ export const AudioMixer: React.FC<AudioMixerProps> = ({
       {/* Status bar */}
       <div className="mt-3 pt-3 border-t border-gray-800 flex items-center justify-between text-xs text-gray-500">
         <span>
-          {channels.length} channel{channels.length !== 1 ? "s" : ""}
+          {t("common:audioMixer.channelCount", {
+            count: channels.length,
+            defaultValue: channels.length === 1 ? "{{count}} channel" : "{{count}} channels",
+          })}
           {hasSoloedTracks && (
-            <span className="ml-2 text-yellow-500">• Solo active</span>
+            <span className="ml-2 text-yellow-500">
+              {t("common:audioMixer.soloActive", "• Solo active")}
+            </span>
           )}
         </span>
         <span>
-          Sample Rate: {project.settings.sampleRate}Hz | Channels:{" "}
-          {project.settings.channels}
+          {t("common:audioMixer.sampleRateInfo", {
+            rate: project.settings.sampleRate,
+            channels: project.settings.channels,
+            defaultValue: "Sample Rate: {{rate}}Hz | Channels: {{channels}}",
+          })}
         </span>
       </div>
     </div>

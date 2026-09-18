@@ -26,6 +26,7 @@ import {
 } from "@openreel/core";
 import { toast } from "../../../stores/notification-store";
 import { useProjectStore } from "../../../stores/project-store";
+import { useTranslation } from "../../../i18n";
 
 interface AutoReframeSectionProps {
   clipId: string;
@@ -48,6 +49,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
   clipId,
   onReframeComplete,
 }) => {
+  const { t } = useTranslation("inspector");
   const updateProjectDimensions = useProjectStore(
     (state) => state.updateSettings,
   );
@@ -120,11 +122,11 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
   const handleAnalyze = useCallback(async () => {
     setIsProcessing(true);
     setProgress(0);
-    setProgressMessage("Initializing...");
+    setProgressMessage(t("inspector:autoReframe.initializing", "Initializing..."));
 
     try {
       if (!isInitialized) {
-        setProgressMessage("Loading AI engine...");
+        setProgressMessage(t("inspector:autoReframe.loadingEngine", "Loading AI engine..."));
         setProgress(10);
         await handleInitialize();
       }
@@ -134,12 +136,19 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         throw new Error("Engine not available");
       }
 
-      setProgressMessage("Configuring reframe settings...");
+      setProgressMessage(
+        t(
+          "inspector:autoReframe.configuring",
+          "Configuring reframe settings...",
+        ),
+      );
       setProgress(30);
 
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      setProgressMessage("Applying smart crop configuration...");
+      setProgressMessage(
+        t("inspector:autoReframe.applyingCrop", "Applying smart crop configuration..."),
+      );
       setProgress(60);
 
       const targetConfig =
@@ -147,7 +156,9 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
 
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      setProgressMessage("Updating project settings...");
+      setProgressMessage(
+        t("inspector:autoReframe.updatingSettings", "Updating project settings..."),
+      );
       setProgress(80);
 
       await updateProjectDimensions({
@@ -155,13 +166,13 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         height: targetConfig.height,
       });
 
-      setProgressMessage("Finalizing...");
+      setProgressMessage(t("inspector:autoReframe.finalizing", "Finalizing..."));
       setProgress(90);
 
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       setProgress(100);
-      setProgressMessage("Complete!");
+      setProgressMessage(t("inspector:autoReframe.complete", "Complete!"));
       setIsApplied(true);
 
       const result: ReframeResult = {
@@ -169,7 +180,15 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         outputWidth: targetConfig.width,
         outputHeight: targetConfig.height,
         success: true,
-        message: `Configured for ${targetConfig.name} (${targetConfig.width}x${targetConfig.height})`,
+        message: t(
+          "inspector:autoReframe.resultMessage",
+          "Configured for {{name}} ({{width}}x{{height}})",
+          {
+            name: targetConfig.name,
+            width: targetConfig.width,
+            height: targetConfig.height,
+          },
+        ),
       };
 
       onReframeComplete?.(result);
@@ -178,14 +197,24 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         ? PLATFORM_PRESETS[selectedPlatform].name
         : reframeSettings.targetAspectRatio;
       toast.success(
-        "Auto Reframe Applied",
-        `Project resized to ${platformName} (${targetConfig.width}x${targetConfig.height})`,
+        t("inspector:autoReframe.applied", "Auto Reframe Applied"),
+        t(
+          "inspector:autoReframe.appliedDescription",
+          "Project resized to {{name}} ({{width}}x{{height}})",
+          {
+            name: platformName,
+            width: targetConfig.width,
+            height: targetConfig.height,
+          },
+        ),
       );
     } catch (error) {
       console.error("Auto-reframe failed:", error);
       toast.error(
-        "Auto Reframe Failed",
-        error instanceof Error ? error.message : "Unknown error",
+        t("inspector:autoReframe.failed", "Auto Reframe Failed"),
+        error instanceof Error
+          ? error.message
+          : t("inspector:autoReframe.unknownError", "Unknown error"),
       );
       setIsApplied(false);
     } finally {
@@ -198,6 +227,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
     selectedPlatform,
     onReframeComplete,
     updateProjectDimensions,
+    t,
   ]);
 
   return (
@@ -205,7 +235,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
       <div className="space-y-3">
         <div>
           <Text type="supporting" color="secondary" className="mb-2 block text-[10px]">
-            Platform Presets
+            {t("inspector:autoReframe.platformPresets", "Platform Presets")}
           </Text>
             <div className="grid grid-cols-3 gap-1">
               {(Object.keys(PLATFORM_PRESETS) as PlatformPreset[]).map(
@@ -214,7 +244,11 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
                   return (
                     <ClickableCard
                       key={platform}
-                      label={`${PLATFORM_PRESETS[platform].name} platform preset`}
+                      label={t(
+                        "inspector:autoReframe.platformPresetLabel",
+                        "{{name}} platform preset",
+                        { name: PLATFORM_PRESETS[platform].name },
+                      )}
                       onClick={() => handleSelectPlatform(platform)}
                       className={`flex items-center gap-1 p-2 rounded text-[9px] transition-colors ${
                         selectedPlatform === platform
@@ -235,7 +269,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
 
         <div>
           <Text type="supporting" color="secondary" className="mb-2 block text-[10px]">
-            Aspect Ratio
+            {t("inspector:autoReframe.aspectRatio", "Aspect Ratio")}
           </Text>
           <div className="grid grid-cols-3 gap-1">
             {(Object.keys(ASPECT_RATIO_PRESETS) as AspectRatioPreset[])
@@ -243,7 +277,11 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
               .map((ratio) => (
                 <ClickableCard
                   key={ratio}
-                  label={`${ratio} aspect ratio`}
+                  label={t(
+                    "inspector:autoReframe.aspectRatioLabel",
+                    "{{ratio}} aspect ratio",
+                    { ratio },
+                  )}
                   onClick={() => handleSelectAspectRatio(ratio)}
                   className={`p-2 rounded text-[9px] transition-colors ${
                     reframeSettings.targetAspectRatio === ratio &&
@@ -259,7 +297,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         </div>
 
         <PropertySlider
-          label="Tracking Speed"
+          label={t("inspector:autoReframe.trackingSpeed", "Tracking Speed")}
           min={0}
           max={100}
           step={1}
@@ -273,7 +311,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         />
 
         <PropertySlider
-          label="Smoothing"
+          label={t("inspector:autoReframe.smoothing", "Smoothing")}
           min={0}
           max={100}
           step={1}
@@ -283,7 +321,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         />
 
         <PropertySlider
-          label="Center Bias"
+          label={t("inspector:autoReframe.centerBias", "Center Bias")}
           min={0}
           max={100}
           step={1}
@@ -298,10 +336,10 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
 
         <div className="flex items-center justify-between">
           <Text type="supporting" color="secondary" className="text-[10px]">
-            Follow Subject
+            {t("inspector:autoReframe.followSubject", "Follow Subject")}
           </Text>
           <MockToggle
-            ariaLabel="Follow Subject"
+            ariaLabel={t("inspector:autoReframe.followSubject", "Follow Subject")}
             checked={reframeSettings.followSubject}
             onChange={() =>
               updateLocalSettings({
@@ -334,11 +372,14 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
           label={
             isInitializing || isProcessing
               ? isInitializing
-                ? "Initializing..."
-                : "Analyzing..."
+                ? t("inspector:autoReframe.initializingButton", "Initializing...")
+                : t("inspector:autoReframe.analyzing", "Analyzing...")
               : isApplied
-                ? "Applied - Click to Reanalyze"
-                : "Analyze & Reframe"
+                ? t(
+                    "inspector:autoReframe.appliedButton",
+                    "Applied - Click to Reanalyze",
+                  )
+                : t("inspector:autoReframe.analyze", "Analyze & Reframe")
           }
           icon={
             isInitializing || isProcessing ? (
@@ -357,7 +398,7 @@ export const AutoReframeSection: React.FC<AutoReframeSectionProps> = ({
         />
 
         <Text type="supporting" color="secondary" className="text-center text-[9px]">
-          Output:{" "}
+          {t("inspector:autoReframe.output", "Output:")}{" "}
           {ASPECT_RATIO_PRESETS[reframeSettings.targetAspectRatio].width} x{" "}
           {ASPECT_RATIO_PRESETS[reframeSettings.targetAspectRatio].height}
         </Text>

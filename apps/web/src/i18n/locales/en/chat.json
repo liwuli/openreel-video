@@ -1,0 +1,118 @@
+{
+  "newChat": "New chat",
+  "panel": {
+    "title": "AI Editor",
+    "dryRunOn": "Dry-run on: plans without applying edits",
+    "dryRunOff": "Dry-run off",
+    "autoApproveOn": "Auto-approve on: destructive actions run without confirmation",
+    "autoApproveOff": "Auto-approve off: destructive actions ask first",
+    "undoLastTurn": "Undo last AI turn",
+    "conversationHistory": "Conversation history",
+    "close": "Close",
+    "tokens": {
+      "label": "{{tokens}} tok",
+      "usage": "{{input}} in · {{output}} out"
+    }
+  },
+  "empty": {
+    "title": "Edit by chatting",
+    "description": "Describe an edit in plain language and the AI will perform it on your timeline.",
+    "noProjectDescription": "Open or create a project, then describe edits in plain language.",
+    "connectTitle": "Connect your model",
+    "setupEndpoint": "Choose an API format, then enter your endpoint URL and model ID.",
+    "setupPassword": "Set a master password, then add your provider API key.",
+    "setupLocked": "Unlock your encrypted API keys to start the AI editor.",
+    "setupApiKey": "Add the optional endpoint API key to start editing.",
+    "unlockApiKeys": "Unlock API keys",
+    "configureEndpoint": "Configure endpoint",
+    "setUpChat": "Set up AI chat",
+    "suggestions": {
+      "welcomeTitle": "Add a title that says 'Welcome' for the first 3 seconds",
+      "trimEnd": "Trim 2 seconds off the end of the first clip",
+      "fadeIn": "Add a fade-in to the opening clip",
+      "listTimeline": "List everything currently on my timeline"
+    }
+  },
+  "composer": {
+    "label": "AI edit request",
+    "placeholder": "Ask the AI to edit your video…",
+    "stop": "Stop",
+    "send": "Send",
+    "hint": "Enter to send · Shift+Enter for a new line"
+  },
+  "history": {
+    "conversations": "Conversations",
+    "savedOnDevice": "Saved on this device for this project",
+    "emptyTitle": "No saved conversations yet",
+    "emptyDescription": "Completed chats will appear here automatically.",
+    "summary": "{{count}} requests · {{time}}",
+    "deleteConversation": "Delete {{title}}"
+  },
+  "confirm": {
+    "title": "Confirm action",
+    "bodyPrefix": "The assistant wants to run",
+    "bodySuffix": ", which may modify your project or incur cost.",
+    "approve": "Approve",
+    "approveForTurn": "Approve all this turn",
+    "reject": "Reject"
+  },
+  "toolCall": {
+    "running": "Running",
+    "done": "Done",
+    "failed": "Failed",
+    "skipped": "Skipped",
+    "arguments": "Arguments",
+    "result": "Result"
+  },
+  "error": {
+    "fallback": "The AI request failed.",
+    "dismiss": "Dismiss error",
+    "technicalDetails": "Technical details",
+    "fixIssue": "Fix issue",
+    "authTitle": "Authentication failed",
+    "authMessage": "The endpoint rejected the API key. Check the saved key and try again.",
+    "authAction": "Check API key",
+    "rateLimitTitle": "Rate limit reached",
+    "rateLimitMessage": "The endpoint is receiving too many requests. Wait a moment and try again.",
+    "networkTitle": "Couldn’t reach the endpoint",
+    "networkMessage": "Check the host URL and confirm the endpoint is online. In a browser, the host must also allow CORS requests from OpenReel.",
+    "checkEndpoint": "Check endpoint",
+    "contextTitle": "Conversation is too long",
+    "contextMessage": "This model cannot fit the full conversation. Start a new chat and continue there.",
+    "newChat": "Start new chat",
+    "modelTitle": "Model or route not found",
+    "modelMessage": "Check that the base URL and model ID match what the endpoint exposes.",
+    "setupTitle": "AI setup needed",
+    "openApiKeys": "Open API keys",
+    "openAiSettings": "Open AI settings",
+    "genericTitle": "AI request failed"
+  },
+  "provider": {
+    "popoverLabel": "AI endpoint and model",
+    "connectTitle": "Connect any compatible model",
+    "connectDescription": "Choose the API format, then use your own host and model. OpenReel does not select a vendor or model for you.",
+    "apiFormat": "API format",
+    "chooseApiFormat": "Choose API format…",
+    "openaiCompatible": "OpenAI-compatible",
+    "anthropicCompatible": "Anthropic-compatible",
+    "notConfigured": "Not configured",
+    "baseUrl": "Base URL",
+    "modelId": "Model ID",
+    "modelIdPlaceholder": "Enter any tool-capable model ID",
+    "loading": "Loading…",
+    "loadModels": "Load models",
+    "modelsFromEndpoint": "Models from endpoint",
+    "chooseDiscoveredModel": "Choose a discovered model…",
+    "modelsFoundOne": "1 model found.",
+    "modelsFoundOther": "{{count}} models found.",
+    "noModels": "The endpoint returned no models. Enter a model ID manually.",
+    "chooseFormatFirst": "Choose an API format first.",
+    "enterBaseUrlFirst": "Enter the endpoint base URL first.",
+    "unlockBeforeLoading": "Unlock API keys before loading models.",
+    "loadFailed": "Could not load models from this endpoint.",
+    "discoveryHint": "Model discovery uses GET /models. If your gateway does not expose it, enter the model ID manually. Browser endpoints must allow CORS.",
+    "manageApiKey": "Manage optional API key",
+    "settingsLabel": "AI settings: {{provider}}, {{model}}",
+    "noModelSelected": "no model selected"
+  }
+}

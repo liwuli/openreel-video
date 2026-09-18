@@ -8,9 +8,11 @@ import { ToolcraftText as Text } from "@openreel/ui";
 import { ToolcraftTextInputControl } from "@openreel/ui";
 import { useProjectStore } from "../../../stores/project-store";
 import { getPlaybackBridge } from "../../../bridges/playback-bridge";
+import { useTranslation } from "../../../i18n";
 import type { Marker } from "@openreel/core";
 
 export const MarkersPanel: React.FC = () => {
+  const { t } = useTranslation("inspector");
   const { project, addMarker, removeMarker, updateMarker } = useProjectStore();
   const markers = project.timeline.markers;
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -20,7 +22,13 @@ export const MarkersPanel: React.FC = () => {
   const handleAddMarker = () => {
     const bridge = getPlaybackBridge();
     const currentTime = bridge.getCurrentTime();
-    addMarker(currentTime, `Marker ${markers.length + 1}`, "#3b82f6");
+    addMarker(
+      currentTime,
+      t("inspector:markers.defaultLabel", "Marker {{index}}", {
+        index: markers.length + 1,
+      }),
+      "#3b82f6",
+    );
   };
 
   const handleJumpTo = (marker: Marker) => {
@@ -71,14 +79,14 @@ export const MarkersPanel: React.FC = () => {
         <div className="flex items-center gap-2">
           <Flag size={14} className="text-fg-2" aria-hidden />
           <Text type="body" color="primary" weight="bold" className="text-xs">
-            Markers
+            {t("inspector:markers.title", "Markers")}
           </Text>
           <Text type="supporting" color="secondary" className="text-xs">
             ({markers.length})
           </Text>
         </div>
         <Button
-          label="Add"
+          label={t("inspector:markers.add", "Add")}
           icon={<Plus size={12} aria-hidden />}
           variant="primary"
           size="sm"
@@ -90,10 +98,10 @@ export const MarkersPanel: React.FC = () => {
         <div className="py-8 text-center text-fg-3 text-xs">
           <Flag size={32} className="mx-auto mb-2 opacity-30" aria-hidden />
           <Text type="supporting" color="secondary" className="block">
-            No markers yet
+            {t("inspector:markers.empty", "No markers yet")}
           </Text>
           <Text type="supporting" color="secondary" className="text-[10px] mt-1 block">
-            Press M at playhead to add markers
+            {t("inspector:markers.emptyHint", "Press M at playhead to add markers")}
           </Text>
         </div>
       ) : (
@@ -119,19 +127,23 @@ export const MarkersPanel: React.FC = () => {
                 {editingId === marker.id ? (
                   <div className="flex-1 space-y-2">
                     <ToolcraftTextInputControl
-                      label="Marker label"
+                      label={t("inspector:markers.label", "Marker label")}
                       isLabelHidden
                       size="sm"
                       width="100%"
                       value={editLabel}
                       onChange={setEditLabel}
-                      placeholder="Marker label"
+                      placeholder={t("inspector:markers.label", "Marker label")}
                     />
                     <div className="flex gap-1">
                       {PRESET_COLORS.map((color) => (
                         <ClickableCard
                           key={color}
-                          label={`Use marker color ${color}`}
+                          label={t(
+                            "inspector:markers.useColor",
+                            "Use marker color {{color}}",
+                            { color },
+                          )}
                           onClick={() => setEditColor(color)}
                           padding={0}
                           width={20}
@@ -145,7 +157,7 @@ export const MarkersPanel: React.FC = () => {
                     </div>
                     <div className="flex gap-1">
                       <Button
-                        label="Save"
+                        label={t("inspector:markers.save", "Save")}
                         icon={<Check size={12} aria-hidden />}
                         variant="primary"
                         size="sm"
@@ -153,7 +165,7 @@ export const MarkersPanel: React.FC = () => {
                         className="flex-1"
                       />
                       <Button
-                        label="Cancel"
+                        label={t("inspector:markers.cancel", "Cancel")}
                         icon={<X size={12} aria-hidden />}
                         variant="secondary"
                         size="sm"
@@ -165,7 +177,9 @@ export const MarkersPanel: React.FC = () => {
                 ) : (
                   <>
                     <ClickableCard
-                      label={`Jump to ${marker.label}`}
+                      label={t("inspector:markers.jumpTo", "Jump to {{label}}", {
+                        label: marker.label,
+                      })}
                       onClick={() => handleJumpTo(marker)}
                       padding={0}
                       variant="transparent"
@@ -186,7 +200,9 @@ export const MarkersPanel: React.FC = () => {
                     </ClickableCard>
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <IconButton
-                        label={`Edit ${marker.label}`}
+                        label={t("inspector:markers.edit", "Edit {{label}}", {
+                          label: marker.label,
+                        })}
                         icon={<Edit2 size={12} aria-hidden />}
                         variant="ghost"
                         size="sm"
@@ -194,7 +210,9 @@ export const MarkersPanel: React.FC = () => {
                         className="text-fg-3 hover:text-primary"
                       />
                       <IconButton
-                        label={`Remove ${marker.label}`}
+                        label={t("inspector:markers.remove", "Remove {{label}}", {
+                          label: marker.label,
+                        })}
                         icon={<Trash2 size={12} aria-hidden />}
                         variant="ghost"
                         size="sm"

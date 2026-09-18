@@ -22,6 +22,7 @@ import {
   ToolcraftText,
 } from "@openreel/ui";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 import { useMotionStore } from "../stores/motion-store";
 import {
   EmptyState,
@@ -38,13 +39,33 @@ interface AnimationPresetsPanelProps {
 
 const CATEGORY_META: Record<
   MotionAnimationPresetCategory,
-  { label: string; icon: typeof Sparkles }
+  { labelKey: string; label: string; icon: typeof Sparkles }
 > = {
-  entrance: { label: "Entrance", icon: ArrowUpFromLine },
-  exit: { label: "Exit", icon: ArrowDownToLine },
-  emphasis: { label: "Emphasis", icon: Zap },
-  loop: { label: "Loop", icon: Repeat2 },
-  shape: { label: "Shape Style", icon: Sparkles },
+  entrance: {
+    labelKey: "motion:animationPresets.categories.entrance",
+    label: "Entrance",
+    icon: ArrowUpFromLine,
+  },
+  exit: {
+    labelKey: "motion:animationPresets.categories.exit",
+    label: "Exit",
+    icon: ArrowDownToLine,
+  },
+  emphasis: {
+    labelKey: "motion:animationPresets.categories.emphasis",
+    label: "Emphasis",
+    icon: Zap,
+  },
+  loop: {
+    labelKey: "motion:animationPresets.categories.loop",
+    label: "Loop",
+    icon: Repeat2,
+  },
+  shape: {
+    labelKey: "motion:animationPresets.categories.shape",
+    label: "Shape Style",
+    icon: Sparkles,
+  },
 };
 
 const CATEGORY_ORDER: readonly MotionAnimationPresetCategory[] = [
@@ -62,6 +83,7 @@ export function AnimationPresetsPanel({
   composition,
   embedded = false,
 }: AnimationPresetsPanelProps): JSX.Element | null {
+  const { t } = useTranslation("motion");
   const [duration, setDuration] = useState(0.6);
   const [distance, setDistance] = useState(120);
   const [intensity, setIntensity] = useState(1);
@@ -120,12 +142,18 @@ export function AnimationPresetsPanel({
     }
     return (
       <div className="flex h-full min-h-0 flex-col">
-        <PanelHeader title="Animation Presets" icon={Sparkles} />
+        <PanelHeader
+          title={t("motion:animationPresets.title", "Animation Presets")}
+          icon={Sparkles}
+        />
         <div className="flex flex-1 items-center justify-center p-4">
           <EmptyState
             icon={Sparkles}
-            title="Select a layer"
-            description="Apply entrance, exit, emphasis, and loop presets as editable keyframes."
+            title={t("motion:animationPresets.selectLayer", "Select a layer")}
+            description={t(
+              "motion:animationPresets.selectLayerDescription",
+              "Apply entrance, exit, emphasis, and loop presets as editable keyframes.",
+            )}
           />
         </div>
       </div>
@@ -134,12 +162,20 @@ export function AnimationPresetsPanel({
 
   return (
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
-      {embedded ? null : <PanelHeader title="Animation Presets" icon={Sparkles} />}
+      {embedded ? null : (
+        <PanelHeader
+          title={t("motion:animationPresets.title", "Animation Presets")}
+          icon={Sparkles}
+        />
+      )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
-        <Section title="Timing" icon={MoveUp}>
+        <Section title={t("motion:animationPresets.timing", "Timing")} icon={MoveUp}>
           <ToolcraftSliderControl
-            ariaLabel="Motion preset duration"
-            label="Duration"
+            ariaLabel={t(
+              "motion:animationPresets.durationAriaLabel",
+              "Motion preset duration",
+            )}
+            label={t("motion:animationPresets.duration", "Duration")}
             value={duration}
             min={0.05}
             max={selectedLayer.duration}
@@ -149,7 +185,10 @@ export function AnimationPresetsPanel({
             onChange={setDuration}
           />
           <div className="grid grid-cols-2 gap-2.5">
-            <Field label="Distance" hint="px">
+            <Field
+              label={t("motion:animationPresets.distance", "Distance")}
+              hint="px"
+            >
               <NumberInput
                 value={distance}
                 min={0}
@@ -158,7 +197,7 @@ export function AnimationPresetsPanel({
                 onChange={setDistance}
               />
             </Field>
-            <Field label="Intensity">
+            <Field label={t("motion:animationPresets.intensity", "Intensity")}>
               <NumberInput
                 value={intensity}
                 min={0}
@@ -171,16 +210,32 @@ export function AnimationPresetsPanel({
           <div className="rounded-md border border-border bg-bg-2 px-2.5 py-2 text-[11px] text-fg-muted">
             {selectedLayers.length > 1 ? (
               <>
-                Applies at each layer’s local playhead time across{" "}
+                {t(
+                  "motion:animationPresets.multiHintPrefix",
+                  "Applies at each layer’s local playhead time across",
+                )}{" "}
                 <span className="font-medium text-fg-2">
-                  {selectedLayers.length} selected layers
+                  {t(
+                    "motion:animationPresets.selectedLayers",
+                    "{{count}} selected layers",
+                    { count: selectedLayers.length },
+                  )}
                 </span>
-                . Locked or incompatible layers are skipped.
+                {t("motion:animationPresets.sentenceEnd", ".")}{" "}
+                {t(
+                  "motion:animationPresets.skippedNote",
+                  "Locked or incompatible layers are skipped.",
+                )}
               </>
             ) : (
               <>
-                Applies at local {formatSeconds(playhead - selectedLayer.startTime)} on{" "}
-                <span className="font-medium text-fg-2">{selectedLayer.name}</span>.
+                {t(
+                  "motion:animationPresets.singleHintPrefix",
+                  "Applies at local {{time}} on",
+                  { time: formatSeconds(playhead - selectedLayer.startTime) },
+                )}{" "}
+                <span className="font-medium text-fg-2">{selectedLayer.name}</span>
+                {t("motion:animationPresets.sentenceEnd", ".")}
               </>
             )}
           </div>
@@ -219,10 +274,11 @@ function PresetCategorySection({
   disabled: boolean;
   onApply: (preset: MotionAnimationPreset) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const meta = CATEGORY_META[category];
   const Icon = meta.icon;
   return (
-    <Section title={meta.label} icon={Icon}>
+    <Section title={t(meta.labelKey, meta.label)} icon={Icon}>
       <div className="grid grid-cols-1 gap-2">
         {presets.map((preset) => (
           <PresetButton
@@ -246,6 +302,7 @@ function PresetButton({
   disabled: boolean;
   onApply: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const [isHovered, setIsHovered] = useState(false);
   const [progress, setProgress] = useState(0.62);
 
@@ -266,7 +323,9 @@ function PresetButton({
 
   return (
     <ToolcraftClickableCard
-      label={`Apply ${preset.name}`}
+      label={t("motion:animationPresets.applyPreset", "Apply {{name}}", {
+        name: preset.name,
+      })}
       disabled={disabled}
       onClick={onApply}
       onMouseEnter={() => setIsHovered(true)}
@@ -319,6 +378,7 @@ function AnimationPresetPreview({
   progress: number;
   className?: string;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const eased = 1 - Math.pow(1 - progress, 3);
   const pulse = Math.sin(progress * Math.PI * 2);
   const style = previewStyle(preset, eased, pulse);
@@ -343,7 +403,7 @@ function AnimationPresetPreview({
         {isShapePreset ? null : "Aa"}
       </span>
       <span className="absolute bottom-1 right-1.5 text-[7px] font-bold uppercase tracking-[0.12em] text-white/45">
-        Preview
+        {t("motion:animationPresets.preview", "Preview")}
       </span>
     </span>
   );

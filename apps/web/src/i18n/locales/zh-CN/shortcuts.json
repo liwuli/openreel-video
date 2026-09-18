@@ -18,5 +18,61 @@
     "view": "视图界面",
     "selection": "选择操作",
     "file": "工程文件"
+  },
+  "descriptions": {
+    "playback": {
+      "playPause": "播放/暂停",
+      "frameBack": "后退一帧",
+      "frameForward": "前进一帧",
+      "secondBack": "后退一秒",
+      "secondForward": "前进一秒",
+      "jump5Back": "后退 5 秒",
+      "jump5Forward": "前进 5 秒",
+      "goToStart": "跳到时间轴开头",
+      "goToEnd": "跳到时间轴末尾",
+      "prevClip": "跳到上一个片段边缘",
+      "nextClip": "跳到下一个片段边缘"
+    },
+    "editing": {
+      "undo": "撤销上一步操作",
+      "redo": "重做已撤销的操作",
+      "cut": "剪切选中的片段",
+      "copy": "复制选中的片段",
+      "paste": "在播放头处粘贴片段",
+      "duplicate": "为选中片段创建副本",
+      "delete": "删除选中的片段",
+      "rippleDelete": "删除并闭合空隙",
+      "split": "在播放头处分割片段",
+      "trimStart": "将片段入点修剪到播放头",
+      "trimEnd": "将片段出点修剪到播放头"
+    },
+    "selection": {
+      "selectAll": "全选所有片段",
+      "deselect": "清除选择"
+    },
+    "timeline": {
+      "toggleSnap": "开关吸附",
+      "zoomIn": "放大时间轴",
+      "zoomOut": "缩小时间轴",
+      "fitTimeline": "时间轴适配视图"
+    },
+    "view": {
+      "showShortcuts": "显示键盘快捷键"
+    },
+    "file": {
+      "save": "保存工程",
+      "export": "导出视频"
+    },
+    "tools": {
+      "addText": "添加文字片段",
+      "addMarker": "在播放头处添加标记"
+    }
+  },
+  "presetDescriptions": {
+    "openreel": "OpenReel 默认快捷键",
+    "capcut": "CapCut 风格快捷键",
+    "premiere": "Premiere Pro 风格快捷键",
+    "finalcut": "Final Cut Pro 风格快捷键",
+    "davinci": "DaVinci Resolve 风格快捷键"
   }
 }

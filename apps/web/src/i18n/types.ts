@@ -17,6 +17,16 @@ export const NAMESPACES = [
   "inspector",
   "export",
   "ai",
+  "assets",
+  "preview",
+  "shortcuts",
+  "search",
+  "motion",
+  "chat",
+  "desktop",
+  "share",
+  "presets",
+  "messages",
 ] as const;
 
 export type I18nNamespace = (typeof NAMESPACES)[number];

@@ -25,6 +25,7 @@ import {
   type SFXCategory,
   type MoodTag,
 } from "@openreel/core";
+import { useTranslation } from "../../../i18n";
 
 type TabType = "music" | "sfx";
 
@@ -43,6 +44,8 @@ const SoundCard: React.FC<SoundCardProps> = ({
   onStop,
   onAdd,
 }) => {
+  const { t } = useTranslation("inspector");
+
   const formatDuration = (seconds: number): string => {
     if (seconds < 60) {
       return `${seconds.toFixed(1)}s`;
@@ -56,7 +59,15 @@ const SoundCard: React.FC<SoundCardProps> = ({
     <Card variant="muted" padding={2} className="border border-border hover:border-primary/50 transition-colors">
       <div className="flex items-center gap-2">
         <IconButton
-          label={isPlaying ? `Stop ${sound.name}` : `Preview ${sound.name}`}
+          label={
+            isPlaying
+              ? t("inspector:musicLibrary.stop", "Stop {{name}}", {
+                  name: sound.name,
+                })
+              : t("inspector:musicLibrary.preview", "Preview {{name}}", {
+                  name: sound.name,
+                })
+          }
           icon={
             isPlaying ? (
               <Pause size={14} aria-hidden />
@@ -87,7 +98,11 @@ const SoundCard: React.FC<SoundCardProps> = ({
           </div>
         </div>
         <IconButton
-          label={`Add ${sound.name} to timeline`}
+          label={t(
+            "inspector:musicLibrary.addToTimeline",
+            "Add {{name}} to timeline",
+            { name: sound.name },
+          )}
           icon={<Plus size={14} aria-hidden />}
           variant="primary"
           size="sm"
@@ -113,6 +128,7 @@ const SoundCard: React.FC<SoundCardProps> = ({
 };
 
 export const MusicLibraryPanel: React.FC = () => {
+  const { t } = useTranslation("inspector");
   const getSoundLibraryEngine = useEngineStore(
     (state) => state.getSoundLibraryEngine,
   );
@@ -246,17 +262,17 @@ export const MusicLibraryPanel: React.FC = () => {
         <Music size={16} className="text-primary" aria-hidden />
         <div className="flex flex-col gap-0.5">
           <Text type="body" color="primary" weight="bold" className="text-[11px]">
-            Music & SFX
+            {t("inspector:musicLibrary.title", "Music & SFX")}
           </Text>
           <Text type="supporting" color="secondary" className="text-[9px]">
-            Royalty-free sounds
+            {t("inspector:musicLibrary.subtitle", "Royalty-free sounds")}
           </Text>
         </div>
       </Card>
 
       <div className="flex gap-1">
         <Button
-          label="Music"
+          label={t("inspector:musicLibrary.music", "Music")}
           icon={<Music size={12} aria-hidden />}
           variant={activeTab === "music" ? "primary" : "secondary"}
           size="sm"
@@ -264,7 +280,7 @@ export const MusicLibraryPanel: React.FC = () => {
           className="flex-1"
         />
         <Button
-          label="Sound FX"
+          label={t("inspector:musicLibrary.soundFx", "Sound FX")}
           icon={<Zap size={12} aria-hidden />}
           variant={activeTab === "sfx" ? "primary" : "secondary"}
           size="sm"
@@ -275,11 +291,14 @@ export const MusicLibraryPanel: React.FC = () => {
 
       <div className="relative">
         <ToolcraftTextInputControl
-          label="Search sounds"
+          label={t("inspector:musicLibrary.searchLabel", "Search sounds")}
           isLabelHidden
           size="sm"
           width="100%"
-          placeholder="Search sounds..."
+          placeholder={t(
+            "inspector:musicLibrary.searchPlaceholder",
+            "Search sounds...",
+          )}
           value={searchQuery}
           onChange={setSearchQuery}
           startIcon={<Search size={14} aria-hidden />}
@@ -289,7 +308,7 @@ export const MusicLibraryPanel: React.FC = () => {
       {activeTab === "music" && (
         <div className="flex gap-1 overflow-x-auto pb-1">
           <Button
-            label="All"
+            label={t("inspector:musicLibrary.all", "All")}
             variant={selectedGenre === "all" ? "primary" : "secondary"}
             size="sm"
             onClick={() => setSelectedGenre("all")}
@@ -311,7 +330,7 @@ export const MusicLibraryPanel: React.FC = () => {
       {activeTab === "sfx" && (
         <div className="flex gap-1 overflow-x-auto pb-1">
           <Button
-            label="All"
+            label={t("inspector:musicLibrary.all", "All")}
             variant={selectedSfxCategory === "all" ? "primary" : "secondary"}
             size="sm"
             onClick={() => setSelectedSfxCategory("all")}
@@ -354,10 +373,10 @@ export const MusicLibraryPanel: React.FC = () => {
               aria-hidden
             />
             <Text type="supporting" color="secondary" className="block text-[10px]">
-              No sounds found
+              {t("inspector:musicLibrary.noSounds", "No sounds found")}
             </Text>
             <Text type="supporting" color="secondary" className="block text-[9px] mt-1">
-              Try adjusting filters
+              {t("inspector:musicLibrary.noSoundsHint", "Try adjusting filters")}
             </Text>
           </div>
         ) : (
@@ -375,7 +394,15 @@ export const MusicLibraryPanel: React.FC = () => {
       </div>
 
       <Text type="supporting" color="secondary" className="block text-[9px] text-center">
-        {sounds.length} {activeTab === "music" ? "tracks" : "effects"} available
+        {activeTab === "music"
+          ? t("inspector:musicLibrary.availableTracks", "{{count}} tracks available", {
+              count: sounds.length,
+            })
+          : t(
+              "inspector:musicLibrary.availableEffects",
+              "{{count}} effects available",
+              { count: sounds.length },
+            )}
       </Text>
     </div>
   );

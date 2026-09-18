@@ -52,6 +52,7 @@ import {
 } from "@openreel/core";
 import { ToolcraftClickableCard, ToolcraftText } from "@openreel/ui";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 import { useMotionStore } from "../stores/motion-store";
 import {
   EmptyState,
@@ -83,6 +84,7 @@ const MASK_ICON: Record<MotionMaskShape, typeof Square> = {
 };
 
 export function MasksPanel({ composition, embedded = false }: MasksPanelProps): JSX.Element | null {
+  const { t } = useTranslation("motion");
   const selectedLayerId = useMotionStore((state) => state.selectedLayerId);
   const selectedLayerIds = useMotionStore((state) => state.selectedLayerIds);
   const selectedLayer =
@@ -171,12 +173,15 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
     if (embedded) return null;
     return (
       <div className="flex h-full min-h-0 flex-col">
-        <PanelHeader title="Masks" icon={Scissors} />
+        <PanelHeader title={t("motion:masksPanel.title", "Masks")} icon={Scissors} />
         <div className="flex flex-1 items-center justify-center p-4">
           <EmptyState
             icon={Scissors}
-            title="Select a layer"
-            description="Masks reveal or remove portions of a layer and render through the shared motion engine."
+            title={t("motion:masksPanel.selectLayer", "Select a layer")}
+            description={t(
+              "motion:masksPanel.selectLayerDescription",
+              "Masks reveal or remove portions of a layer and render through the shared motion engine.",
+            )}
           />
         </div>
       </div>
@@ -191,14 +196,19 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
 
   return (
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
-      {embedded ? null : <PanelHeader title="Masks" icon={Scissors} />}
+      {embedded ? null : (
+        <PanelHeader title={t("motion:masksPanel.title", "Masks")} icon={Scissors} />
+      )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
-        <Section title="Add Mask" icon={Plus}>
+        <Section title={t("motion:masksPanel.addMask", "Add Mask")} icon={Plus}>
           {maskTargetLayerIds.length > 1 ? (
             <div className="mb-2 rounded-md border border-accent/25 bg-accent-soft px-2.5 py-2">
               <ToolcraftText type="supporting" color="secondary">
-                New preset masks will be added to all {maskTargetLayerIds.length}{" "}
-                selected layers.
+                {t(
+                  "motion:masksPanel.selectedLayersNote",
+                  "New preset masks will be added to all {{count}} selected layers.",
+                  { count: maskTargetLayerIds.length },
+                )}
               </ToolcraftText>
             </div>
           ) : null}
@@ -208,7 +218,9 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
               return (
                 <ToolcraftClickableCard
                   key={preset.shape}
-                  label={`Add ${preset.name}`}
+                  label={t("motion:masksPanel.addPresetMask", "Add {{name}}", {
+                    name: preset.name,
+                  })}
                   onClick={() => addMask(preset.shape)}
                   variant="muted"
                   padding={2}
@@ -237,7 +249,7 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
             className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-border bg-bg-2 px-3 py-2 text-[12px] font-semibold text-fg-2 transition-colors hover:border-accent hover:text-accent"
           >
             <Spline size={13} aria-hidden />
-            Draw mask (pen)
+            {t("motion:masksPanel.drawMaskPen", "Draw mask (pen)")}
           </button>
         </Section>
 
@@ -247,10 +259,15 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
           replaceLayer={replaceLayer}
         />
 
-        <Section title={`Stack (${masks.length})`} icon={Scissors}>
+        <Section
+          title={t("motion:masksPanel.stackCount", "Stack ({{count}})", {
+            count: masks.length,
+          })}
+          icon={Scissors}
+        >
           <div className="mb-2 grid grid-cols-3 gap-1.5">
             <Button
-              label="Copy mask stack"
+              label={t("motion:masksPanel.copyMaskStack", "Copy mask stack")}
               icon={Copy}
               variant="outline"
               size="sm"
@@ -258,7 +275,7 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
               onClick={copyMaskStack}
             />
             <Button
-              label="Paste masks"
+              label={t("motion:masksPanel.pasteMasks", "Paste masks")}
               icon={ClipboardPaste}
               variant="outline"
               size="sm"
@@ -266,7 +283,7 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
               onClick={() => pasteMaskStack("append")}
             />
             <Button
-              label="Replace masks"
+              label={t("motion:masksPanel.replaceMasks", "Replace masks")}
               variant="outline"
               size="sm"
               disabled={!hasMaskStackClipboard}
@@ -275,8 +292,10 @@ export function MasksPanel({ composition, embedded = false }: MasksPanelProps): 
           </div>
           {masks.length === 0 ? (
             <ToolcraftText type="supporting" color="secondary" className="block rounded-md border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-              Add a mask to crop, reveal, or cut a layer while keeping the
-              original artwork editable.
+              {t(
+                "motion:masksPanel.noMasksHint",
+                "Add a mask to crop, reveal, or cut a layer while keeping the original artwork editable.",
+              )}
             </ToolcraftText>
           ) : (
             <div className="space-y-2">
@@ -325,6 +344,7 @@ function TrackMatteSection({
   selectedLayer: MotionLayer;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const matte = selectedLayer.trackMatte;
   const sources = getAvailableMotionTrackMatteSources(
     composition,
@@ -345,12 +365,12 @@ function TrackMatteSection({
   };
 
   return (
-    <Section title="Track Matte" icon={Layers}>
-      <Field label="Source">
+    <Section title={t("motion:masksPanel.trackMatte", "Track Matte")} icon={Layers}>
+      <Field label={t("motion:masksPanel.source", "Source")}>
         <SelectInput
           value={matte?.sourceLayerId ?? ""}
           options={[
-            { value: "", label: "None" },
+            { value: "", label: t("motion:masksPanel.none", "None") },
             ...sources.map((source) => ({ value: source.id, label: source.name })),
           ]}
           onChange={setSource}
@@ -358,7 +378,7 @@ function TrackMatteSection({
       </Field>
 
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2">
-        <Field label="Mode">
+        <Field label={t("motion:masksPanel.mode", "Mode")}>
           <SelectInput
             value={matte?.type ?? "alpha"}
             disabled={!matte}
@@ -378,7 +398,7 @@ function TrackMatteSection({
         </Field>
         <IconButton
           icon={Trash2}
-          label="Clear track matte"
+          label={t("motion:masksPanel.clearTrackMatte", "Clear track matte")}
           variant="danger"
           disabled={!matte}
           onClick={() => replaceLayer(clearMotionLayerTrackMatte(selectedLayer))}
@@ -386,8 +406,11 @@ function TrackMatteSection({
       </div>
 
       <SwitchInput
-        label="Enabled"
-        description="Composite this layer through the source"
+        label={t("motion:masksPanel.enabled", "Enabled")}
+        description={t(
+          "motion:masksPanel.enabledDescription",
+          "Composite this layer through the source",
+        )}
         checked={matte?.enabled ?? false}
         disabled={!matte}
         onChange={(enabled) =>
@@ -431,6 +454,7 @@ function MaskCard({
   onRemove: () => void;
   onUpdate: (updater: (mask: MotionMask) => MotionMask) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const Icon = MASK_ICON[mask.shape];
   const getProperty = (property: MotionMaskPropertyName) =>
     getMotionMaskKeyframeProperty(mask.id, property);
@@ -519,34 +543,41 @@ function MaskCard({
             {mask.name}
           </span>
           <span className="block text-[10.5px] capitalize text-fg-muted">
-            {mask.mode} {mask.inverted ? "inverted" : "mask"}
+            {mask.mode}{" "}
+            {mask.inverted
+              ? t("motion:masksPanel.inverted", "inverted")
+              : t("motion:masksPanel.maskWord", "mask")}
           </span>
         </span>
         <div className="flex items-center gap-0.5">
           <IconButton
             icon={ArrowUp}
-            label="Move mask up"
+            label={t("motion:masksPanel.moveMaskUp", "Move mask up")}
             size="sm"
             disabled={isFirst}
             onClick={() => onMove(-1)}
           />
           <IconButton
             icon={ArrowDown}
-            label="Move mask down"
+            label={t("motion:masksPanel.moveMaskDown", "Move mask down")}
             size="sm"
             disabled={isLast}
             onClick={() => onMove(1)}
           />
           <IconButton
             icon={mask.enabled ? Eye : EyeOff}
-            label={mask.enabled ? "Disable mask" : "Enable mask"}
+            label={
+              mask.enabled
+                ? t("motion:masksPanel.disableMask", "Disable mask")
+                : t("motion:masksPanel.enableMask", "Enable mask")
+            }
             size="sm"
             active={mask.enabled}
             onClick={() => onToggle(!mask.enabled)}
           />
           <IconButton
             icon={Trash2}
-            label="Remove mask"
+            label={t("motion:masksPanel.removeMask", "Remove mask")}
             size="sm"
             variant="danger"
             onClick={onRemove}
@@ -555,17 +586,31 @@ function MaskCard({
       </div>
       <div className="space-y-3 p-3">
         <div className="grid grid-cols-2 gap-2">
-          <Field label="Shape">
+          <Field label={t("motion:masksPanel.shape", "Shape")}>
             <SelectInput
               value={mask.shape}
               disabled={isPathMask}
               options={
                 isPathMask
-                  ? [{ value: "path", label: "Path (bezier)" }]
+                  ? [
+                      {
+                        value: "path",
+                        label: t("motion:masksPanel.pathBezier", "Path (bezier)"),
+                      },
+                    ]
                   : [
-                      { value: "rectangle", label: "Rectangle" },
-                      { value: "ellipse", label: "Ellipse" },
-                      { value: "polygon", label: "Polygon" },
+                      {
+                        value: "rectangle",
+                        label: t("motion:masksPanel.rectangle", "Rectangle"),
+                      },
+                      {
+                        value: "ellipse",
+                        label: t("motion:masksPanel.ellipse", "Ellipse"),
+                      },
+                      {
+                        value: "polygon",
+                        label: t("motion:masksPanel.polygon", "Polygon"),
+                      },
                     ]
               }
               onChange={(shape) =>
@@ -574,20 +619,23 @@ function MaskCard({
                   shape: shape as MotionMaskShape,
                   name:
                     shape === "ellipse"
-                      ? "Ellipse Mask"
+                      ? t("motion:masksPanel.ellipseMask", "Ellipse Mask")
                       : shape === "polygon"
-                        ? "Polygon Mask"
-                        : "Rectangle Mask",
+                        ? t("motion:masksPanel.polygonMask", "Polygon Mask")
+                        : t("motion:masksPanel.rectangleMask", "Rectangle Mask"),
                 }))
               }
             />
           </Field>
-          <Field label="Mode">
+          <Field label={t("motion:masksPanel.mode", "Mode")}>
             <SelectInput
               value={mask.mode}
               options={[
-                { value: "add", label: "Add" },
-                { value: "subtract", label: "Subtract" },
+                { value: "add", label: t("motion:masksPanel.modeAdd", "Add") },
+                {
+                  value: "subtract",
+                  label: t("motion:masksPanel.modeSubtract", "Subtract"),
+                },
               ]}
               onChange={(mode) =>
                 onUpdate((current) => ({
@@ -600,8 +648,11 @@ function MaskCard({
         </div>
 
         <SwitchInput
-          label="Invert"
-          description="Use the outside of this mask"
+          label={t("motion:masksPanel.invert", "Invert")}
+          description={t(
+            "motion:masksPanel.invertDescription",
+            "Use the outside of this mask",
+          )}
           checked={mask.inverted}
           onChange={(inverted) =>
             onUpdate((current) => ({
@@ -612,20 +663,30 @@ function MaskCard({
         />
 
         {isPathMask ? (
-          <Field label="Path">
+          <Field label={t("motion:masksPanel.path", "Path")}>
             <div className="grid grid-cols-[minmax(0,1fr)_28px] items-center gap-1.5">
               <span className="truncate rounded-[7px] border border-border bg-bg-1 px-[10px] py-2 text-[12px] text-fg-muted">
-                {mask.pathPoints?.length ?? 0} vertices
+                {t("motion:masksPanel.vertices", "{{count}} vertices", {
+                  count: mask.pathPoints?.length ?? 0,
+                })}
                 {(mask.pathKeyframes?.length ?? 0) > 0
-                  ? ` · ${mask.pathKeyframes?.length} keys`
+                  ? t("motion:masksPanel.keysSuffix", " · {{count}} keys", {
+                      count: mask.pathKeyframes?.length ?? 0,
+                    })
                   : ""}
               </span>
               <IconButton
                 icon={Diamond}
                 label={
                   pathKeyframeAtPlayhead
-                    ? "Remove mask path keyframe"
-                    : "Add mask path keyframe"
+                    ? t(
+                        "motion:masksPanel.removeMaskPathKeyframe",
+                        "Remove mask path keyframe",
+                      )
+                    : t(
+                        "motion:masksPanel.addMaskPathKeyframe",
+                        "Add mask path keyframe",
+                      )
                 }
                 size="sm"
                 variant={pathKeyframeAtPlayhead ? "solid" : "ghost"}
@@ -637,7 +698,7 @@ function MaskCard({
         ) : (
           <>
             <div className="grid grid-cols-2 gap-2">
-              <Field label="X" hint="%">
+              <Field label={t("motion:masksPanel.x", "X")} hint="%">
                 <MaskNumberInput
                   property="x"
                   value={toPercent(getPropertyValue("x"))}
@@ -649,7 +710,7 @@ function MaskCard({
                   onToggleKeyframe={() => toggleMaskPropertyKeyframe("x")}
                 />
               </Field>
-              <Field label="Y" hint="%">
+              <Field label={t("motion:masksPanel.y", "Y")} hint="%">
                 <MaskNumberInput
                   property="y"
                   value={toPercent(getPropertyValue("y"))}
@@ -661,7 +722,7 @@ function MaskCard({
                   onToggleKeyframe={() => toggleMaskPropertyKeyframe("y")}
                 />
               </Field>
-              <Field label="Width" hint="%">
+              <Field label={t("motion:masksPanel.width", "Width")} hint="%">
                 <MaskNumberInput
                   property="width"
                   value={toPercent(getPropertyValue("width"))}
@@ -673,7 +734,7 @@ function MaskCard({
                   onToggleKeyframe={() => toggleMaskPropertyKeyframe("width")}
                 />
               </Field>
-              <Field label="Height" hint="%">
+              <Field label={t("motion:masksPanel.height", "Height")} hint="%">
                 <MaskNumberInput
                   property="height"
                   value={toPercent(getPropertyValue("height"))}
@@ -687,7 +748,7 @@ function MaskCard({
               </Field>
             </div>
 
-            <Field label="Rotation" hint="deg">
+            <Field label={t("motion:masksPanel.rotation", "Rotation")} hint="deg">
               <MaskNumberInput
                 property="rotation"
                 value={getPropertyValue("rotation")}
@@ -701,7 +762,7 @@ function MaskCard({
             </Field>
           </>
         )}
-        <Field label="Expansion" hint="px">
+        <Field label={t("motion:masksPanel.expansion", "Expansion")} hint="px">
           <MaskNumberInput
             property="expansion"
             value={getPropertyValue("expansion")}
@@ -715,7 +776,7 @@ function MaskCard({
           />
         </Field>
         <div className="grid grid-cols-2 gap-2">
-          <Field label="Feather" hint="px">
+          <Field label={t("motion:masksPanel.feather", "Feather")} hint="px">
             <MaskNumberInput
               property="feather"
               value={getPropertyValue("feather")}
@@ -728,7 +789,7 @@ function MaskCard({
               onToggleKeyframe={() => toggleMaskPropertyKeyframe("feather")}
             />
           </Field>
-          <Field label="Opacity" hint="%">
+          <Field label={t("motion:masksPanel.opacity", "Opacity")} hint="%">
             <MaskNumberInput
               property="opacity"
               value={Math.round(getPropertyValue("opacity") * 100)}
@@ -767,12 +828,17 @@ function MaskNumberInput({
   onChange: (value: number) => void;
   onToggleKeyframe: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_28px] gap-1.5">
       <NumberInput value={value} min={min} max={max} step={step} onChange={onChange} />
       <IconButton
         icon={Diamond}
-        label={keyed ? "Remove mask keyframe" : "Add mask keyframe"}
+        label={
+          keyed
+            ? t("motion:masksPanel.removeMaskKeyframe", "Remove mask keyframe")
+            : t("motion:masksPanel.addMaskKeyframe", "Add mask keyframe")
+        }
         size="sm"
         variant={keyed ? "solid" : "ghost"}
         active={selected}

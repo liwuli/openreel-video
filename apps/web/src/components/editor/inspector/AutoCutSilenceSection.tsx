@@ -12,6 +12,7 @@ import {
   type SilenceAnalysisResult,
 } from "../../../bridges/silence-cut-bridge";
 import { toast } from "../../../stores/notification-store";
+import { useTranslation } from "../../../i18n";
 
 interface AutoCutSilenceSectionProps {
   clipId: string;
@@ -44,6 +45,7 @@ const SilenceSlider: React.FC<{
 export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const { getClip, getMediaItem } = useProjectStore();
   const [settings, setSettings] = useState<SilenceSettings>(
     DEFAULT_SILENCE_SETTINGS,
@@ -69,7 +71,7 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
 
     setIsAnalyzing(true);
     setProgress(0);
-    setProgressMessage("Initializing...");
+    setProgressMessage(t("inspector:autoCutSilence.initializing", "Initializing..."));
 
     try {
       const bridge = getSilenceCutBridge();
@@ -82,27 +84,32 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
 
       if (result.silentRegions.length === 0) {
         toast.info(
-          "No Silence Detected",
-          "No silent sections found with current settings. Try lowering the threshold.",
+          t("inspector:autoCutSilence.noSilenceTitle", "No Silence Detected"),
+          t(
+            "inspector:autoCutSilence.noSilenceDescription",
+            "No silent sections found with current settings. Try lowering the threshold.",
+          ),
         );
       }
     } catch (error) {
       console.error("Silence analysis failed:", error);
       toast.error(
-        "Analysis Failed",
-        error instanceof Error ? error.message : "Unknown error",
+        t("inspector:autoCutSilence.analysisFailed", "Analysis Failed"),
+        error instanceof Error
+          ? error.message
+          : t("inspector:autoCutSilence.unknownError", "Unknown error"),
       );
     } finally {
       setIsAnalyzing(false);
     }
-  }, [clipId, settings]);
+  }, [clipId, settings, t]);
 
   const handleCutSilence = useCallback(async () => {
     if (!analysisResult || analysisResult.silentRegions.length === 0) return;
 
     setIsCutting(true);
     setProgress(0);
-    setProgressMessage("Preparing...");
+    setProgressMessage(t("inspector:autoCutSilence.preparing", "Preparing..."));
 
     try {
       const bridge = getSilenceCutBridge();
@@ -116,24 +123,40 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
       );
 
       if (result.success) {
+        const removedCount = analysisResult.silentRegions.length;
         toast.success(
-          "Silence Removed",
-          `Removed ${analysisResult.silentRegions.length} silent section${analysisResult.silentRegions.length > 1 ? "s" : ""}`,
+          t("inspector:autoCutSilence.removed", "Silence Removed"),
+          removedCount > 1
+            ? t(
+                "inspector:autoCutSilence.removedDescOther",
+                "Removed {{count}} silent sections",
+                { count: removedCount },
+              )
+            : t(
+                "inspector:autoCutSilence.removedDescOne",
+                "Removed {{count}} silent section",
+                { count: removedCount },
+              ),
         );
         setAnalysisResult(null);
       } else {
-        toast.error("Cut Failed", result.error ?? "Unknown error");
+        toast.error(
+          t("inspector:autoCutSilence.cutFailed", "Cut Failed"),
+          result.error ?? t("inspector:autoCutSilence.unknownError", "Unknown error"),
+        );
       }
     } catch (error) {
       console.error("Cut silence failed:", error);
       toast.error(
-        "Cut Failed",
-        error instanceof Error ? error.message : "Unknown error",
+        t("inspector:autoCutSilence.cutFailed", "Cut Failed"),
+        error instanceof Error
+          ? error.message
+          : t("inspector:autoCutSilence.unknownError", "Unknown error"),
       );
     } finally {
       setIsCutting(false);
     }
-  }, [clipId, analysisResult]);
+  }, [clipId, analysisResult, t]);
 
   if (!hasAudio) {
     return null;
@@ -143,18 +166,21 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
     <div className="space-y-3">
       <div className="space-y-3">
         <SilenceSlider
-          label="Silence Threshold"
+          label={t("inspector:autoCutSilence.threshold", "Silence Threshold")}
           min={-80}
           max={-20}
           step={1}
           value={settings.threshold}
           onChange={(threshold) => updateSettings({ threshold })}
           unit=" dB"
-          description="Lower values detect more silence"
+          description={t(
+            "inspector:autoCutSilence.thresholdDescription",
+            "Lower values detect more silence",
+          )}
         />
 
         <SilenceSlider
-          label="Min Duration"
+          label={t("inspector:autoCutSilence.minDuration", "Min Duration")}
           min={0.1}
           max={2.0}
           step={0.1}
@@ -163,12 +189,15 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
             updateSettings({ minSilenceDuration })
           }
           unit="s"
-          description="Minimum silence length to detect"
+          description={t(
+            "inspector:autoCutSilence.minDurationDescription",
+            "Minimum silence length to detect",
+          )}
         />
 
         <div className="grid grid-cols-2 gap-2">
           <SilenceSlider
-            label="Pad Before"
+            label={t("inspector:autoCutSilence.padBefore", "Pad Before")}
             min={0}
             max={2}
             step={0.05}
@@ -177,7 +206,7 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
             unit="s"
           />
           <SilenceSlider
-            label="Pad After"
+            label={t("inspector:autoCutSilence.padAfter", "Pad After")}
             min={0}
             max={2}
             step={0.05}
@@ -191,7 +220,7 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
           <Card variant="muted" padding={3}>
             <div className="flex items-center justify-between mb-1">
               <Text type="supporting" color="secondary">
-                Silent Sections Found
+                {t("inspector:autoCutSilence.found", "Silent Sections Found")}
               </Text>
               <Text type="body" color="primary" weight="bold">
                 {analysisResult.silentRegions.length}
@@ -199,17 +228,22 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
             </div>
             <div className="flex items-center justify-between">
               <Text type="supporting" color="secondary">
-                Total Silence
+                {t("inspector:autoCutSilence.totalSilence", "Total Silence")}
               </Text>
               <Text type="supporting" color="primary">
-                {analysisResult.totalSilenceDuration.toFixed(1)}s of{" "}
-                {analysisResult.clipDuration.toFixed(1)}s (
-                {Math.round(
-                  (analysisResult.totalSilenceDuration /
-                    analysisResult.clipDuration) *
-                    100,
+                {t(
+                  "inspector:autoCutSilence.totalSilenceValue",
+                  "{{silence}}s of {{duration}}s ({{percent}}%)",
+                  {
+                    silence: analysisResult.totalSilenceDuration.toFixed(1),
+                    duration: analysisResult.clipDuration.toFixed(1),
+                    percent: Math.round(
+                      (analysisResult.totalSilenceDuration /
+                        analysisResult.clipDuration) *
+                        100,
+                    ),
+                  },
                 )}
-                %)
               </Text>
             </div>
           </Card>
@@ -236,7 +270,13 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
 
         <div className="flex gap-2">
           <Button
-            label={isAnalyzing ? "Analyzing..." : analysisResult ? "Re-analyze" : "Analyze"}
+            label={
+              isAnalyzing
+                ? t("inspector:autoCutSilence.analyzing", "Analyzing...")
+                : analysisResult
+                  ? t("inspector:autoCutSilence.reanalyze", "Re-analyze")
+                  : t("inspector:autoCutSilence.analyze", "Analyze")
+            }
             size="sm"
             variant={analysisResult ? "secondary" : "primary"}
             icon={
@@ -259,8 +299,12 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
             <Button
               label={
                 isCutting
-                  ? "Cutting..."
-                  : `Cut ${analysisResult.silentRegions.length}`
+                  ? t("inspector:autoCutSilence.cutting", "Cutting...")
+                  : t(
+                      "inspector:autoCutSilence.cutCount",
+                      "Cut {{count}}",
+                      { count: analysisResult.silentRegions.length },
+                    )
               }
               size="sm"
               variant="primary"
@@ -279,7 +323,10 @@ export const AutoCutSilenceSection: React.FC<AutoCutSilenceSectionProps> = ({
         </div>
 
         <Text type="supporting" color="secondary" className="text-center text-[9px]">
-          Tip: Use Ctrl+Z to undo all cuts at once
+          {t(
+            "inspector:autoCutSilence.tip",
+            "Tip: Use Ctrl+Z to undo all cuts at once",
+          )}
         </Text>
       </div>
     </div>

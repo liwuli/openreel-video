@@ -16,6 +16,12 @@ import assetsEn from "./locales/en/assets.json";
 import previewEn from "./locales/en/preview.json";
 import shortcutsEn from "./locales/en/shortcuts.json";
 import searchEn from "./locales/en/search.json";
+import motionEn from "./locales/en/motion.json";
+import chatEn from "./locales/en/chat.json";
+import desktopEn from "./locales/en/desktop.json";
+import shareEn from "./locales/en/share.json";
+import presetsEn from "./locales/en/presets.json";
+import messagesEn from "./locales/en/messages.json";
 
 // Chinese resources
 import commonZh from "./locales/zh-CN/common.json";
@@ -31,6 +37,12 @@ import assetsZh from "./locales/zh-CN/assets.json";
 import previewZh from "./locales/zh-CN/preview.json";
 import shortcutsZh from "./locales/zh-CN/shortcuts.json";
 import searchZh from "./locales/zh-CN/search.json";
+import motionZh from "./locales/zh-CN/motion.json";
+import chatZh from "./locales/zh-CN/chat.json";
+import desktopZh from "./locales/zh-CN/desktop.json";
+import shareZh from "./locales/zh-CN/share.json";
+import presetsZh from "./locales/zh-CN/presets.json";
+import messagesZh from "./locales/zh-CN/messages.json";
 
 export const resources = {
   en: {
@@ -47,6 +59,12 @@ export const resources = {
     preview: previewEn,
     shortcuts: shortcutsEn,
     search: searchEn,
+    motion: motionEn,
+    chat: chatEn,
+    desktop: desktopEn,
+    share: shareEn,
+    presets: presetsEn,
+    messages: messagesEn,
   },
   "zh-CN": {
     common: commonZh,
@@ -62,6 +80,12 @@ export const resources = {
     preview: previewZh,
     shortcuts: shortcutsZh,
     search: searchZh,
+    motion: motionZh,
+    chat: chatZh,
+    desktop: desktopZh,
+    share: shareZh,
+    presets: presetsZh,
+    messages: messagesZh,
   },
 } as const;
 
@@ -111,6 +135,12 @@ void i18n
       "preview",
       "shortcuts",
       "search",
+      "motion",
+      "chat",
+      "desktop",
+      "share",
+      "presets",
+      "messages",
     ],
     interpolation: {
       escapeValue: false, // React already protects from XSS

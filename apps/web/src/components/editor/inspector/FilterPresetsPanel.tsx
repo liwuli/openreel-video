@@ -15,6 +15,7 @@ import {
   type FilterPreset,
   type FilterCategory,
 } from "@openreel/core";
+import { useTranslation } from "../../../i18n";
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   cinematic: Film,
@@ -35,9 +36,15 @@ const PresetCard: React.FC<PresetCardProps> = ({
   isApplied,
   onApply,
 }) => {
+  const { t } = useTranslation("inspector");
+
   return (
     <ClickableCard
-      label={`Apply ${preset.name} filter preset`}
+      label={t(
+        "inspector:filterPresets.applyPreset",
+        "Apply {{name}} filter preset",
+        { name: preset.name },
+      )}
       onClick={onApply}
       className={`relative w-full p-3 rounded-lg border transition-all text-left ${
         isApplied
@@ -90,6 +97,7 @@ interface FilterPresetsPanelProps {
 export const FilterPresetsPanel: React.FC<FilterPresetsPanelProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const selectedClipIds = useUIStore((state) => state.getSelectedClipIds());
   const addVideoEffect = useProjectStore((state) => state.addVideoEffect);
   const getVideoEffects = useProjectStore((state) => state.getVideoEffects);
@@ -124,9 +132,14 @@ export const FilterPresetsPanel: React.FC<FilterPresetsPanelProps> = ({
       }
 
       setAppliedPresetId(preset.id);
-      toast.success("Filter Applied", `${preset.name} preset applied`);
+      toast.success(
+        t("inspector:filterPresets.applied", "Filter Applied"),
+        t("inspector:filterPresets.appliedDesc", "{{name}} preset applied", {
+          name: preset.name,
+        }),
+      );
     },
-    [targetClipId, addVideoEffect, getVideoEffects, removeVideoEffect],
+    [targetClipId, addVideoEffect, getVideoEffects, removeVideoEffect, t],
   );
 
   const handleClearEffects = useCallback(async () => {
@@ -138,15 +151,18 @@ export const FilterPresetsPanel: React.FC<FilterPresetsPanelProps> = ({
     }
 
     setAppliedPresetId(null);
-    toast.info("Effects Cleared");
-  }, [targetClipId, getVideoEffects, removeVideoEffect]);
+    toast.info(t("inspector:filterPresets.cleared", "Effects Cleared"));
+  }, [targetClipId, getVideoEffects, removeVideoEffect, t]);
 
   if (!targetClipId) {
     return (
       <div className="p-4 text-center">
         <Palette size={24} className="mx-auto mb-2 text-fg-3" />
         <Text type="supporting" color="secondary">
-          Select a video clip to apply filters
+          {t(
+            "inspector:filterPresets.noClip",
+            "Select a video clip to apply filters",
+          )}
         </Text>
       </div>
     );
@@ -158,10 +174,10 @@ export const FilterPresetsPanel: React.FC<FilterPresetsPanelProps> = ({
         <Palette size={16} className="text-primary" />
         <div className="flex flex-col gap-0.5">
           <Text type="supporting" color="primary" weight="medium" display="block">
-            Filter Presets
+            {t("inspector:filterPresets.title", "Filter Presets")}
           </Text>
           <Text type="supporting" color="secondary" display="block" className="text-[9px]">
-            One-click color grades
+            {t("inspector:filterPresets.subtitle", "One-click color grades")}
           </Text>
         </div>
       </div>
@@ -201,7 +217,7 @@ export const FilterPresetsPanel: React.FC<FilterPresetsPanelProps> = ({
       {appliedPresetId && (
         <Card variant="muted" padding={3} className="space-y-3">
           <PropertySlider
-            label="Intensity"
+            label={t("inspector:filterPresets.intensity", "Intensity")}
             min={0}
             max={100}
             step={1}
@@ -210,7 +226,7 @@ export const FilterPresetsPanel: React.FC<FilterPresetsPanelProps> = ({
             formatValue={(value) => `${value}%`}
           />
           <Button
-            label="Remove All Effects"
+            label={t("inspector:filterPresets.removeAll", "Remove All Effects")}
             size="sm"
             variant="destructive"
             onClick={handleClearEffects}
@@ -220,8 +236,14 @@ export const FilterPresetsPanel: React.FC<FilterPresetsPanelProps> = ({
       )}
 
       <Text type="supporting" color="secondary" className="text-center text-[9px]">
-        {FILTER_PRESETS.length} presets across {FILTER_CATEGORIES.length}{" "}
-        categories
+        {t(
+          "inspector:filterPresets.summary",
+          "{{presets}} presets across {{categories}} categories",
+          {
+            presets: FILTER_PRESETS.length,
+            categories: FILTER_CATEGORIES.length,
+          },
+        )}
       </Text>
     </div>
   );

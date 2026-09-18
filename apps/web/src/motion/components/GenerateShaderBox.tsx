@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Sparkles } from "@/icons/lucide-compat";
 import type { MotionShaderCategory, MotionShaderDef } from "@openreel/core";
 import { ToolcraftText } from "@openreel/ui";
+import i18n, { useTranslation } from "../../i18n";
 import { generateAiShader, type LlmMessage } from "../../services/ai-shader";
 import { makeBYOKClient } from "../../services/agent/llm-transport";
 import { getSecret, isSessionUnlocked } from "../../services/secure-storage";
@@ -20,7 +21,11 @@ type Phase =
   | { readonly kind: "generating" }
   | { readonly kind: "error"; readonly message: string };
 
-const CONFIGURE_PROVIDER = "Configure an AI provider in settings";
+const configureProviderMessage = (): string =>
+  i18n.t(
+    "motion:shaderBox.configureProvider",
+    "Configure an AI provider in settings",
+  );
 
 function isDesktop(): boolean {
   return typeof window !== "undefined" && window.openreel?.platform === "desktop";
@@ -57,6 +62,7 @@ export function GenerateShaderBox({
   category,
   onGenerated,
 }: GenerateShaderBoxProps): JSX.Element {
+  const { t } = useTranslation("motion");
   const [prompt, setPrompt] = useState("");
   const [phase, setPhase] = useState<Phase>({ kind: "idle" });
 
@@ -70,12 +76,12 @@ export function GenerateShaderBox({
 
     const { provider, model, baseUrl } = resolveModel();
     if (!provider || !model || !baseUrl.trim()) {
-      setPhase({ kind: "error", message: CONFIGURE_PROVIDER });
+      setPhase({ kind: "error", message: configureProviderMessage() });
       return;
     }
     const apiKey = await resolveApiKey(provider);
     if (apiKey === null) {
-      setPhase({ kind: "error", message: CONFIGURE_PROVIDER });
+      setPhase({ kind: "error", message: configureProviderMessage() });
       return;
     }
 
@@ -96,7 +102,9 @@ export function GenerateShaderBox({
       result = await generateAiShader(trimmed, category, { send });
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Shader generation failed";
+        error instanceof Error
+          ? error.message
+          : t("motion:shaderBox.generationFailed", "Shader generation failed");
       setPhase({ kind: "error", message });
       return;
     }
@@ -116,7 +124,9 @@ export function GenerateShaderBox({
     if (!dispatched.success) {
       setPhase({
         kind: "error",
-        message: dispatched.error?.message ?? "Could not save the shader",
+        message:
+          dispatched.error?.message ??
+          t("motion:shaderBox.saveFailed", "Could not save the shader"),
       });
       return;
     }
@@ -136,25 +146,28 @@ export function GenerateShaderBox({
         className="flex items-center gap-1.5"
       >
         <Sparkles size={13} />
-        Generate with AI
+        {t("motion:shaderBox.generateWithAi", "Generate with AI")}
       </ToolcraftText>
-      <Field label="Shader prompt">
+      <Field label={t("motion:shaderBox.promptLabel", "Shader prompt")}>
         <TextInput
           value={prompt}
           onChange={setPrompt}
-          placeholder="Describe a shader, e.g. holographic foil"
+          placeholder={t(
+            "motion:shaderBox.promptPlaceholder",
+            "Describe a shader, e.g. holographic foil",
+          )}
           disabled={busy}
         />
       </Field>
       <Button
-        label="Generate shader"
+        label={t("motion:shaderBox.generate", "Generate shader")}
         variant="solid"
         onClick={() => void runGenerate()}
         disabled={busy || prompt.trim() === ""}
       />
       {phase.kind === "generating" ? (
         <ToolcraftText type="supporting" color="secondary">
-          Generating shader...
+          {t("motion:shaderBox.generating", "Generating shader...")}
         </ToolcraftText>
       ) : null}
       {phase.kind === "error" ? (

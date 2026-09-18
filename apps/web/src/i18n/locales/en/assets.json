@@ -68,6 +68,29 @@
     "subtitle": "Subtitle",
     "lowerThird": "Lower Third",
     "caption": "Caption",
-    "hero": "Hero"
-  }
+    "hero": "Hero",
+    "quote": "Quote",
+    "outline": "Outline",
+    "badge": "Badge"
+  },
+  "addToTimeline": "Add to timeline",
+  "replaceAsset": "Replace asset",
+  "retryGeneration": "Retry generation",
+  "createWithKieAI": "Create with KieAI",
+  "kieaiGenerating": "KieAI generation in progress…",
+  "generating": "Generating…",
+  "unknownError": "Unknown error",
+  "kieaiOpenFailed": "Failed to open KieAI",
+  "assetNotFound": "Asset not found",
+  "assetNotFoundDesc": "Cannot load the image data for this asset.",
+  "unsavedAudioDiscarded": "Unsaved audio discarded",
+  "unsavedAudioDiscardedDesc": "Save to media or download next time to keep it.",
+  "folderPickerNotSupported": "Folder picker not supported",
+  "folderPickerNotSupportedDesc": "Please relink assets individually using the refresh button on each missing asset.",
+  "importingMedia": "Importing media...",
+  "importingFile": "Importing {{name}} ({{current}}/{{total}})...",
+  "extractingAudio": "Extracting audio from {{name}}...",
+  "replacingAsset": "Replacing asset...",
+  "badgeFailed": "Failed",
+  "badgeMissing": "Missing"
 }

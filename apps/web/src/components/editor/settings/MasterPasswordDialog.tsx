@@ -88,7 +88,11 @@ export const MasterPasswordDialog: React.FC<MasterPasswordDialogProps> = ({
         );
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(
+        err instanceof Error
+          ? err.message
+          : t("masterPassword.errorOccurred", "An error occurred"),
+      );
     } finally {
       setLoading(false);
     }

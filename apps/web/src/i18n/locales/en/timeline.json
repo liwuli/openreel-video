@@ -26,7 +26,8 @@
     "trackLayers": "Track layers",
     "timelineZoom": "Timeline zoom",
     "pixelsPerSecond": "{{count}} pixels per second",
-    "manageTrackLayers": "Manage track layers"
+    "manageTrackLayers": "Manage track layers",
+    "timelineTool": "Timeline tool"
   },
   "trackHeader": {
     "name": "Track name",
@@ -46,7 +47,9 @@
     "lockTrackName": "Lock {{name}}",
     "unlockTrackName": "Unlock {{name}}",
     "moveUp": "Move {{name}} up",
-    "moveDown": "Move {{name}} down"
+    "moveDown": "Move {{name}} down",
+    "lock": "Lock",
+    "unlock": "Unlock"
   },
   "trackTypes": {
     "track": "Track",
@@ -63,6 +66,12 @@
     "deleteConfirmDesc": "Its clips will be removed. You can undo this action.",
     "deleteTrack": "Delete track",
     "cancel": "Cancel",
+    "deleteAria": "Delete {{name}}",
+    "renameAria": "Rename {{name}}",
+    "duplicateAria": "Duplicate {{name}}",
+    "hideAria": "Hide {{name}}",
+    "searchAria": "Search track layers",
+    "filtersAria": "Track layer types",
     "filters": {
       "all": "All",
       "video": "Video",
@@ -119,11 +128,42 @@
   "captionBatch": {
     "selectAll": "Select all captions ({{count}})"
   },
+  "keyframeTrack": {
+    "noKeyframes": "No keyframes",
+    "properties": {
+      "positionX": "Position X",
+      "positionY": "Position Y",
+      "scaleX": "Scale X",
+      "scaleY": "Scale Y",
+      "rotation": "Rotation",
+      "opacity": "Opacity",
+      "borderRadius": "Border Radius"
+    }
+  },
+  "addedToTrack": "Added to {{name}}",
   "adjustmentLayer": {
     "moveAction": "Move adjustment layer",
     "trimAction": "Trim adjustment layer",
     "ariaLabel": "{{name}}, adjustment layer",
     "trimStart": "Trim start of {{name}}",
     "trimEnd": "Trim end of {{name}}"
+  },
+  "transitionHandle": {
+    "updated": "Transition updated",
+    "engineNotReady": "Transition engine not ready",
+    "tryAgain": "Try again in a moment.",
+    "added": "Transition added",
+    "failed": "Transition failed",
+    "couldNotCreate": "Could not create transition",
+    "removed": "Transition removed",
+    "hardCutRestored": "Hard cut restored",
+    "addIntro": "Add intro transition",
+    "addOutro": "Add outro transition",
+    "addTransition": "Add transition",
+    "editIntro": "Edit intro transition: {{label}}",
+    "editOutro": "Edit outro transition: {{label}}",
+    "editBetween": "Edit transition between clips: {{label}}",
+    "menuTitle": "Transition",
+    "remove": "Remove transition"
   }
 }

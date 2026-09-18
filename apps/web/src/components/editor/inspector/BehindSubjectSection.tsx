@@ -5,6 +5,7 @@ import { MockToggle } from "./shell/InspectorControls";
 import { useEngineStore } from "../../../stores/engine-store";
 import { useProjectStore } from "../../../stores/project-store";
 import { getPersonSegmentationEngine } from "@openreel/core";
+import { useTranslation } from "../../../i18n";
 
 interface BehindSubjectSectionProps {
   clipId: string;
@@ -13,6 +14,7 @@ interface BehindSubjectSectionProps {
 export const BehindSubjectSection: React.FC<BehindSubjectSectionProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const getTitleEngine = useEngineStore((state) => state.getTitleEngine);
   const updateTextBehindSubject = useProjectStore(
     (state) => state.updateTextBehindSubject,
@@ -51,7 +53,12 @@ export const BehindSubjectSection: React.FC<BehindSubjectSectionProps> = ({
             "[BehindSubject] Person model initialization failed:",
             modelError,
           );
-          setError("Failed to load AI model. Check your connection.");
+          setError(
+            t(
+              "inspector:behindSubject.loadError",
+              "Failed to load AI model. Check your connection.",
+            ),
+          );
           updateTextBehindSubject(clipId, false);
           setEnabled(false);
           setIsLoading(false);
@@ -62,7 +69,7 @@ export const BehindSubjectSection: React.FC<BehindSubjectSectionProps> = ({
 
       updateTextBehindSubject(clipId, true);
     },
-    [clipId, getTitleEngine, updateTextBehindSubject],
+    [clipId, getTitleEngine, updateTextBehindSubject, t],
   );
 
   return (
@@ -70,17 +77,20 @@ export const BehindSubjectSection: React.FC<BehindSubjectSectionProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex flex-1 flex-col gap-0.5">
           <Text type="supporting" color="primary" className="block">
-            Place Behind Subject
+            {t("inspector:behindSubject.title", "Place Behind Subject")}
           </Text>
           <Text type="supporting" color="secondary" className="block text-[9px]">
-            Text appears behind people in the video
+            {t(
+              "inspector:behindSubject.description",
+              "Text appears behind people in the video",
+            )}
           </Text>
         </div>
         {isLoading ? (
           <Loader2 size={14} className="animate-spin text-primary" />
         ) : (
           <MockToggle
-            ariaLabel="Place Behind Subject"
+            ariaLabel={t("inspector:behindSubject.title", "Place Behind Subject")}
             checked={enabled}
             onChange={handleToggle}
           />
@@ -88,7 +98,7 @@ export const BehindSubjectSection: React.FC<BehindSubjectSectionProps> = ({
       </div>
       {isLoading && (
         <Text type="supporting" color="secondary" className="text-[9px]">
-          Loading AI model...
+          {t("inspector:behindSubject.loading", "Loading AI model...")}
         </Text>
       )}
       {error && (

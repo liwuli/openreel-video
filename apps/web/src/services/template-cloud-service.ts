@@ -5,6 +5,7 @@ import type {
 } from "@openreel/core";
 
 import { OPENREEL_CLOUD_URL } from "../config/api-endpoints";
+import i18n from "../i18n";
 
 const CLOUD_API_URL = OPENREEL_CLOUD_URL;
 
@@ -62,7 +63,10 @@ export class TemplateCloudService {
       const data = await response.json();
 
       if (!response.ok) {
-        return { success: false, error: data.error || "Upload failed" };
+        return {
+          success: false,
+          error: data.error || i18n.t("messages:templateCloud.uploadFailed", "Upload failed"),
+        };
       }
 
       return { success: true };
@@ -70,7 +74,10 @@ export class TemplateCloudService {
       console.error("Failed to upload template to cloud:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Upload failed",
+        error:
+          error instanceof Error
+            ? error.message
+            : i18n.t("messages:templateCloud.uploadFailed", "Upload failed"),
       };
     }
   }
@@ -86,7 +93,10 @@ export class TemplateCloudService {
       const data = await response.json();
 
       if (!response.ok) {
-        return { success: false, error: data.error || "Delete failed" };
+        return {
+          success: false,
+          error: data.error || i18n.t("messages:templateCloud.deleteFailed", "Delete failed"),
+        };
       }
 
       return { success: true };
@@ -94,7 +104,10 @@ export class TemplateCloudService {
       console.error(`Failed to delete template ${id} from cloud:`, error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Delete failed",
+        error:
+          error instanceof Error
+            ? error.message
+            : i18n.t("messages:templateCloud.deleteFailed", "Delete failed"),
       };
     }
   }

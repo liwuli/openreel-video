@@ -18,12 +18,25 @@ import {
   isMasterPasswordSet,
   isSessionUnlocked,
 } from "../../../services/secure-storage";
+import { useTranslation } from "../../../i18n";
 
-const SUGGESTIONS: ReadonlyArray<string> = [
-  "Add a title that says 'Welcome' for the first 3 seconds",
-  "Trim 2 seconds off the end of the first clip",
-  "Add a fade-in to the opening clip",
-  "List everything currently on my timeline",
+const SUGGESTIONS: ReadonlyArray<{ readonly key: string; readonly prompt: string }> = [
+  {
+    key: "chat:empty.suggestions.welcomeTitle",
+    prompt: "Add a title that says 'Welcome' for the first 3 seconds",
+  },
+  {
+    key: "chat:empty.suggestions.trimEnd",
+    prompt: "Trim 2 seconds off the end of the first clip",
+  },
+  {
+    key: "chat:empty.suggestions.fadeIn",
+    prompt: "Add a fade-in to the opening clip",
+  },
+  {
+    key: "chat:empty.suggestions.listTimeline",
+    prompt: "List everything currently on my timeline",
+  },
 ];
 
 function EmptyState({
@@ -31,6 +44,7 @@ function EmptyState({
 }: {
   hasOpenProject: boolean;
 }): JSX.Element {
+  const { t } = useTranslation("chat");
   const send = useChatStore((s) => s.send);
   const provider = useSettingsStore((s) => s.defaultLlmProvider);
   const openSettings = useSettingsStore((s) => s.openSettings);
@@ -74,37 +88,59 @@ function EmptyState({
 
   const setupMessage =
     setup === "endpoint"
-      ? "Choose an API format, then enter your endpoint URL and model ID."
+      ? t(
+          "chat:empty.setupEndpoint",
+          "Choose an API format, then enter your endpoint URL and model ID.",
+        )
       : setup === "setup"
-      ? "Set a master password, then add your provider API key."
+      ? t(
+          "chat:empty.setupPassword",
+          "Set a master password, then add your provider API key.",
+        )
       : setup === "locked"
-        ? "Unlock your encrypted API keys to start the AI editor."
-        : "Add the optional endpoint API key to start editing.";
+        ? t(
+            "chat:empty.setupLocked",
+            "Unlock your encrypted API keys to start the AI editor.",
+          )
+        : t(
+            "chat:empty.setupApiKey",
+            "Add the optional endpoint API key to start editing.",
+          );
 
   return (
     <div className="flex h-full flex-col items-center justify-center px-2 text-center">
       <div className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-accent-soft text-accent">
         <Sparkles size={18} />
       </div>
-      <div className="text-[13px] font-medium text-fg">Edit by chatting</div>
+      <div className="text-[13px] font-medium text-fg">
+        {t("chat:empty.title", "Edit by chatting")}
+      </div>
       <Text type="supporting" color="secondary" className="mt-1 max-w-[14rem] text-[11px] leading-relaxed text-fg-muted">
         {hasOpenProject
-          ? "Describe an edit in plain language and the AI will perform it on your timeline."
-          : "Open or create a project, then describe edits in plain language."}
+          ? t(
+              "chat:empty.description",
+              "Describe an edit in plain language and the AI will perform it on your timeline.",
+            )
+          : t(
+              "chat:empty.noProjectDescription",
+              "Open or create a project, then describe edits in plain language.",
+            )}
       </Text>
       {hasOpenProject && setup !== "loading" && setup !== "ready" && (
         <div className="mt-4 w-full rounded-lg border border-accent/30 bg-accent-soft/50 p-3 text-left">
-          <div className="text-[11px] font-medium text-fg">Connect your model</div>
+          <div className="text-[11px] font-medium text-fg">
+            {t("chat:empty.connectTitle", "Connect your model")}
+          </div>
           <Text type="supporting" color="secondary" className="mt-1 block text-[10px] leading-relaxed">
             {setupMessage}
           </Text>
           <Button
             label={
               setup === "locked"
-                ? "Unlock API keys"
+                ? t("chat:empty.unlockApiKeys", "Unlock API keys")
                 : setup === "endpoint"
-                  ? "Configure endpoint"
-                  : "Set up AI chat"
+                  ? t("chat:empty.configureEndpoint", "Configure endpoint")
+                  : t("chat:empty.setUpChat", "Set up AI chat")
             }
             variant="primary"
             size="sm"
@@ -117,11 +153,11 @@ function EmptyState({
         <div className="mt-4 w-full space-y-1.5">
           {SUGGESTIONS.map((s) => (
             <Button
-              key={s}
-              label={s}
+              key={s.key}
+              label={t(s.key, s.prompt)}
               variant="ghost"
               size="sm"
-              onClick={() => void send(s)}
+              onClick={() => void send(s.prompt)}
               className="w-full rounded-md border border-border bg-bg-1/60 px-2.5 py-1.5 text-left text-[11px] text-fg-2 transition-colors hover:border-accent/50 hover:bg-hover hover:text-fg"
             />
           ))}
@@ -136,6 +172,7 @@ export function ChatPanel({
 }: {
   onClose?: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("chat");
   const messages = useChatStore((s) => s.messages);
   const status = useChatStore((s) => s.status);
   const error = useChatStore((s) => s.error);
@@ -178,19 +215,31 @@ export function ChatPanel({
       <header className="flex items-center gap-2 border-b border-border px-3 py-2">
         <Bot size={15} className="shrink-0 text-accent" />
         <span className="shrink-0 text-[13px] font-medium text-fg">
-          AI Editor
+          {t("chat:panel.title", "AI Editor")}
         </span>
         {totalTokens > 0 && (
           <span
-            title={`${usage.inputTokens} in · ${usage.outputTokens} out`}
+            title={t("chat:panel.tokens.usage", "{{input}} in · {{output}} out", {
+              input: usage.inputTokens,
+              output: usage.outputTokens,
+            })}
             className="shrink-0 rounded bg-bg-2 px-1.5 py-0.5 text-[10px] tabular-nums text-fg-muted"
           >
-            {tokenLabel} tok
+            {t("chat:panel.tokens.label", "{{tokens}} tok", {
+              tokens: tokenLabel,
+            })}
           </span>
         )}
         <div className="ml-auto flex items-center gap-1">
           <IconButton
-            label={dryRun ? "Dry-run on: plans without applying edits" : "Dry-run off"}
+            label={
+              dryRun
+                ? t(
+                    "chat:panel.dryRunOn",
+                    "Dry-run on: plans without applying edits",
+                  )
+                : t("chat:panel.dryRunOff", "Dry-run off")
+            }
             icon={<FlaskConical size={14} aria-hidden />}
             size="sm"
             variant={dryRun ? "secondary" : "ghost"}
@@ -203,8 +252,14 @@ export function ChatPanel({
           <IconButton
             label={
               autoConfirm
-                ? "Auto-approve on: destructive actions run without confirmation"
-                : "Auto-approve off: destructive actions ask first"
+                ? t(
+                    "chat:panel.autoApproveOn",
+                    "Auto-approve on: destructive actions run without confirmation",
+                  )
+                : t(
+                    "chat:panel.autoApproveOff",
+                    "Auto-approve off: destructive actions ask first",
+                  )
             }
             icon={<ShieldCheck size={14} aria-hidden />}
             size="sm"
@@ -218,7 +273,7 @@ export function ChatPanel({
           <ProviderModelPicker disabled={busy} />
           {lastTurnCommitted && (
             <IconButton
-              label="Undo last AI turn"
+              label={t("chat:panel.undoLastTurn", "Undo last AI turn")}
               icon={<Undo2 size={14} aria-hidden />}
               size="sm"
               variant="ghost"
@@ -227,7 +282,7 @@ export function ChatPanel({
             />
           )}
           <IconButton
-            label="Conversation history"
+            label={t("chat:panel.conversationHistory", "Conversation history")}
             icon={<History size={14} aria-hidden />}
             size="sm"
             variant={historyOpen ? "secondary" : "ghost"}
@@ -237,7 +292,7 @@ export function ChatPanel({
             className="grid h-7 w-7 place-items-center rounded-md text-fg-2 transition-colors hover:bg-hover hover:text-fg disabled:opacity-40"
           />
           <Button
-            label="New chat"
+            label={t("chat:newChat", "New chat")}
             size="sm"
             variant="secondary"
             onClick={() => {
@@ -251,7 +306,7 @@ export function ChatPanel({
           </Button>
           {onClose && (
             <IconButton
-              label="Close"
+              label={t("chat:panel.close", "Close")}
               icon={<X size={14} aria-hidden />}
               size="sm"
               variant="ghost"

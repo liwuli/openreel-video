@@ -129,7 +129,12 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
           (uploaded as unknown as Record<string, string>)["url"] ||
           "";
         if (!uploadedUrl) {
-          throw new Error("Upload succeeded but returned no file URL. Check console for response.");
+          throw new Error(
+            t(
+              "kieai.errors.noFileUrl",
+              "Upload succeeded but returned no file URL. Check console for response.",
+            ),
+          );
         }
       }
 
@@ -157,7 +162,7 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
           input = { ...qwen, image_url: uploadedUrl };
           break;
         default:
-          throw new Error("Unknown model");
+          throw new Error(t("kieai.errors.unknownModel", "Unknown model"));
       }
 
       console.log("[KieAI] createTask payload:", { model: selectedModel, input });
@@ -242,7 +247,7 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
               {previewUrl ? (
                 <img
                   src={previewUrl}
-                  alt="Source"
+                  alt={t("kieai.sourceAlt", "Source")}
                   className="h-10 w-10 rounded object-cover flex-shrink-0"
                 />
               ) : (

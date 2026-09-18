@@ -1,0 +1,81 @@
+{
+  "chat": {
+    "noProject": "请先打开或新建项目，然后再开始对话。",
+    "chooseApiFormat": "请在 AI 设置中选择 API 格式。",
+    "enterModelId": "请在 AI 设置中输入或选择模型 ID。",
+    "invalidEndpoint": "请输入有效的兼容接口地址。",
+    "unlockSecureStorage": "请先解锁安全存储，才能使用 API 密钥。",
+    "apiKeyNotLoaded": "无法加载已配置的接口 API 密钥。",
+    "turnFailed": "AI 执行失败。",
+    "stoppedMaxSteps": "已达到本轮步骤上限，执行已停止。如需继续，请告知我。",
+    "stoppedMaxToolCalls": "已达到本轮工具调用上限，执行已停止。如需继续，请告知我。",
+    "stoppedBudget": "模型已达到响应或词元上限而停止。请告知我继续，或提高模型的输出上限。",
+    "emptyWithTools": "编辑已完成，但模型未提供文字说明。",
+    "emptyResponse": "模型返回了空响应。请重试或更换其他模型。"
+  },
+  "project": {
+    "clipboardEmpty": "剪贴板为空",
+    "noCompatibleTrack": "没有可用于 {{kind}} 片段的未锁定轨道",
+    "couldNotPlaceClip": "无法放置 {{kind}} 片段",
+    "pasteClipFailed": "粘贴 {{kind}} 片段失败",
+    "noEffectsInClipboard": "剪贴板中没有特效",
+    "noResults": "无结果",
+    "clipIdNotFound": "未找到片段 {{clipId}}",
+    "blendOpacityRange": "混合不透明度必须在 0 到 100 之间",
+    "noProjectOpen": "尚未打开项目",
+    "history": {
+      "applyTemplate": "应用 {{name}}",
+      "updateTemplate": "更新 {{name}}",
+      "pasteClips": "粘贴时间线片段"
+    }
+  },
+  "clip": {
+    "mediaItemNotFound": "未找到素材",
+    "newTrackNotFound": "找不到新建的轨道",
+    "noAudioToSeparate": "该素材没有可分离的音频",
+    "createAudioTrackFailed": "创建音频轨道失败",
+    "audioTrackNotFound": "找不到或无法创建音频轨道",
+    "moveClipsGroup": "移动片段"
+  },
+  "errors": {
+    "clipNotFound": "未找到片段",
+    "trackNotFound": "未找到轨道"
+  },
+  "settings": {
+    "services": {
+      "elevenlabs": "AI 语音生成与文本转语音",
+      "openaiCompatible": "任何兼容 OpenAI 的 API 主机；API 密钥可选",
+      "anthropicCompatible": "任何兼容 Anthropic Messages 的 API 主机；API 密钥可选",
+      "kieAi": "用于视频/图像生成、超分与编辑的 AI 聚合服务",
+      "freepik": "用于图像生成、矢量图与创意素材的 AI 聚合服务"
+    }
+  },
+  "recorder": {
+    "errorOccurred": "录制出错",
+    "permissionDenied": "权限被拒绝",
+    "noScreenStream": "没有可用的屏幕流",
+    "startFailed": "开始录制失败",
+    "stopFailed": "停止录制失败"
+  },
+  "autoSave": {
+    "initFailed": "自动保存初始化失败",
+    "failed": "自动保存失败",
+    "recoverFailed": "恢复项目失败"
+  },
+  "processing": {
+    "waiting": "等待开始...",
+    "complete": "已完成",
+    "failed": "失败"
+  },
+  "projectManager": {
+    "emptyFile": "项目文件为空",
+    "parseError": "解析错误",
+    "invalidFile": "项目文件无效：{{detail}}",
+    "expectedObject": "项目文件无效：应为 JSON 对象",
+    "missingIdOrName": "项目文件无效：缺少项目 ID 或名称"
+  },
+  "templateCloud": {
+    "uploadFailed": "上传失败",
+    "deleteFailed": "删除失败"
+  }
+}

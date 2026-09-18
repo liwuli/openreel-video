@@ -29,6 +29,7 @@ import {
 } from "@openreel/core";
 import { ToolcraftClickableCard, ToolcraftText } from "@openreel/ui";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 import { useMotionStore } from "../stores/motion-store";
 import {
   ColorInput,
@@ -58,19 +59,45 @@ const VARIABLE_TYPES: readonly MotionVariableType[] = [
 
 const VARIABLE_META: Record<
   MotionVariableType,
-  { label: string; icon: typeof Type; dot: string }
+  { labelKey: string; label: string; icon: typeof Type; dot: string }
 > = {
-  text: { label: "Text", icon: Type, dot: "bg-clip-text" },
-  number: { label: "Number", icon: Hash, dot: "bg-status-info" },
-  color: { label: "Color", icon: Palette, dot: "bg-accent" },
-  boolean: { label: "Toggle", icon: ToggleLeft, dot: "bg-status-warning" },
-  media: { label: "Media", icon: ImageIcon, dot: "bg-clip-video" },
+  text: {
+    labelKey: "motion:variablesPanel.types.text",
+    label: "Text",
+    icon: Type,
+    dot: "bg-clip-text",
+  },
+  number: {
+    labelKey: "motion:variablesPanel.types.number",
+    label: "Number",
+    icon: Hash,
+    dot: "bg-status-info",
+  },
+  color: {
+    labelKey: "motion:variablesPanel.types.color",
+    label: "Color",
+    icon: Palette,
+    dot: "bg-accent",
+  },
+  boolean: {
+    labelKey: "motion:variablesPanel.types.boolean",
+    label: "Toggle",
+    icon: ToggleLeft,
+    dot: "bg-status-warning",
+  },
+  media: {
+    labelKey: "motion:variablesPanel.types.media",
+    label: "Media",
+    icon: ImageIcon,
+    dot: "bg-clip-video",
+  },
 };
 
 export function VariablesPanel({
   composition,
   embedded = false,
 }: VariablesPanelProps): JSX.Element {
+  const { t } = useTranslation("motion");
   const [bindingTargets, setBindingTargets] = useState<
     Record<string, MotionVariableBindingTarget>
   >({});
@@ -141,7 +168,7 @@ export function VariablesPanel({
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
       {embedded ? null : (
         <PanelHeader
-          title="Variables"
+          title={t("motion:variablesPanel.title", "Variables")}
           icon={Braces}
           actions={
             <div className="flex items-center gap-0.5">
@@ -152,7 +179,11 @@ export function VariablesPanel({
                   <IconButton
                     key={type}
                     icon={Icon}
-                    label={`Add ${meta.label.toLowerCase()} variable`}
+                    label={t(
+                      "motion:variablesPanel.addVariable",
+                      "Add {{type}} variable",
+                      { type: t(meta.labelKey, meta.label).toLowerCase() },
+                    )}
                     size="sm"
                     onClick={() => addVariable(type)}
                   />
@@ -163,7 +194,7 @@ export function VariablesPanel({
         />
       )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
-        <Section title="Add Variable" icon={Plus}>
+        <Section title={t("motion:variablesPanel.addSection", "Add Variable")} icon={Plus}>
           <div className="grid grid-cols-2 gap-2">
             {VARIABLE_TYPES.map((type) => {
               const meta = VARIABLE_META[type];
@@ -171,7 +202,11 @@ export function VariablesPanel({
               return (
                 <ToolcraftClickableCard
                   key={type}
-                  label={`Add ${meta.label} variable`}
+                  label={t(
+                    "motion:variablesPanel.addVariable",
+                    "Add {{type}} variable",
+                    { type: t(meta.labelKey, meta.label) },
+                  )}
                   onClick={() => addVariable(type)}
                   variant="muted"
                   padding={2}
@@ -183,10 +218,10 @@ export function VariablesPanel({
                   </span>
                   <span className="min-w-0">
                     <ToolcraftText type="label" color="primary" weight="semibold" maxLines={1}>
-                      {meta.label}
+                      {t(meta.labelKey, meta.label)}
                     </ToolcraftText>
                     <ToolcraftText type="supporting" color="secondary">
-                      Template value
+                      {t("motion:variablesPanel.templateValue", "Template value")}
                     </ToolcraftText>
                   </span>
                   </span>
@@ -196,12 +231,20 @@ export function VariablesPanel({
           </div>
         </Section>
 
-        <Section title={`Variables (${composition.variables.length})`} icon={Braces}>
+        <Section
+          title={t("motion:variablesPanel.count", "Variables ({{count}})", {
+            count: composition.variables.length,
+          })}
+          icon={Braces}
+        >
           {composition.variables.length === 0 ? (
             <EmptyState
               icon={Braces}
-              title="No variables yet"
-              description="Add reusable text, color, number, media, or toggle values for templates and AI-generated scenes."
+              title={t("motion:variablesPanel.emptyTitle", "No variables yet")}
+              description={t(
+                "motion:variablesPanel.emptyDescription",
+                "Add reusable text, color, number, media, or toggle values for templates and AI-generated scenes.",
+              )}
             />
           ) : (
             <div className="space-y-2.5">
@@ -250,6 +293,7 @@ function VariableCard({
   onUpdate: (updater: (variable: MotionVariable) => MotionVariable) => void;
   onRemove: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const meta = VARIABLE_META[variable.type];
   const Icon = meta.icon;
   const compatibleTargets = selectedLayer
@@ -275,19 +319,19 @@ function VariableCard({
           </span>
           <span className="flex items-center gap-1.5 text-[10.5px] text-fg-muted">
             <span className={`h-1.5 w-1.5 rounded-full ${meta.dot}`} />
-            {meta.label}
+            {t(meta.labelKey, meta.label)}
           </span>
         </span>
         <IconButton
           icon={Trash2}
-          label="Remove variable"
+          label={t("motion:variablesPanel.removeVariable", "Remove variable")}
           size="sm"
           variant="danger"
           onClick={onRemove}
         />
       </div>
       <div className="space-y-3 p-3">
-        <Field label="Name">
+        <Field label={t("motion:variablesPanel.name", "Name")}>
           <TextInput
             value={variable.name}
             onChange={(name) =>
@@ -298,12 +342,12 @@ function VariableCard({
             }
           />
         </Field>
-        <Field label="Type">
+        <Field label={t("motion:variablesPanel.type", "Type")}>
           <SelectInput
             value={variable.type}
             options={VARIABLE_TYPES.map((type) => ({
               value: type,
-              label: VARIABLE_META[type].label,
+              label: t(VARIABLE_META[type].labelKey, VARIABLE_META[type].label),
             }))}
             onChange={(type) =>
               onUpdate((current) => ({
@@ -317,11 +361,16 @@ function VariableCard({
         <div className="rounded-md border border-border bg-bg-1 p-2.5">
           <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-3">
             <Link2 size={12} className="text-fg-muted" />
-            Bindings
+            {t("motion:variablesPanel.bindings", "Bindings")}
           </div>
           {selectedLayer && compatibleTargets.length > 0 ? (
             <div className="flex items-end gap-2">
-              <Field label="Selected layer target">
+              <Field
+                label={t(
+                  "motion:variablesPanel.selectedLayerTarget",
+                  "Selected layer target",
+                )}
+              >
                 <SelectInput
                   value={selectedTarget}
                   options={compatibleTargets.map((target) => ({
@@ -335,14 +384,20 @@ function VariableCard({
               </Field>
               <IconButton
                 icon={Link2}
-                label="Bind variable to selected layer"
+                label={t(
+                  "motion:variablesPanel.bindToSelectedLayer",
+                  "Bind variable to selected layer",
+                )}
                 variant="outline"
                 onClick={() => onBind(selectedTarget)}
               />
             </div>
           ) : (
             <ToolcraftText type="supporting" color="secondary" className="text-[11px] leading-relaxed text-fg-muted">
-              Select a compatible layer to bind this variable.
+              {t(
+                "motion:variablesPanel.noCompatibleLayer",
+                "Select a compatible layer to bind this variable.",
+              )}
             </ToolcraftText>
           )}
 
@@ -367,7 +422,7 @@ function VariableCard({
                     </span>
                     <IconButton
                       icon={Unlink2}
-                      label="Remove binding"
+                      label={t("motion:variablesPanel.removeBinding", "Remove binding")}
                       size="sm"
                       variant="danger"
                       onClick={() => onRemoveBinding(layer.id, binding.id)}
@@ -390,9 +445,10 @@ function VariableValueControl({
   variable: MotionVariable;
   onUpdate: (updater: (variable: MotionVariable) => MotionVariable) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   if (variable.type === "number") {
     return (
-      <Field label="Value">
+      <Field label={t("motion:variablesPanel.value", "Value")}>
         <NumberInput
           value={typeof variable.value === "number" ? variable.value : 0}
           onChange={(value) =>
@@ -408,7 +464,7 @@ function VariableValueControl({
 
   if (variable.type === "color") {
     return (
-      <Field label="Value">
+      <Field label={t("motion:variablesPanel.value", "Value")}>
         <ColorInput
           value={typeof variable.value === "string" ? variable.value : "#14b8a6"}
           onChange={(value) =>
@@ -425,7 +481,7 @@ function VariableValueControl({
   if (variable.type === "boolean") {
     return (
       <SwitchInput
-        label="Value"
+        label={t("motion:variablesPanel.value", "Value")}
         checked={Boolean(variable.value)}
         onChange={(value) =>
           onUpdate((current) => ({
@@ -438,10 +494,14 @@ function VariableValueControl({
   }
 
   return (
-    <Field label="Value">
+    <Field label={t("motion:variablesPanel.value", "Value")}>
       <TextInput
         value={String(variable.value)}
-        placeholder={variable.type === "media" ? "Media placeholder id" : undefined}
+        placeholder={
+          variable.type === "media"
+            ? t("motion:variablesPanel.mediaPlaceholderId", "Media placeholder id")
+            : undefined
+        }
         onChange={(value) =>
           onUpdate((current) => ({
             ...current,

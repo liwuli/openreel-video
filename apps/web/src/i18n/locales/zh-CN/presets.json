@@ -1,0 +1,432 @@
+{
+  "transitionTypes": {
+    "crossfade": {
+      "name": "交叉溶解",
+      "description": "片段之间平滑融合"
+    },
+    "dipToBlack": {
+      "name": "渐隐为黑",
+      "description": "经过黑场淡入淡出"
+    },
+    "dipToWhite": {
+      "name": "渐隐为白",
+      "description": "经过白场淡入淡出"
+    },
+    "wipe": {
+      "name": "擦除",
+      "description": "从一个片段擦除到另一个片段"
+    },
+    "slide": {
+      "name": "滑动",
+      "description": "新片段滑入覆盖旧片段"
+    },
+    "zoom": {
+      "name": "缩放",
+      "description": "片段之间缩放过渡"
+    },
+    "push": {
+      "name": "推挤",
+      "description": "新片段推走旧片段"
+    },
+    "circleReveal": {
+      "name": "圆形揭示",
+      "description": "从中心向外圈出画面"
+    },
+    "blur": {
+      "name": "模糊溶解",
+      "description": "模糊淡出后进入下一个片段"
+    },
+    "whipPan": {
+      "name": "快速摇镜",
+      "description": "带运动模糊的快速横摇"
+    },
+    "radialWipe": {
+      "name": "径向擦除",
+      "description": "类似时钟指针的角度扫过"
+    },
+    "pixelate": {
+      "name": "像素化",
+      "description": "通过切点时呈现块状像素马赛克"
+    },
+    "glitch": {
+      "name": "故障切变",
+      "description": "数字切片错位效果"
+    },
+    "blinds": {
+      "name": "百叶窗",
+      "description": "重复叶片式揭示"
+    },
+    "diamondReveal": {
+      "name": "菱形揭示",
+      "description": "几何图形从中心揭示"
+    },
+    "spin": {
+      "name": "旋转",
+      "description": "旋转并缩放的交接"
+    },
+    "flip": {
+      "name": "翻转",
+      "description": "卡片式水平或垂直翻转"
+    },
+    "splitReveal": {
+      "name": "分割揭示",
+      "description": "从中心向两侧揭示"
+    },
+    "flash": {
+      "name": "闪白切",
+      "description": "高能量的白闪剪辑"
+    },
+    "filmBurn": {
+      "name": "胶片灼烧",
+      "description": "温暖的模拟漏光穿过剪辑点"
+    },
+    "mosaic": {
+      "name": "马赛克揭示",
+      "description": "镜头之间以打乱的方块揭示"
+    },
+    "ripple": {
+      "name": "波纹",
+      "description": "流畅的水平波浪扭曲"
+    },
+    "pageTurn": {
+      "name": "翻页",
+      "description": "像翻书页一样把旧镜头折走"
+    },
+    "colorSplit": {
+      "name": "色彩分离",
+      "description": "棱镜式通道重影穿过切点"
+    }
+  },
+  "exportPresets": {
+    "youtube-4k": {
+      "name": "YouTube 4K",
+      "description": "YouTube 4K 最佳画质 - 50Mbps"
+    },
+    "youtube-4k-60": {
+      "name": "YouTube 4K 60fps",
+      "description": "面向游戏/高速画面的 4K 60fps - 65Mbps"
+    },
+    "youtube-1080p": {
+      "name": "YouTube 1080p 高清",
+      "description": "YouTube 标准高清画质"
+    },
+    "youtube-shorts": {
+      "name": "YouTube Shorts",
+      "description": "YouTube Shorts 竖屏格式（最长 60 秒）"
+    },
+    "tiktok": {
+      "name": "TikTok",
+      "description": "为 TikTok 优化（最长 3 分钟）"
+    },
+    "instagram-reels": {
+      "name": "Instagram Reels",
+      "description": "Reels 竖屏格式（最长 90 秒）"
+    },
+    "instagram-feed": {
+      "name": "Instagram 动态视频",
+      "description": "动态帖子的方形格式（最长 60 秒）"
+    },
+    "instagram-story": {
+      "name": "Instagram 快拍",
+      "description": "快拍竖屏格式（每段最长 15 秒）"
+    },
+    "twitter": {
+      "name": "Twitter/X",
+      "description": "为 Twitter 优化（最长 2 分 20 秒）"
+    },
+    "facebook-feed": {
+      "name": "Facebook 动态",
+      "description": "Facebook 动态的标准格式"
+    },
+    "linkedin": {
+      "name": "LinkedIn",
+      "description": "LinkedIn 的专业格式（最长 10 分钟）"
+    },
+    "broadcast-4k-master": {
+      "name": "4K 母版画质",
+      "description": "最高画质 4K - 80Mbps H.265"
+    },
+    "broadcast-4k-prores-hq": {
+      "name": "4K ProRes HQ",
+      "description": "用于剪辑/母版制作的专业 ProRes"
+    },
+    "broadcast-4k-prores-4444": {
+      "name": "4K ProRes 4444",
+      "description": "支持 alpha 通道的最高画质 ProRes"
+    },
+    "broadcast-4k-60": {
+      "name": "4K 60fps 高速运动",
+      "description": "面向体育/游戏的 4K 60fps - 65Mbps"
+    },
+    "broadcast-4k": {
+      "name": "广播级 4K UHD",
+      "description": "4K 广播级画质 - 50Mbps"
+    },
+    "broadcast-1080p-high": {
+      "name": "1080p 高画质",
+      "description": "高码率 1080p - 20Mbps"
+    },
+    "broadcast-1080p-prores": {
+      "name": "1080p ProRes HQ",
+      "description": "用于 1080p 剪辑的 ProRes HQ"
+    },
+    "broadcast-hd": {
+      "name": "广播级高清 1080p",
+      "description": "标准广播级画质"
+    },
+    "web-hd": {
+      "name": "网络高清",
+      "description": "适合网页嵌入的均衡画质"
+    },
+    "web-small": {
+      "name": "网络优化",
+      "description": "更小的文件体积，加载更快"
+    },
+    "webm-vp9": {
+      "name": "WebM VP9",
+      "description": "采用 VP9 编码的现代网页格式（推荐 720p）"
+    },
+    "archive-4k-prores": {
+      "name": "归档 4K ProRes",
+      "description": "用于长期归档的无损 4K ProRes"
+    },
+    "archive-master": {
+      "name": "归档母版 H.265",
+      "description": "高画质 4K H.265 - 80Mbps"
+    },
+    "archive-1080p-prores": {
+      "name": "归档 1080p ProRes",
+      "description": "用于 1080p 归档的 ProRes HQ"
+    },
+    "archive-proxy": {
+      "name": "归档代理",
+      "description": "用于剪辑的较低画质代理文件"
+    },
+    "audio-mp3-320": {
+      "name": "MP3 高音质",
+      "description": "用于音乐的 320kbps MP3"
+    },
+    "audio-wav": {
+      "name": "WAV 无损",
+      "description": "未压缩的 WAV 音频"
+    },
+    "audio-aac": {
+      "name": "AAC 高音质",
+      "description": "兼容性更好的 256kbps AAC"
+    }
+  },
+  "motionPresets": {
+    "fade-in": {
+      "name": "淡入",
+      "description": "从全透明平滑淡入"
+    },
+    "slide-in-left": {
+      "name": "从左侧滑入",
+      "description": "从画面左边缘滑入"
+    },
+    "slide-in-right": {
+      "name": "从右侧滑入",
+      "description": "从画面右边缘滑入"
+    },
+    "slide-in-top": {
+      "name": "从顶部滑入",
+      "description": "从画面上边缘滑入"
+    },
+    "slide-in-bottom": {
+      "name": "从底部滑入",
+      "description": "从画面下边缘滑入"
+    },
+    "scale-in": {
+      "name": "缩放进入",
+      "description": "以缩放动画弹入"
+    },
+    "pop": {
+      "name": "弹出",
+      "description": "带过冲的快速弹出进入"
+    },
+    "bounce-in": {
+      "name": "弹跳进入",
+      "description": "带有弹性的缩放进入"
+    },
+    "flip-in": {
+      "name": "翻转进入",
+      "description": "3D 翻转进入效果"
+    },
+    "blur-in": {
+      "name": "模糊进入",
+      "description": "带模糊效果的淡入"
+    },
+    "fade-out": {
+      "name": "淡出",
+      "description": "平滑淡出至全透明"
+    },
+    "slide-out-left": {
+      "name": "向左侧滑出",
+      "description": "滑出到画面左边缘"
+    },
+    "slide-out-right": {
+      "name": "向右侧滑出",
+      "description": "滑出到画面右边缘"
+    },
+    "scale-out": {
+      "name": "缩放退出",
+      "description": "缩小并淡出"
+    },
+    "shrink": {
+      "name": "收缩",
+      "description": "快速收缩退出"
+    },
+    "blur-out": {
+      "name": "模糊退出",
+      "description": "带模糊效果的淡出"
+    },
+    "pulse": {
+      "name": "脉冲",
+      "description": "轻微的缩放脉冲效果"
+    },
+    "shake": {
+      "name": "抖动",
+      "description": "快速的水平抖动"
+    },
+    "bounce": {
+      "name": "弹跳",
+      "description": "带弹跳的强调效果"
+    },
+    "wiggle": {
+      "name": "摇摆",
+      "description": "活泼的摇摆旋转"
+    },
+    "rubber-band": {
+      "name": "橡皮筋",
+      "description": "弹性拉伸效果"
+    },
+    "glow-pulse": {
+      "name": "辉光脉冲",
+      "description": "轻微的不透明度脉冲"
+    },
+    "cross-dissolve": {
+      "name": "交叉溶解",
+      "description": "简单的不透明度交叉淡化"
+    },
+    "wipe-left": {
+      "name": "向左擦除",
+      "description": "向左的擦除转场"
+    },
+    "zoom-transition": {
+      "name": "缩放转场",
+      "description": "缩小式转场"
+    }
+  },
+  "noiseReductionPresets": {
+    "balanced": {
+      "label": "均衡",
+      "description": "针对中等环境噪声的通用清理，处理力度不过强。"
+    },
+    "speech": {
+      "label": "人声优先",
+      "description": "在降低嘶声和环境底噪的同时保留对白的临场感。"
+    },
+    "whiteNoise": {
+      "label": "白噪声",
+      "description": "强力去除风扇、空调、相机前置放大器噪声和环境底噪等宽带嘶声。"
+    },
+    "music": {
+      "label": "音乐铺底",
+      "description": "压低背景音乐，同时让人声保持突出。"
+    },
+    "heavy": {
+      "label": "重度噪声",
+      "description": "更强力地清理空调声、风扇声和街道环境噪声等宽带噪声。"
+    },
+    "wind": {
+      "label": "风声与低频轰鸣",
+      "description": "针对低频轰鸣、操作噪声和户外风压。"
+    },
+    "hum": {
+      "label": "电流声与空调嗡鸣",
+      "description": "集中清理音调性电流声、空调嗡鸣和电源线式噪声。"
+    }
+  },
+  "mographTour": {
+    "steps": {
+      "intro": {
+        "title": "动态图形与动画",
+        "description": "快速了解当前的动画工具分布：检查器中的关键帧、时间轴中的时间控制，以及左侧操作栏中的动态场景。"
+      },
+      "keyframes-inspector": {
+        "title": "关键帧动画",
+        "description": "选中一个片段，在检查器中打开其动画控制。添加关键帧即可为位置、缩放、旋转、不透明度等属性设置动画。",
+        "tips": [
+          "点击菱形图标可在当前时间添加关键帧",
+          "每个属性都可以有独立的动画曲线",
+          "可从 30 多种缓动预设中选择，获得平滑运动"
+        ]
+      },
+      "keyframes-timeline": {
+        "title": "时间轴关键帧视图",
+        "description": "下方时间轴是动画时间关系可见的地方。展开轨道并拖动关键帧菱形即可调整时间。",
+        "tips": [
+          "菱形标记表示关键帧位置",
+          "水平拖动可更改时间",
+          "点击关键帧之间的曲线可编辑缓动"
+        ]
+      },
+      "keyframe-editor": {
+        "title": "图形编辑器",
+        "description": "使用最左侧的操作栏打开动画工具，其中包括用于精确控制曲线的关键帧编辑器。",
+        "tips": [
+          "拖动关键帧点可调整时间和数值",
+          "按住 Shift 点击可多选关键帧",
+          "为选中的关键帧应用缓动预设"
+        ]
+      },
+      "motion-path": {
+        "title": "运动路径",
+        "description": "让元素沿自定义路径平滑运动。启用运动路径模式后，可直接在预览画布上绘制贝塞尔曲线。",
+        "tips": [
+          "在画布上点击可添加路径点",
+          "拖动控制手柄可弯曲路径",
+          "元素会沿路径运动",
+          "非常适合飞入的标志和动态文字"
+        ]
+      },
+      "particle-effects": {
+        "title": "粒子效果",
+        "description": "添加彩带、闪片、灰尘和爆炸等电影感粒子效果。可在检查器的粒子效果区域找到。",
+        "tips": [
+          "可从预设效果中选择或自行自定义",
+          "调整粒子数量、速度和颜色",
+          "设置效果出现的时间",
+          "与关键帧结合可做出戏剧性揭示"
+        ]
+      },
+      "emphasis-animations": {
+        "title": "强调动画",
+        "description": "用吸引注意力的动画让元素更突出。脉冲、弹跳、抖动、摇摆等等，非常适合强调重要内容。",
+        "tips": [
+          "内置 24 种强调预设",
+          "可设置时长和循环次数",
+          "可与进入/退出动画组合"
+        ]
+      },
+      "text-animations": {
+        "title": "文字动画预设",
+        "description": "使用专业预设为文字添加动画。字符可以淡入、滑入、弹跳，或以打字机效果出现。",
+        "tips": [
+          "提供 25 种文字动画样式",
+          "可按字符或按词设置动画",
+          "可自定义时间和缓动"
+        ]
+      },
+      "complete": {
+        "title": "开始做动画吧！",
+        "description": "你已经可以创作专业的动态图形了。选中一个片段，开始尝试关键帧和效果吧。",
+        "tips": [
+          "按 K 键可在播放头处添加关键帧",
+          "按 ? 键可查看所有键盘快捷键",
+          "组合多种效果可做出独特的动画"
+        ]
+      }
+    }
+  }
+}

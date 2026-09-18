@@ -23,11 +23,19 @@ import {
   type EasingName,
 } from "@openreel/core";
 import type { Keyframe, EasingType } from "@openreel/core";
+import { useTranslation } from "../../../i18n";
 
 const keyframeEngine = new KeyframeEngine();
 
+const CATEGORY_KEYS: Record<string, string> = {
+  Transform: "inspector:keyframesSection.categoryTransform",
+  Effects: "inspector:keyframesSection.categoryEffects",
+  Audio: "inspector:keyframesSection.categoryAudio",
+};
+
 interface AnimatableProperty {
   id: string;
+  labelKey: string;
   label: string;
   category: string;
   defaultValue: unknown;
@@ -39,6 +47,7 @@ interface AnimatableProperty {
 const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   {
     id: "position.x",
+    labelKey: "inspector:keyframesSection.positionX",
     label: "Position X",
     category: "Transform",
     defaultValue: 0,
@@ -47,6 +56,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "position.y",
+    labelKey: "inspector:keyframesSection.positionY",
     label: "Position Y",
     category: "Transform",
     defaultValue: 0,
@@ -55,6 +65,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "scale.x",
+    labelKey: "inspector:keyframesSection.scaleX",
     label: "Scale X",
     category: "Transform",
     defaultValue: 1,
@@ -64,6 +75,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "scale.y",
+    labelKey: "inspector:keyframesSection.scaleY",
     label: "Scale Y",
     category: "Transform",
     defaultValue: 1,
@@ -73,6 +85,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "rotation",
+    labelKey: "inspector:keyframesSection.rotation",
     label: "Rotation",
     category: "Transform",
     defaultValue: 0,
@@ -81,6 +94,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "opacity",
+    labelKey: "inspector:keyframesSection.opacity",
     label: "Opacity",
     category: "Transform",
     defaultValue: 1,
@@ -91,6 +105,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   // Effect parameters
   {
     id: "effect.brightness",
+    labelKey: "inspector:keyframesSection.brightness",
     label: "Brightness",
     category: "Effects",
     defaultValue: 0,
@@ -99,6 +114,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "effect.contrast",
+    labelKey: "inspector:keyframesSection.contrast",
     label: "Contrast",
     category: "Effects",
     defaultValue: 1,
@@ -108,6 +124,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "effect.saturation",
+    labelKey: "inspector:keyframesSection.saturation",
     label: "Saturation",
     category: "Effects",
     defaultValue: 1,
@@ -117,6 +134,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "effect.blur",
+    labelKey: "inspector:keyframesSection.blur",
     label: "Blur",
     category: "Effects",
     defaultValue: 0,
@@ -125,6 +143,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "volume",
+    labelKey: "inspector:keyframesSection.volume",
     label: "Volume",
     category: "Audio",
     defaultValue: 1,
@@ -134,6 +153,7 @@ const ANIMATABLE_PROPERTIES: AnimatableProperty[] = [
   },
   {
     id: "pan",
+    labelKey: "inspector:keyframesSection.pan",
     label: "Pan",
     category: "Audio",
     defaultValue: 0,
@@ -157,14 +177,20 @@ const PropertySelector: React.FC<{
   onSelect: (propertyId: string) => void;
   existingProperties: string[];
 }> = ({ selectedProperty, onSelect, existingProperties }) => {
+  const { t } = useTranslation("inspector");
   const [isOpen, setIsOpen] = useState(false);
 
   const categories = [...new Set(ANIMATABLE_PROPERTIES.map((p) => p.category))];
 
+  const selectedPropertyDef = selectedProperty
+    ? ANIMATABLE_PROPERTIES.find((p) => p.id === selectedProperty)
+    : undefined;
+
   const selectedLabel = selectedProperty
-    ? ANIMATABLE_PROPERTIES.find((p) => p.id === selectedProperty)?.label ||
+    ? (selectedPropertyDef &&
+        t(selectedPropertyDef.labelKey, selectedPropertyDef.label)) ||
       selectedProperty
-    : "Select Property";
+    : t("inspector:keyframesSection.selectProperty", "Select Property");
 
   return (
     <Popover
@@ -173,14 +199,14 @@ const PropertySelector: React.FC<{
       placement="below"
       alignment="start"
       width="min(260px, 100vw - 32px)"
-      label="Animate property"
+      label={t("inspector:keyframesSection.animatePropertyLabel", "Animate property")}
       content={
         <div className="max-h-64 overflow-y-auto p-1.5">
           {categories.map((category) => (
             <div key={category} className="space-y-1">
               <div className="px-2 py-1 bg-bg-2">
                 <Text type="supporting" color="secondary" weight="bold">
-                  {category}
+                  {t(CATEGORY_KEYS[category] ?? category, category)}
                 </Text>
               </div>
               {ANIMATABLE_PROPERTIES.filter(
@@ -190,7 +216,9 @@ const PropertySelector: React.FC<{
                 return (
                   <ClickableCard
                     key={prop.id}
-                    label={`Select ${prop.label}`}
+                    label={t("inspector:keyframesSection.selectProp", "Select {{name}}", {
+                      name: t(prop.labelKey, prop.label),
+                    })}
                     onClick={() => {
                       onSelect(prop.id);
                       setIsOpen(false);
@@ -201,7 +229,7 @@ const PropertySelector: React.FC<{
                   >
                     <div className="flex items-center justify-between gap-2">
                       <Text type="supporting" color="primary">
-                        {prop.label}
+                        {t(prop.labelKey, prop.label)}
                       </Text>
                       {hasKeyframes && (
                         <Diamond
@@ -282,6 +310,7 @@ const EasingSelector: React.FC<{
   value: EasingType;
   onChange: (easing: EasingName) => void;
 }> = ({ value, onChange }) => {
+  const { t } = useTranslation("inspector");
   const [isOpen, setIsOpen] = useState(false);
 
   const currentLabel = formatEasingLabel(value);
@@ -293,7 +322,9 @@ const EasingSelector: React.FC<{
       placement="below"
       alignment="end"
       width={208}
-      label={`Easing: ${currentLabel}`}
+      label={t("inspector:keyframesSection.easingLabel", "Easing: {{easing}}", {
+        easing: currentLabel,
+      })}
       content={
         <div className="max-h-64 overflow-y-auto p-1.5">
           {EASING_CATEGORIES.map((category) => (
@@ -306,7 +337,9 @@ const EasingSelector: React.FC<{
               {category.easings.map((easing) => (
                 <ClickableCard
                   key={easing}
-                  label={`Use ${formatEasingLabel(easing)} easing`}
+                  label={t("inspector:keyframesSection.useEasing", "Use {{easing}} easing", {
+                    easing: formatEasingLabel(easing),
+                  })}
                   onClick={() => {
                     onChange(easing);
                     setIsOpen(false);
@@ -345,6 +378,7 @@ const KeyframeItem: React.FC<{
   onEasingChange: (easing: EasingName) => void;
   property: AnimatableProperty | undefined;
 }> = ({ keyframe, onUpdate, onDelete, onEasingChange, property }) => {
+  const { t } = useTranslation("inspector");
   const _formatValue = (value: unknown): string => {
     if (typeof value === "number") {
       return value.toFixed(property?.step && property.step < 1 ? 2 : 0);
@@ -373,7 +407,7 @@ const KeyframeItem: React.FC<{
             •
           </Text>
           <ToolcraftNumberInputControl
-            label="Keyframe value"
+            label={t("inspector:keyframesSection.keyframeValue", "Keyframe value")}
             isLabelHidden
             value={typeof keyframe.value === "number" ? keyframe.value : 0}
             onChange={(value) => onUpdate({ value: value ?? 0 })}
@@ -387,7 +421,7 @@ const KeyframeItem: React.FC<{
       </div>
       <EasingSelector value={keyframe.easing} onChange={onEasingChange} />
       <IconButton
-        label="Delete keyframe"
+        label={t("inspector:keyframesSection.deleteKeyframe", "Delete keyframe")}
         icon={<Trash2 size={12} aria-hidden />}
         variant="ghost"
         size="sm"
@@ -410,6 +444,7 @@ interface KeyframesSectionProps {
 export const KeyframesSection: React.FC<KeyframesSectionProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const { getClip, updateClipKeyframes, project } = useProjectStore();
   const playheadPosition = useTimelineStore((state) => state.playheadPosition);
   const getGraphicsEngine = useEngineStore((state) => state.getGraphicsEngine);
@@ -533,7 +568,7 @@ export const KeyframesSection: React.FC<KeyframesSectionProps> = ({
   if (!clip) {
     return (
       <Text type="supporting" color="secondary" className="block text-center py-4">
-        No clip selected
+        {t("inspector:keyframesSection.noClip", "No clip selected")}
       </Text>
     );
   }
@@ -542,7 +577,7 @@ export const KeyframesSection: React.FC<KeyframesSectionProps> = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Text type="supporting" color="secondary" weight="bold" className="block">
-          Animate Property
+          {t("inspector:keyframesSection.animateProperty", "Animate Property")}
         </Text>
         <PropertySelector
           selectedProperty={selectedProperty}
@@ -558,7 +593,9 @@ export const KeyframesSection: React.FC<KeyframesSectionProps> = ({
           className="flex items-center justify-between gap-3 border border-border"
         >
           <Text type="supporting" color="secondary">
-            Value at {playheadPosition.toFixed(2)}s
+            {t("inspector:keyframesSection.valueAt", "Value at {{time}}s", {
+              time: playheadPosition.toFixed(2),
+            })}
           </Text>
           <Text type="supporting" color="primary" className="font-mono">
             {typeof currentValue === "number"
@@ -572,8 +609,12 @@ export const KeyframesSection: React.FC<KeyframesSectionProps> = ({
         <Button
           label={
             hasKeyframeAtPlayhead
-              ? `Keyframe exists at ${playheadPosition.toFixed(2)}s`
-              : `Add Keyframe at ${playheadPosition.toFixed(2)}s`
+              ? t("inspector:keyframesSection.keyframeExistsAt", "Keyframe exists at {{time}}s", {
+                  time: playheadPosition.toFixed(2),
+                })
+              : t("inspector:keyframesSection.addKeyframeAt", "Add Keyframe at {{time}}s", {
+                  time: playheadPosition.toFixed(2),
+                })
           }
           icon={
             hasKeyframeAtPlayhead ? (
@@ -594,7 +635,9 @@ export const KeyframesSection: React.FC<KeyframesSectionProps> = ({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Text type="supporting" color="secondary" weight="bold">
-              Keyframes ({propertyKeyframes.length})
+              {t("inspector:keyframesSection.keyframesCount", "Keyframes ({{count}})", {
+                count: propertyKeyframes.length,
+              })}
             </Text>
           </div>
           <div className="space-y-1.5 max-h-48 overflow-y-auto">
@@ -616,14 +659,17 @@ export const KeyframesSection: React.FC<KeyframesSectionProps> = ({
         <div className="text-center py-4">
           <Key size={24} className="mx-auto text-fg-3 mb-2" aria-hidden />
           <Text type="supporting" color="secondary">
-            Select a property to animate
+            {t("inspector:keyframesSection.selectPropertyHint", "Select a property to animate")}
           </Text>
         </div>
       )}
 
       {selectedProperty && propertyKeyframes.length === 0 && (
         <Text type="supporting" color="secondary" className="block text-center py-2">
-          No keyframes for this property. Add one to start animating.
+          {t(
+            "inspector:keyframesSection.noKeyframes",
+            "No keyframes for this property. Add one to start animating.",
+          )}
         </Text>
       )}
     </div>

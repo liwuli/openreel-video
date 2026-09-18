@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import i18n from "../i18n";
 
 export type ProcessingType =
   | "background-removal"
@@ -57,7 +58,7 @@ export const useProcessingStore = create<ProcessingState>((set, get) => ({
       type,
       progress: 0,
       status: "queued",
-      message: "Waiting to start...",
+      message: i18n.t("messages:processing.waiting", "Waiting to start..."),
     };
 
     set((state) => {
@@ -101,7 +102,7 @@ export const useProcessingStore = create<ProcessingState>((set, get) => ({
         ...task,
         progress: 100,
         status: "completed",
-        message: "Complete",
+        message: i18n.t("messages:processing.complete", "Complete"),
         completedAt: Date.now(),
       });
 
@@ -131,7 +132,7 @@ export const useProcessingStore = create<ProcessingState>((set, get) => ({
       newTasks.set(taskId, {
         ...task,
         status: "failed",
-        message: "Failed",
+        message: i18n.t("messages:processing.failed", "Failed"),
         error,
         completedAt: Date.now(),
       });

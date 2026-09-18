@@ -63,7 +63,11 @@
     },
     "savings": "可节省约 {{percent}}% 存储空间",
     "originalSize": "原始估算：{{size}}",
-    "compressedSize": "压缩预估：{{size}}"
+    "compressedSize": "压缩预估：{{size}}",
+    "intro": "重新编码项目以缩小文件体积。可选择画质档位，或按邮件、WhatsApp、Discord 等分享场景指定目标文件大小。",
+    "addClipsHint": "将片段添加到时间线即可预估压缩后的文件体积。",
+    "bitrateSummary": "视频 {{videoBitrate}} kbps",
+    "audioBitrateSummary": "音频 {{audioBitrate}} kbps"
   },
   "custom": {
     "videoSettings": "视频编码参数",
@@ -76,7 +80,24 @@
     "audioBitrate": "音频码率",
     "upscaling": "AI 超分辨率放大",
     "upscalingQuality": "放大质量",
-    "sharpening": "锐化强度"
+    "sharpening": "锐化强度",
+    "title": "自定义导出",
+    "subtitle": "为此文件自定义视频、编码与音频参数。",
+    "videoSection": "视频",
+    "videoSectionHint": "封装格式、编解码器、分辨率与帧率",
+    "qualitySection": "画质与编码",
+    "qualitySectionHint": "在画质、速度与文件体积之间取得平衡",
+    "bitrateKbps": "比特率 (kbps)",
+    "exportMode": "导出模式",
+    "audioSectionHint": "格式、采样率与比特率",
+    "encodeModes": {
+      "fast": "快速",
+      "fastHint": "硬件加速，速度最快",
+      "balanced": "均衡",
+      "balancedHint": "硬件加速，画质出色且体积小",
+      "smallest": "最小体积",
+      "smallestHint": "软件编码，文件体积最小"
+    }
   },
   "compressDialog": {
     "title": "压缩视频",
@@ -97,6 +118,56 @@
     "customSize": "自定义目标大小",
     "custom": "自定义",
     "compressBtn": "开始压缩",
-    "close": "关闭"
+    "close": "关闭",
+    "videoFile": "视频文件",
+    "modeAria": "压缩模式",
+    "readError": "无法读取该视频，请尝试其他文件。",
+    "failed": "压缩失败，请尝试更轻量的压缩设置。",
+    "from": "原大小 {{size}}",
+    "smaller": "体积减少 {{percent}}%",
+    "compressing": "正在压缩… {{percent}}%",
+    "progressLabel": "压缩进度"
+  },
+  "smaller": "更小",
+  "better": "更好",
+  "none": "无",
+  "max": "最大",
+  "estimatedOutput": "预计输出",
+  "recommendedForThisVideo": "推荐用于此视频",
+  "selectPresetHint": "选择预设即可查看预计体积与导出耗时。",
+  "optionsCount": "{{count}} 个选项",
+  "maxDuration": "最长 {{seconds}} 秒",
+  "resolutionOriginal": "原始分辨率 ({{width}}x{{height}})",
+  "resolutionVertical": "竖屏 1080p",
+  "resolutionSquare": "方形 1080",
+  "browserLimit": "浏览器限制：将以 {{width}}×{{height}} · {{fps}} fps 导出",
+  "browserLimitAdjusted": "受浏览器安全限制，此视频将以 {{width}}×{{height}} • {{frameRate}}fps 导出。",
+  "webGuardrail": "网页版无法导出 ProRes 或透明通道，将改用 H.264 编码且不保留透明度。如需 ProRes 或透明通道，请使用桌面端应用。",
+  "h264NoTransparency": "将使用 H.264 编码，且不保留透明通道。",
+  "exportH264Anyway": "仍以 H.264 导出",
+  "aria": {
+    "exportMode": "导出模式"
+  },
+  "upscale": {
+    "heading": "画质增强",
+    "hint": "以高于源分辨率导出时进行锐化",
+    "aria": "启用超分辨率放大以增强画质",
+    "note": "适用于导出分辨率高于项目分辨率的场景，会增加处理耗时。",
+    "qualityLevels": {
+      "fast": "快速",
+      "balanced": "均衡",
+      "quality": "高画质"
+    }
+  },
+  "device": {
+    "estimate": "预估耗时",
+    "getAccurateEstimate": "获取精确预估",
+    "testing": "测试中...",
+    "cores": "{{n}} 核",
+    "unknown": "未知",
+    "hwEncode": "硬件编码",
+    "softwareOnly": "仅软件编码",
+    "codecs": "编解码器",
+    "showDetails": "查看设备导出预估详情"
   }
 }

@@ -1,0 +1,1314 @@
+[
+ [
+  "propertiesPanel.adjustment.title",
+  "Adjustment"
+ ],
+ [
+  "propertiesPanel.alignDistribute.alignBottom",
+  "Align bottom"
+ ],
+ [
+  "propertiesPanel.alignDistribute.alignHorizontalCenter",
+  "Align horizontal center"
+ ],
+ [
+  "propertiesPanel.alignDistribute.alignLeft",
+  "Align left"
+ ],
+ [
+  "propertiesPanel.alignDistribute.alignRight",
+  "Align right"
+ ],
+ [
+  "propertiesPanel.alignDistribute.alignTop",
+  "Align top"
+ ],
+ [
+  "propertiesPanel.alignDistribute.alignVerticalCenter",
+  "Align vertical center"
+ ],
+ [
+  "propertiesPanel.alignDistribute.distributeHorizontally",
+  "Distribute horizontally"
+ ],
+ [
+  "propertiesPanel.alignDistribute.distributeVertically",
+  "Distribute vertically"
+ ],
+ [
+  "propertiesPanel.alignDistribute.groupLabel",
+  "Align selected layers"
+ ],
+ [
+  "propertiesPanel.alignDistribute.title",
+  "Align & Distribute"
+ ],
+ [
+  "propertiesPanel.animation.addKeyframe",
+  "Add keyframe"
+ ],
+ [
+  "propertiesPanel.animation.disableAnimation",
+  "Disable animation"
+ ],
+ [
+  "propertiesPanel.animation.propertyKeys",
+  "{{label}}, {{count}} keys"
+ ],
+ [
+  "propertiesPanel.animation.removeKeyframe",
+  "Remove keyframe"
+ ],
+ [
+  "propertiesPanel.animation.title",
+  "Animation"
+ ],
+ [
+  "propertiesPanel.axisValue",
+  "{{axis}} value"
+ ],
+ [
+  "propertiesPanel.camera.active",
+  "Active camera"
+ ],
+ [
+  "propertiesPanel.camera.activeDescription",
+  "Pan, zoom, rotate, and push the whole scene in 3D space"
+ ],
+ [
+  "propertiesPanel.camera.addKeyframe",
+  "Add camera keyframe"
+ ],
+ [
+  "propertiesPanel.camera.aperture",
+  "Aperture"
+ ],
+ [
+  "propertiesPanel.camera.depth",
+  "Depth"
+ ],
+ [
+  "propertiesPanel.camera.depthOfField",
+  "Depth of field"
+ ],
+ [
+  "propertiesPanel.camera.depthOfFieldDescription",
+  "Blur layers away from the camera focus plane"
+ ],
+ [
+  "propertiesPanel.camera.focus",
+  "Focus"
+ ],
+ [
+  "propertiesPanel.camera.maxBlur",
+  "Max blur"
+ ],
+ [
+  "propertiesPanel.camera.perspective",
+  "Perspective"
+ ],
+ [
+  "propertiesPanel.camera.positionX",
+  "Position X"
+ ],
+ [
+  "propertiesPanel.camera.positionY",
+  "Position Y"
+ ],
+ [
+  "propertiesPanel.camera.removeKeyframe",
+  "Remove camera keyframe"
+ ],
+ [
+  "propertiesPanel.camera.reset",
+  "Reset camera"
+ ],
+ [
+  "propertiesPanel.camera.roll",
+  "Roll"
+ ],
+ [
+  "propertiesPanel.camera.title",
+  "Camera"
+ ],
+ [
+  "propertiesPanel.camera.zoom",
+  "Zoom"
+ ],
+ [
+  "propertiesPanel.common.add",
+  "Add"
+ ],
+ [
+  "propertiesPanel.common.amount",
+  "Amount"
+ ],
+ [
+  "propertiesPanel.common.angle",
+  "Angle"
+ ],
+ [
+  "propertiesPanel.common.color",
+  "Color"
+ ],
+ [
+  "propertiesPanel.common.duration",
+  "Duration"
+ ],
+ [
+  "propertiesPanel.common.end",
+  "End"
+ ],
+ [
+  "propertiesPanel.common.fit",
+  "Fit"
+ ],
+ [
+  "propertiesPanel.common.height",
+  "Height"
+ ],
+ [
+  "propertiesPanel.common.keyCount",
+  "{{count}} keys"
+ ],
+ [
+  "propertiesPanel.common.lock",
+  "Lock"
+ ],
+ [
+  "propertiesPanel.common.loopSource",
+  "Loop source"
+ ],
+ [
+  "propertiesPanel.common.none",
+  "None"
+ ],
+ [
+  "propertiesPanel.common.offset",
+  "Offset"
+ ],
+ [
+  "propertiesPanel.common.opacity",
+  "Opacity"
+ ],
+ [
+  "propertiesPanel.common.radius",
+  "Radius"
+ ],
+ [
+  "propertiesPanel.common.remove",
+  "Remove"
+ ],
+ [
+  "propertiesPanel.common.reverse",
+  "Reverse"
+ ],
+ [
+  "propertiesPanel.common.rotation",
+  "Rotation"
+ ],
+ [
+  "propertiesPanel.common.seed",
+  "Seed"
+ ],
+ [
+  "propertiesPanel.common.size",
+  "Size"
+ ],
+ [
+  "propertiesPanel.common.source",
+  "Source"
+ ],
+ [
+  "propertiesPanel.common.speed",
+  "Speed"
+ ],
+ [
+  "propertiesPanel.common.start",
+  "Start"
+ ],
+ [
+  "propertiesPanel.common.type",
+  "Type"
+ ],
+ [
+  "propertiesPanel.common.width",
+  "Width"
+ ],
+ [
+  "propertiesPanel.composition.background",
+  "Background"
+ ],
+ [
+  "propertiesPanel.composition.duration",
+  "Duration"
+ ],
+ [
+  "propertiesPanel.composition.frameRate",
+  "Frame rate"
+ ],
+ [
+  "propertiesPanel.composition.sceneName",
+  "Scene name"
+ ],
+ [
+  "propertiesPanel.composition.title",
+  "Composition"
+ ],
+ [
+  "propertiesPanel.controller.guideColor",
+  "Guide color"
+ ],
+ [
+  "propertiesPanel.controller.guideSize",
+  "Guide size"
+ ],
+ [
+  "propertiesPanel.controller.title",
+  "Controller"
+ ],
+ [
+  "propertiesPanel.emptyState.selectLayer",
+  "Select a layer on the stage or in the layers panel to edit its transform, timing, and style."
+ ],
+ [
+  "propertiesPanel.fit.contain",
+  "Contain"
+ ],
+ [
+  "propertiesPanel.fit.cover",
+  "Cover"
+ ],
+ [
+  "propertiesPanel.fit.fill",
+  "Fill"
+ ],
+ [
+  "propertiesPanel.gradient.angle",
+  "Angle"
+ ],
+ [
+  "propertiesPanel.gradient.fillOpacity",
+  "Fill opacity"
+ ],
+ [
+  "propertiesPanel.gradient.linear",
+  "Linear"
+ ],
+ [
+  "propertiesPanel.gradient.radial",
+  "Radial"
+ ],
+ [
+  "propertiesPanel.gradient.type",
+  "Gradient type"
+ ],
+ [
+  "propertiesPanel.gradientStop.add",
+  "Add stop"
+ ],
+ [
+  "propertiesPanel.gradientStop.remove",
+  "Remove stop {{index}}"
+ ],
+ [
+  "propertiesPanel.guides.clear",
+  "Clear guides"
+ ],
+ [
+  "propertiesPanel.guides.empty",
+  "No guides"
+ ],
+ [
+  "propertiesPanel.guides.horizontal",
+  "Horizontal"
+ ],
+ [
+  "propertiesPanel.guides.orientationAria",
+  "Guide orientation"
+ ],
+ [
+  "propertiesPanel.guides.remove",
+  "Remove guide"
+ ],
+ [
+  "propertiesPanel.guides.title",
+  "Guides"
+ ],
+ [
+  "propertiesPanel.guides.vertical",
+  "Vertical"
+ ],
+ [
+  "propertiesPanel.header.composition",
+  "Composition"
+ ],
+ [
+  "propertiesPanel.header.layersSelected",
+  "{{count}} layers selected"
+ ],
+ [
+  "propertiesPanel.header.multiSelectionInspector",
+  "Multi-selection inspector"
+ ],
+ [
+  "propertiesPanel.header.sceneSettings",
+  "Scene settings"
+ ],
+ [
+  "propertiesPanel.image.empty",
+  "Add an image from the Assets panel to bind this layer to real media."
+ ],
+ [
+  "propertiesPanel.image.fitAria",
+  "Image fit"
+ ],
+ [
+  "propertiesPanel.image.sourceAria",
+  "Image source"
+ ],
+ [
+  "propertiesPanel.image.title",
+  "Image"
+ ],
+ [
+  "propertiesPanel.layerOptions.blendMode",
+  "Blend mode"
+ ],
+ [
+  "propertiesPanel.layerOptions.blending",
+  "Blending"
+ ],
+ [
+  "propertiesPanel.layerOptions.guideLayer",
+  "Guide"
+ ],
+ [
+  "propertiesPanel.layerOptions.motionBlur",
+  "Motion Blur"
+ ],
+ [
+  "propertiesPanel.layerOptions.motionBlurAria",
+  "Motion blur"
+ ],
+ [
+  "propertiesPanel.layerOptions.name",
+  "Name"
+ ],
+ [
+  "propertiesPanel.layerOptions.orientAlongPath",
+  "Orient along path"
+ ],
+ [
+  "propertiesPanel.layerOptions.parent",
+  "Parent"
+ ],
+ [
+  "propertiesPanel.layerOptions.solo",
+  "Solo"
+ ],
+ [
+  "propertiesPanel.layerOptions.title",
+  "Layer Options"
+ ],
+ [
+  "propertiesPanel.lighting.ambient",
+  "Ambient"
+ ],
+ [
+  "propertiesPanel.lighting.environment",
+  "Environment"
+ ],
+ [
+  "propertiesPanel.lighting.environmentBackdrop",
+  "Show environment as backdrop"
+ ],
+ [
+  "propertiesPanel.lighting.environmentHint",
+  "image-based lighting"
+ ],
+ [
+  "propertiesPanel.lighting.groundShadow",
+  "Ground shadow"
+ ],
+ [
+  "propertiesPanel.lighting.hdriMapUrl",
+  "HDRI map URL"
+ ],
+ [
+  "propertiesPanel.lighting.keyColor",
+  "Key color"
+ ],
+ [
+  "propertiesPanel.lighting.keyIntensity",
+  "Key intensity"
+ ],
+ [
+  "propertiesPanel.lighting.rimIntensity",
+  "Rim intensity"
+ ],
+ [
+  "propertiesPanel.lighting.title",
+  "Lighting & Environment"
+ ],
+ [
+  "propertiesPanel.lights.addKeyframe",
+  "Add light keyframe"
+ ],
+ [
+  "propertiesPanel.lights.castShadow",
+  "Cast shadow"
+ ],
+ [
+  "propertiesPanel.lights.disable",
+  "Disable light"
+ ],
+ [
+  "propertiesPanel.lights.empty",
+  "No lights"
+ ],
+ [
+  "propertiesPanel.lights.enable",
+  "Enable light"
+ ],
+ [
+  "propertiesPanel.lights.remove",
+  "Remove light"
+ ],
+ [
+  "propertiesPanel.lights.removeKeyframe",
+  "Remove light keyframe"
+ ],
+ [
+  "propertiesPanel.lights.title",
+  "Lights"
+ ],
+ [
+  "propertiesPanel.lights.typeAria",
+  "Light type"
+ ],
+ [
+  "propertiesPanel.motionBlur.enable",
+  "Enable shutter blur"
+ ],
+ [
+  "propertiesPanel.motionBlur.phase",
+  "Phase"
+ ],
+ [
+  "propertiesPanel.motionBlur.samples",
+  "Samples"
+ ],
+ [
+  "propertiesPanel.motionBlur.shutterAngle",
+  "Shutter angle"
+ ],
+ [
+  "propertiesPanel.motionBlur.title",
+  "Motion Blur"
+ ],
+ [
+  "propertiesPanel.particles.circle",
+  "Circle"
+ ],
+ [
+  "propertiesPanel.particles.endColor",
+  "End color"
+ ],
+ [
+  "propertiesPanel.particles.endOpacity",
+  "End opacity"
+ ],
+ [
+  "propertiesPanel.particles.gravity",
+  "Gravity"
+ ],
+ [
+  "propertiesPanel.particles.lifetime",
+  "Lifetime"
+ ],
+ [
+  "propertiesPanel.particles.max",
+  "Max"
+ ],
+ [
+  "propertiesPanel.particles.preset",
+  "{{name}} {{rate}}/s"
+ ],
+ [
+  "propertiesPanel.particles.random",
+  "Random"
+ ],
+ [
+  "propertiesPanel.particles.rate",
+  "Rate"
+ ],
+ [
+  "propertiesPanel.particles.shape",
+  "Shape"
+ ],
+ [
+  "propertiesPanel.particles.shapeAria",
+  "Particle shape"
+ ],
+ [
+  "propertiesPanel.particles.size",
+  "Size"
+ ],
+ [
+  "propertiesPanel.particles.speed",
+  "Speed"
+ ],
+ [
+  "propertiesPanel.particles.spread",
+  "Spread"
+ ],
+ [
+  "propertiesPanel.particles.square",
+  "Square"
+ ],
+ [
+  "propertiesPanel.particles.startColor",
+  "Start color"
+ ],
+ [
+  "propertiesPanel.particles.startOpacity",
+  "Start opacity"
+ ],
+ [
+  "propertiesPanel.particles.title",
+  "Particles"
+ ],
+ [
+  "propertiesPanel.precomp.clearRemap",
+  "Clear remap"
+ ],
+ [
+  "propertiesPanel.precomp.enableRemap",
+  "Enable remap"
+ ],
+ [
+  "propertiesPanel.precomp.fitAria",
+  "Precomp fit"
+ ],
+ [
+  "propertiesPanel.precomp.freeze",
+  "Freeze"
+ ],
+ [
+  "propertiesPanel.precomp.instanceOverrides",
+  "Instance overrides"
+ ],
+ [
+  "propertiesPanel.precomp.keyTime",
+  "Key time"
+ ],
+ [
+  "propertiesPanel.precomp.missingSource",
+  "This precomp layer references a composition that is no longer in the project."
+ ],
+ [
+  "propertiesPanel.precomp.openSource",
+  "Open source composition"
+ ],
+ [
+  "propertiesPanel.precomp.playback",
+  "Playback"
+ ],
+ [
+  "propertiesPanel.precomp.reset",
+  "Reset"
+ ],
+ [
+  "propertiesPanel.precomp.resetAll",
+  "Reset all"
+ ],
+ [
+  "propertiesPanel.precomp.sourceComposition",
+  "Source composition"
+ ],
+ [
+  "propertiesPanel.precomp.sourceTimeAtPlayhead",
+  "Source time at playhead"
+ ],
+ [
+  "propertiesPanel.precomp.text",
+  "Text"
+ ],
+ [
+  "propertiesPanel.precomp.timeOffset",
+  "Time offset"
+ ],
+ [
+  "propertiesPanel.precomp.timeRemap",
+  "Time remap"
+ ],
+ [
+  "propertiesPanel.precomp.title",
+  "Precomp"
+ ],
+ [
+  "propertiesPanel.precomp.updateKey",
+  "Update key"
+ ],
+ [
+  "propertiesPanel.select.defaultLabel",
+  "Select option"
+ ],
+ [
+  "propertiesPanel.selectionActions.delete",
+  "Delete selection"
+ ],
+ [
+  "propertiesPanel.selectionActions.duplicate",
+  "Duplicate selection"
+ ],
+ [
+  "propertiesPanel.selectionActions.note",
+  "Changes apply to all selected, unlocked layers. Animated opacity writes a keyframe at the playhead."
+ ],
+ [
+  "propertiesPanel.selectionActions.title",
+  "Selection Actions"
+ ],
+ [
+  "propertiesPanel.shader.builtInCollection",
+  "Built-in"
+ ],
+ [
+  "propertiesPanel.shader.generalCollection",
+  "General"
+ ],
+ [
+  "propertiesPanel.shaderAnimator.aria",
+  "Text shader animator"
+ ],
+ [
+  "propertiesPanel.shaderAnimator.title",
+  "Shader animator"
+ ],
+ [
+  "propertiesPanel.shaderFill.aria",
+  "Shader fill"
+ ],
+ [
+  "propertiesPanel.shaderFill.previews",
+  "Fill previews"
+ ],
+ [
+  "propertiesPanel.shaderFill.title",
+  "Shader"
+ ],
+ [
+  "propertiesPanel.shape.addPathKeyframe",
+  "Add path keyframe"
+ ],
+ [
+  "propertiesPanel.shape.clearPathKeyframes",
+  "Clear path keyframes"
+ ],
+ [
+  "propertiesPanel.shape.closedPath",
+  "Closed path"
+ ],
+ [
+  "propertiesPanel.shape.cornerRadius",
+  "Corner radius"
+ ],
+ [
+  "propertiesPanel.shape.dashOffset",
+  "Dash offset"
+ ],
+ [
+  "propertiesPanel.shape.dashPattern",
+  "Dash pattern"
+ ],
+ [
+  "propertiesPanel.shape.fillColor",
+  "Fill color"
+ ],
+ [
+  "propertiesPanel.shape.fillMode",
+  "Fill mode"
+ ],
+ [
+  "propertiesPanel.shape.fillModeGradient",
+  "Grad"
+ ],
+ [
+  "propertiesPanel.shape.fillModeNone",
+  "None"
+ ],
+ [
+  "propertiesPanel.shape.fillModeShader",
+  "Shader"
+ ],
+ [
+  "propertiesPanel.shape.fillModeSolid",
+  "Solid"
+ ],
+ [
+  "propertiesPanel.shape.fillOpacity",
+  "Fill opacity"
+ ],
+ [
+  "propertiesPanel.shape.innerRadius",
+  "Inner radius"
+ ],
+ [
+  "propertiesPanel.shape.lineCap",
+  "Line cap"
+ ],
+ [
+  "propertiesPanel.shape.lineCapButt",
+  "Butt"
+ ],
+ [
+  "propertiesPanel.shape.lineCapRound",
+  "Round"
+ ],
+ [
+  "propertiesPanel.shape.lineCapSquare",
+  "Square"
+ ],
+ [
+  "propertiesPanel.shape.lineJoin",
+  "Line join"
+ ],
+ [
+  "propertiesPanel.shape.lineJoinBevel",
+  "Bevel"
+ ],
+ [
+  "propertiesPanel.shape.lineJoinMiter",
+  "Miter"
+ ],
+ [
+  "propertiesPanel.shape.lineJoinRound",
+  "Round"
+ ],
+ [
+  "propertiesPanel.shape.pathData",
+  "Path data"
+ ],
+ [
+  "propertiesPanel.shape.pathMorph",
+  "Path morph"
+ ],
+ [
+  "propertiesPanel.shape.points",
+  "Points"
+ ],
+ [
+  "propertiesPanel.shape.strokeColor",
+  "Stroke color"
+ ],
+ [
+  "propertiesPanel.shape.strokeOpacity",
+  "Stroke opacity"
+ ],
+ [
+  "propertiesPanel.shape.strokeWidth",
+  "Stroke width"
+ ],
+ [
+  "propertiesPanel.shape.title",
+  "Shape"
+ ],
+ [
+  "propertiesPanel.shape.typeAria",
+  "Shape type"
+ ],
+ [
+  "propertiesPanel.shape.updatePathKeyframe",
+  "Update path keyframe"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addOffsetPaths",
+  "Add Offset Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addPuckerBloat",
+  "Add Pucker & Bloat"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addRepeater",
+  "Add Repeater"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addRoundCorners",
+  "Add Round Corners"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addTrimPaths",
+  "Add Trim Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addTwist",
+  "Add Twist"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addWigglePaths",
+  "Add Wiggle Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.addZigZag",
+  "Add Zig Zag"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.copies",
+  "Copies"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.detail",
+  "Detail"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disableOffsetPaths",
+  "Disable Offset Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disablePuckerBloat",
+  "Disable Pucker & Bloat"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disableRepeater",
+  "Disable Repeater"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disableRoundCorners",
+  "Disable Round Corners"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disableTrimPaths",
+  "Disable Trim Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disableTwist",
+  "Disable Twist"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disableWigglePaths",
+  "Disable Wiggle Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.disableZigZag",
+  "Disable Zig Zag"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.empty",
+  "Add Trim Paths, Repeater, Zig Zag, Round Corners, Wiggle Paths, Offset Paths, Pucker & Bloat, or Twist modifiers for logo reveals, line draws, patterns, echoes, kinetic outlines, and organic distortions."
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enableOffsetPaths",
+  "Enable Offset Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enablePuckerBloat",
+  "Enable Pucker & Bloat"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enableRepeater",
+  "Enable Repeater"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enableRoundCorners",
+  "Enable Round Corners"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enableTrimPaths",
+  "Enable Trim Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enableTwist",
+  "Enable Twist"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enableWigglePaths",
+  "Enable Wiggle Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.enableZigZag",
+  "Enable Zig Zag"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.keyframeToggle",
+  "{{action}} {{label}} keyframe"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.offsetPathsSubtitle",
+  "{{amount}}px {{join}} join"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.positionX",
+  "Position X"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.positionY",
+  "Position Y"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.puckerBloatSubtitle",
+  "{{amount}}% distortion"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removeOffsetPaths",
+  "Remove Offset Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removePuckerBloat",
+  "Remove Pucker & Bloat"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removeRepeater",
+  "Remove Repeater"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removeRoundCorners",
+  "Remove Round Corners"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removeTrimPaths",
+  "Remove Trim Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removeTwist",
+  "Remove Twist"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removeWigglePaths",
+  "Remove Wiggle Paths"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.removeZigZag",
+  "Remove Zig Zag"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.repeaterSubtitle",
+  "{{count}} generated copies"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.ridges",
+  "Ridges"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.roundCornersSubtitle",
+  "{{radius}}px radius, {{segments}} samples"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.samples",
+  "Samples"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.scaleX",
+  "Scale X"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.scaleY",
+  "Scale Y"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.title",
+  "Shape Modifiers"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.trimPathsSubtitle",
+  "Stroke reveal modifier"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.twistSubtitle",
+  "{{angle}}deg twist"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.wigglePathsSubtitle",
+  "{{size}}px at {{speed}}x speed"
+ ],
+ [
+  "propertiesPanel.shapeModifiers.zigZagSubtitle",
+  "{{count}} ridges per segment"
+ ],
+ [
+  "propertiesPanel.sharedAppearance.hideAll",
+  "Hide all"
+ ],
+ [
+  "propertiesPanel.sharedAppearance.lockAll",
+  "Lock all"
+ ],
+ [
+  "propertiesPanel.sharedAppearance.opacityAverage",
+  "Opacity (average)"
+ ],
+ [
+  "propertiesPanel.sharedAppearance.showAll",
+  "Show all"
+ ],
+ [
+  "propertiesPanel.sharedAppearance.title",
+  "Shared Appearance"
+ ],
+ [
+  "propertiesPanel.sharedAppearance.unlockAll",
+  "Unlock all"
+ ],
+ [
+  "propertiesPanel.strokeGradient.gradient",
+  "Gradient stroke"
+ ],
+ [
+  "propertiesPanel.strokeGradient.mode",
+  "Stroke fill"
+ ],
+ [
+  "propertiesPanel.strokeGradient.solid",
+  "Solid stroke"
+ ],
+ [
+  "propertiesPanel.text.boxWidth",
+  "Box width"
+ ],
+ [
+  "propertiesPanel.text.boxWidthHint",
+  "0 disables word wrap"
+ ],
+ [
+  "propertiesPanel.text.content",
+  "Content"
+ ],
+ [
+  "propertiesPanel.text.fill",
+  "Fill"
+ ],
+ [
+  "propertiesPanel.text.fillType",
+  "Fill type"
+ ],
+ [
+  "propertiesPanel.text.fontFamily",
+  "Font family"
+ ],
+ [
+  "propertiesPanel.text.fontWeight",
+  "Font weight"
+ ],
+ [
+  "propertiesPanel.text.leading",
+  "Leading"
+ ],
+ [
+  "propertiesPanel.text.shader",
+  "Shader"
+ ],
+ [
+  "propertiesPanel.text.solid",
+  "Solid"
+ ],
+ [
+  "propertiesPanel.text.stroke",
+  "Stroke"
+ ],
+ [
+  "propertiesPanel.text.strokeWidth",
+  "Stroke width"
+ ],
+ [
+  "propertiesPanel.text.strokeWidthHint",
+  "0 removes stroke"
+ ],
+ [
+  "propertiesPanel.text.title",
+  "Text"
+ ],
+ [
+  "propertiesPanel.text.tracking",
+  "Tracking"
+ ],
+ [
+  "propertiesPanel.textAnimators.addAnimator",
+  "+ Add animator"
+ ],
+ [
+  "propertiesPanel.textAnimators.addPresetAria",
+  "Add text animator preset"
+ ],
+ [
+  "propertiesPanel.textAnimators.basedOn",
+  "Based on"
+ ],
+ [
+  "propertiesPanel.textAnimators.characters",
+  "Characters"
+ ],
+ [
+  "propertiesPanel.textAnimators.direction",
+  "Direction"
+ ],
+ [
+  "propertiesPanel.textAnimators.disable",
+  "Disable Text Animator"
+ ],
+ [
+  "propertiesPanel.textAnimators.ease",
+  "Ease"
+ ],
+ [
+  "propertiesPanel.textAnimators.easeIn",
+  "Ease in"
+ ],
+ [
+  "propertiesPanel.textAnimators.easeOption",
+  "Ease"
+ ],
+ [
+  "propertiesPanel.textAnimators.easeOut",
+  "Ease out"
+ ],
+ [
+  "propertiesPanel.textAnimators.empty",
+  "Add a text animator for character reveals, type-on effects, kinetic headlines, and staggered title sequences."
+ ],
+ [
+  "propertiesPanel.textAnimators.enable",
+  "Enable Text Animator"
+ ],
+ [
+  "propertiesPanel.textAnimators.forward",
+  "Forward"
+ ],
+ [
+  "propertiesPanel.textAnimators.fromCenter",
+  "From center"
+ ],
+ [
+  "propertiesPanel.textAnimators.initialOpacity",
+  "Initial opacity"
+ ],
+ [
+  "propertiesPanel.textAnimators.initialRotation",
+  "Initial rotation"
+ ],
+ [
+  "propertiesPanel.textAnimators.initialScale",
+  "Initial scale"
+ ],
+ [
+  "propertiesPanel.textAnimators.initialX",
+  "Initial X"
+ ],
+ [
+  "propertiesPanel.textAnimators.initialY",
+  "Initial Y"
+ ],
+ [
+  "propertiesPanel.textAnimators.linear",
+  "Linear"
+ ],
+ [
+  "propertiesPanel.textAnimators.name",
+  "Name"
+ ],
+ [
+  "propertiesPanel.textAnimators.remove",
+  "Remove Text Animator"
+ ],
+ [
+  "propertiesPanel.textAnimators.reverse",
+  "Reverse"
+ ],
+ [
+  "propertiesPanel.textAnimators.stagger",
+  "Stagger"
+ ],
+ [
+  "propertiesPanel.textAnimators.startTime",
+  "Start time"
+ ],
+ [
+  "propertiesPanel.textAnimators.title",
+  "Text Animators"
+ ],
+ [
+  "propertiesPanel.textAnimators.words",
+  "Words"
+ ],
+ [
+  "propertiesPanel.timing.duration",
+  "Duration"
+ ],
+ [
+  "propertiesPanel.timing.start",
+  "Start"
+ ],
+ [
+  "propertiesPanel.timing.title",
+  "Timing"
+ ],
+ [
+  "propertiesPanel.transform.anchor",
+  "Anchor"
+ ],
+ [
+  "propertiesPanel.transform.opacity",
+  "Opacity"
+ ],
+ [
+  "propertiesPanel.transform.perspective",
+  "Perspective"
+ ],
+ [
+  "propertiesPanel.transform.position",
+  "Position"
+ ],
+ [
+  "propertiesPanel.transform.preserve3d",
+  "Preserve 3D"
+ ],
+ [
+  "propertiesPanel.transform.rotation",
+  "Rotation"
+ ],
+ [
+  "propertiesPanel.transform.scale",
+  "Scale"
+ ],
+ [
+  "propertiesPanel.transform.title",
+  "Transform"
+ ],
+ [
+  "propertiesPanel.video.empty",
+  "Add a video from the Assets panel to bind this layer to real footage."
+ ],
+ [
+  "propertiesPanel.video.fitAria",
+  "Video fit"
+ ],
+ [
+  "propertiesPanel.video.freezeFrame",
+  "Freeze frame"
+ ],
+ [
+  "propertiesPanel.video.frozenSourceTime",
+  "Frozen source time"
+ ],
+ [
+  "propertiesPanel.video.muteAudio",
+  "Mute audio"
+ ],
+ [
+  "propertiesPanel.video.sourceAria",
+  "Video source"
+ ],
+ [
+  "propertiesPanel.video.speed",
+  "Speed"
+ ],
+ [
+  "propertiesPanel.video.title",
+  "Video"
+ ],
+ [
+  "propertiesPanel.video.trimStart",
+  "Trim Start"
+ ]
+]

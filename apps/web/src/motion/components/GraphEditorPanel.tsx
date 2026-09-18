@@ -90,6 +90,7 @@ import {
 } from "@openreel/core";
 import { ToolcraftText } from "@openreel/ui";
 import { useProjectStore } from "../../stores/project-store";
+import i18n, { useTranslation } from "../../i18n";
 import { useMotionStore } from "../stores/motion-store";
 import {
   graphPointToNormalizedHandle,
@@ -317,6 +318,7 @@ export function GraphEditorPanel({
   composition,
   embedded = false,
 }: GraphEditorPanelProps): JSX.Element | null {
+  const { t } = useTranslation("motion");
   const [keyframeClipboard, setKeyframeClipboard] =
     useState<MotionKeyframeClipboard | null>(null);
   const [referenceLayerId, setReferenceLayerId] = useState<string>("");
@@ -492,12 +494,18 @@ export function GraphEditorPanel({
     }
     return (
       <div className="flex h-full min-h-0 flex-col">
-        <PanelHeader title="Graph Editor" icon={Activity} />
+        <PanelHeader
+          title={t("motion:graphEditor.panelTitle", "Graph Editor")}
+          icon={Activity}
+        />
         <div className="flex flex-1 items-center justify-center p-4">
           <EmptyState
             icon={ListTree}
-            title="Select an object"
-            description="Choose a layer, camera, or light to edit timing curves and keyframes."
+            title={t("motion:graphEditor.empty.title", "Select an object")}
+            description={t(
+              "motion:graphEditor.empty.description",
+              "Choose a layer, camera, or light to edit timing curves and keyframes.",
+            )}
           />
         </div>
       </div>
@@ -906,9 +914,17 @@ export function GraphEditorPanel({
 
   return (
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
-      {embedded ? null : <PanelHeader title="Graph Editor" icon={Activity} />}
+      {embedded ? null : (
+        <PanelHeader
+          title={t("motion:graphEditor.panelTitle", "Graph Editor")}
+          icon={Activity}
+        />
+      )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
-        <Section title="Animated Property" icon={ListTree}>
+        <Section
+          title={t("motion:graphEditor.sections.animatedProperty", "Animated Property")}
+          icon={ListTree}
+        >
           <div className="grid grid-cols-2 gap-1.5">
             {availableProperties.map((item) => {
               const active = item.property === property;
@@ -952,13 +968,13 @@ export function GraphEditorPanel({
         </Section>
 
         <Section
-          title="Expression"
+          title={t("motion:graphEditor.sections.expression", "Expression")}
           icon={Activity}
           defaultOpen={Boolean(propertyExpression)}
           action={
             <IconButton
               icon={Trash2}
-              label="Clear expression"
+              label={t("motion:graphEditor.actions.clearExpression", "Clear expression")}
               size="sm"
               variant="danger"
               disabled={!propertyExpression}
@@ -966,11 +982,11 @@ export function GraphEditorPanel({
             />
           }
         >
-          <Field label="Preset">
+          <Field label={t("motion:graphEditor.fields.preset", "Preset")}>
             <SelectInput
               value={propertyExpression?.type ?? ""}
               options={[
-                { value: "", label: "None" },
+                { value: "", label: t("motion:graphEditor.options.none", "None") },
                 ...MOTION_EXPRESSION_PRESETS.map((preset) => ({
                   value: preset.type,
                   label: preset.name,
@@ -985,8 +1001,11 @@ export function GraphEditorPanel({
           {propertyExpression ? (
             <>
               <SwitchInput
-                label="Enabled"
-                description="Procedural value is added at render time"
+                label={t("motion:graphEditor.fields.enabled", "Enabled")}
+                description={t(
+                  "motion:graphEditor.fields.enabledDescription",
+                  "Procedural value is added at render time",
+                )}
                 checked={propertyExpression.enabled}
                 onChange={(enabled) =>
                   replaceLayer(
@@ -1001,9 +1020,12 @@ export function GraphEditorPanel({
 
               {propertyExpression.type === "expression" ? (
                 <>
-                  <Field label="Expression">
+                  <Field label={t("motion:graphEditor.fields.expression", "Expression")}>
                     <textarea
-                      aria-label="Expression code"
+                      aria-label={t(
+                        "motion:graphEditor.fields.expressionCode",
+                        "Expression code",
+                      )}
                       value={propertyExpression.code ?? ""}
                       rows={4}
                       spellCheck={false}
@@ -1024,7 +1046,7 @@ export function GraphEditorPanel({
                       className="flex items-start gap-2 rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-[12px] leading-relaxed text-danger"
                     >
                       <span className="mt-[1px] inline-flex shrink-0 items-center rounded bg-danger px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-                        Error
+                        {t("motion:graphEditor.expression.error", "Error")}
                       </span>
                       <span className="min-w-0 break-words">{expressionError}</span>
                     </div>
@@ -1036,11 +1058,17 @@ export function GraphEditorPanel({
                       color="secondary"
                       className="mb-2 block text-[11px] font-semibold uppercase tracking-wide text-fg-muted"
                     >
-                      Insert reference
+                      {t(
+                        "motion:graphEditor.expression.insertReference",
+                        "Insert reference",
+                      )}
                     </ToolcraftText>
                     <div className="grid grid-cols-2 gap-2">
                       <select
-                        aria-label="Reference layer"
+                        aria-label={t(
+                          "motion:graphEditor.fields.referenceLayer",
+                          "Reference layer",
+                        )}
                         value={referenceLayerId || selectedLayer.id}
                         onChange={(event) => {
                           setReferenceLayerId(event.target.value);
@@ -1051,13 +1079,20 @@ export function GraphEditorPanel({
                         {composition.layers.map((layer) => (
                           <option key={layer.id} value={layer.id}>
                             {layer.id === selectedLayer.id
-                              ? `${layer.name} (this layer)`
+                              ? t(
+                                  "motion:graphEditor.reference.thisLayer",
+                                  "{{name}} (this layer)",
+                                  { name: layer.name },
+                                )
                               : layer.name}
                           </option>
                         ))}
                       </select>
                       <select
-                        aria-label="Reference property"
+                        aria-label={t(
+                          "motion:graphEditor.fields.referenceProperty",
+                          "Reference property",
+                        )}
                         value={resolvedReferenceProperty}
                         onChange={(event) =>
                           setReferenceProperty(event.target.value)
@@ -1072,7 +1107,10 @@ export function GraphEditorPanel({
                       </select>
                     </div>
                     <Button
-                      label="Insert reference"
+                      label={t(
+                        "motion:graphEditor.expression.insertReference",
+                        "Insert reference",
+                      )}
                       size="sm"
                       variant="secondary"
                       className="mt-2 w-full"
@@ -1086,7 +1124,7 @@ export function GraphEditorPanel({
               {hasExpressionParameters(propertyExpression.type) ? (
                 <div className="grid grid-cols-2 gap-2.5">
                   {EXPRESSION_TYPES_WITH_AMPLITUDE.has(propertyExpression.type) ? (
-                    <Field label="Amplitude">
+                    <Field label={t("motion:graphEditor.fields.amplitude", "Amplitude")}>
                       <NumberInput
                         value={propertyExpression.amplitude}
                         step={descriptor?.step ?? 1}
@@ -1103,8 +1141,8 @@ export function GraphEditorPanel({
                     <Field
                       label={
                         propertyExpression.type === "posterize"
-                          ? "Samples/sec"
-                          : "Frequency"
+                          ? t("motion:graphEditor.fields.samplesPerSec", "Samples/sec")
+                          : t("motion:graphEditor.fields.frequency", "Frequency")
                       }
                     >
                       <NumberInput
@@ -1121,7 +1159,7 @@ export function GraphEditorPanel({
                     </Field>
                   ) : null}
                   {EXPRESSION_TYPES_WITH_PHASE.has(propertyExpression.type) ? (
-                    <Field label="Phase" hint="deg">
+                    <Field label={t("motion:graphEditor.fields.phase", "Phase")} hint="deg">
                       <NumberInput
                         value={propertyExpression.phase}
                         step={5}
@@ -1135,7 +1173,7 @@ export function GraphEditorPanel({
                     </Field>
                   ) : null}
                   {EXPRESSION_TYPES_WITH_SEED.has(propertyExpression.type) ? (
-                    <Field label="Seed">
+                    <Field label={t("motion:graphEditor.fields.seed", "Seed")}>
                       <NumberInput
                         value={propertyExpression.seed}
                         step={1}
@@ -1149,7 +1187,7 @@ export function GraphEditorPanel({
                     </Field>
                   ) : null}
                   {propertyExpression.type === "spring" ? (
-                    <Field label="Decay">
+                    <Field label={t("motion:graphEditor.fields.decay", "Decay")}>
                       <NumberInput
                         value={propertyExpression.decay}
                         min={0}
@@ -1172,8 +1210,10 @@ export function GraphEditorPanel({
             </>
           ) : (
             <ToolcraftText type="supporting" color="secondary" className="block rounded-md border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-              Add a safe expression preset to generate procedural motion for
-              this property.
+              {t(
+                "motion:graphEditor.expression.empty",
+                "Add a safe expression preset to generate procedural motion for this property.",
+              )}
             </ToolcraftText>
           )}
         </Section>
@@ -1186,14 +1226,21 @@ export function GraphEditorPanel({
             <div className="flex items-center gap-1">
               <IconButton
                 icon={Plus}
-                label={keyframeAtPlayhead ? "Update keyframe" : "Add keyframe"}
+                label={
+                  keyframeAtPlayhead
+                    ? t("motion:graphEditor.actions.updateKeyframe", "Update keyframe")
+                    : t("motion:graphEditor.actions.addKeyframe", "Add keyframe")
+                }
                 size="sm"
                 variant={keyframeAtPlayhead ? "solid" : "outline"}
                 onClick={addOrUpdateKeyframe}
               />
               <IconButton
                 icon={Trash2}
-                label="Clear property keyframes"
+                label={t(
+                  "motion:graphEditor.actions.clearPropertyKeyframes",
+                  "Clear property keyframes",
+                )}
                 size="sm"
                 variant="danger"
                 disabled={propertyKeyframes.length === 0}
@@ -1206,8 +1253,8 @@ export function GraphEditorPanel({
             <SegmentedControl<GraphMode>
               value={graphMode}
               options={[
-                { value: "value", label: "Value" },
-                { value: "speed", label: "Speed" },
+                { value: "value", label: t("motion:graphEditor.modes.value", "Value") },
+                { value: "speed", label: t("motion:graphEditor.modes.speed", "Speed") },
               ]}
               onChange={setGraphMode}
             />
@@ -1218,9 +1265,16 @@ export function GraphEditorPanel({
               viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`}
               className="h-[148px] w-full overflow-visible"
               role="img"
-              aria-label={`${descriptor?.label ?? property} ${
-                isSpeedMode ? "speed" : "keyframe"
-              } graph`}
+              aria-label={t(
+                "motion:graphEditor.graph.ariaLabel",
+                "{{property}} {{type}} graph",
+                {
+                  property: descriptor?.label ?? property,
+                  type: isSpeedMode
+                    ? t("motion:graphEditor.graph.typeSpeed", "speed")
+                    : t("motion:graphEditor.graph.typeKeyframe", "keyframe"),
+                },
+              )}
               onPointerMove={dispatchGraphPointerMove}
               onPointerUp={dispatchGraphPointerEnd}
               onPointerCancel={dispatchGraphPointerEnd}
@@ -1285,7 +1339,10 @@ export function GraphEditorPanel({
                     textAnchor="middle"
                     className="text-[11px]"
                   >
-                    Add two keyframes to see speed
+                    {t(
+                      "motion:graphEditor.graph.addTwoKeyframes",
+                      "Add two keyframes to see speed",
+                    )}
                   </text>
                 )
               ) : (
@@ -1333,7 +1390,10 @@ export function GraphEditorPanel({
                       textAnchor="middle"
                       className="text-[11px]"
                     >
-                      Add keyframes to draw a curve
+                      {t(
+                        "motion:graphEditor.graph.addKeyframes",
+                        "Add keyframes to draw a curve",
+                      )}
                     </text>
                   ) : null}
                 </>
@@ -1346,7 +1406,10 @@ export function GraphEditorPanel({
           </div>
 
           <div className="grid grid-cols-2 gap-2.5">
-            <Field label="Value at playhead" hint={descriptor?.unit}>
+            <Field
+              label={t("motion:graphEditor.fields.valueAtPlayhead", "Value at playhead")}
+              hint={descriptor?.unit}
+            >
               <NumberInput
                 value={currentValue}
                 step={descriptor?.step ?? 0.01}
@@ -1360,7 +1423,10 @@ export function GraphEditorPanel({
                 }
               />
             </Field>
-            <Field label="Layer base" hint={descriptor?.unit}>
+            <Field
+              label={t("motion:graphEditor.fields.layerBase", "Layer base")}
+              hint={descriptor?.unit}
+            >
               <NumberInput
                 value={baseValue}
                 step={descriptor?.step ?? 0.01}
@@ -1372,7 +1438,7 @@ export function GraphEditorPanel({
           </div>
         </Section>
 
-        <Section title="Keyframes" icon={Diamond}>
+        <Section title={t("motion:graphEditor.sections.keyframes", "Keyframes")} icon={Diamond}>
           <div className="space-y-1.5">
             <KeyframeTimingToolbar
               disabled={propertyKeyframes.length === 0}
@@ -1386,8 +1452,10 @@ export function GraphEditorPanel({
             />
             {propertyKeyframes.length === 0 ? (
               <ToolcraftText type="supporting" color="secondary" className="block rounded-md border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-                No keyframes on this property yet. Add one at the current
-                playhead to start shaping motion.
+                {t(
+                  "motion:graphEditor.keyframes.emptyLayer",
+                  "No keyframes on this property yet. Add one at the current playhead to start shaping motion.",
+                )}
               </ToolcraftText>
             ) : (
               propertyKeyframes.map((keyframe, index) => (
@@ -1430,6 +1498,7 @@ function KeyframeGraphPoint({
   onDragMove: (event: ReactPointerEvent<SVGElement>) => void;
   onDragEnd: (event: ReactPointerEvent<SVGElement>) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const seekToPoint = () => onSeek(layerStartTime + point.time);
   const radius = active ? 7 : 5;
   const draggable = !point.roving;
@@ -1460,7 +1529,9 @@ function KeyframeGraphPoint({
     >
       <title>
         {point.roving
-          ? `${point.time.toFixed(2)}s · roving`
+          ? t("motion:graphEditor.keyframe.rovingTitle", "{{time}}s · roving", {
+              time: point.time.toFixed(2),
+            })
           : `${point.time.toFixed(2)}s`}
       </title>
       {point.roving ? (
@@ -1547,6 +1618,7 @@ function BezierHandleGrips({
   onDragMove: (event: ReactPointerEvent<SVGElement>) => void;
   onDragEnd: (event: ReactPointerEvent<SVGElement>) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const frame = frameFor(segment.from, segment.to);
   const anchorStart = { x: frame.toX(frame.t0), y: frame.toY(frame.v0) };
   const anchorEnd = { x: frame.toX(frame.t1), y: frame.toY(frame.v1) };
@@ -1556,7 +1628,12 @@ function BezierHandleGrips({
     const midY = (anchorStart.y + anchorEnd.y) / 2;
     return (
       <g data-testid={`flat-segment-hint-${segment.from.id}`}>
-        <title>Flat segment — handles have no effect</title>
+        <title>
+          {t(
+            "motion:graphEditor.graph.flatSegment",
+            "Flat segment — handles have no effect",
+          )}
+        </title>
         <circle
           cx={midX}
           cy={midY}
@@ -1642,19 +1719,34 @@ function hasExpressionParameters(type: MotionExpressionType): boolean {
 function getExpressionSummary(type: MotionExpressionType): string {
   switch (type) {
     case "loop":
-      return "Loop repeats this property's keyframes after the last key.";
+      return i18n.t(
+        "motion:graphEditor.expression.summary.loop",
+        "Loop repeats this property's keyframes after the last key.",
+      );
     case "ping-pong":
-      return "Ping-pong repeats keyframes forward and backward.";
+      return i18n.t(
+        "motion:graphEditor.expression.summary.pingPong",
+        "Ping-pong repeats keyframes forward and backward.",
+      );
     case "posterize":
-      return "Posterize samples this property's value at a lower rate.";
+      return i18n.t(
+        "motion:graphEditor.expression.summary.posterize",
+        "Posterize samples this property's value at a lower rate.",
+      );
     case "expression":
-      return "Write a JavaScript expression: value, time, wiggle(), loopOut(), linear(), ease(), clamp(), random(), Math.";
+      return i18n.t(
+        "motion:graphEditor.expression.summary.expressionCode",
+        "Write a JavaScript expression: value, time, wiggle(), loopOut(), linear(), ease(), clamp(), random(), Math.",
+      );
     case "sine":
     case "wiggle":
     case "drift":
     case "spring":
     case "random":
-      return "Adjust expression parameters above.";
+      return i18n.t(
+        "motion:graphEditor.expression.summary.parameters",
+        "Adjust expression parameters above.",
+      );
   }
 }
 
@@ -1681,6 +1773,7 @@ function CameraGraphEditor({
   setKeyframeClipboard: (clipboard: MotionKeyframeClipboard | null) => void;
   embedded?: boolean;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const svgRef = useRef<SVGSVGElement>(null);
   const keyframeDragRef = useRef<{
     readonly pointerId: number;
@@ -1844,9 +1937,14 @@ function CameraGraphEditor({
 
   return (
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
-      {embedded ? null : <PanelHeader title="Camera Graph" icon={Camera} />}
+      {embedded ? null : (
+        <PanelHeader
+          title={t("motion:graphEditor.camera.title", "Camera Graph")}
+          icon={Camera}
+        />
+      )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
-        <Section title="Camera" icon={ListTree}>
+        <Section title={t("motion:graphEditor.sections.camera", "Camera")} icon={ListTree}>
           <div className="grid grid-cols-2 gap-1.5">
             {MOTION_CAMERA_PROPERTY_DESCRIPTORS.map((item) => {
               const active = item.property === property;
@@ -1886,7 +1984,11 @@ function CameraGraphEditor({
             <div className="flex items-center gap-1">
               <IconButton
                 icon={Plus}
-                label={keyframeAtPlayhead ? "Update keyframe" : "Add keyframe"}
+                label={
+                  keyframeAtPlayhead
+                    ? t("motion:graphEditor.actions.updateKeyframe", "Update keyframe")
+                    : t("motion:graphEditor.actions.addKeyframe", "Add keyframe")
+                }
                 size="sm"
                 variant={keyframeAtPlayhead ? "solid" : "outline"}
                 onClick={() =>
@@ -1905,7 +2007,10 @@ function CameraGraphEditor({
               />
               <IconButton
                 icon={Trash2}
-                label="Clear property keyframes"
+                label={t(
+                  "motion:graphEditor.actions.clearPropertyKeyframes",
+                  "Clear property keyframes",
+                )}
                 size="sm"
                 variant="danger"
                 disabled={propertyKeyframes.length === 0}
@@ -1924,7 +2029,14 @@ function CameraGraphEditor({
               viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`}
               className="h-[148px] w-full overflow-visible"
               role="img"
-              aria-label={`${descriptor.label} keyframe graph`}
+              aria-label={t(
+                "motion:graphEditor.graph.ariaLabel",
+                "{{property}} {{type}} graph",
+                {
+                  property: descriptor.label,
+                  type: t("motion:graphEditor.graph.typeKeyframe", "keyframe"),
+                },
+              )}
             >
               {[0.25, 0.5, 0.75].map((ratio) => (
                 <line
@@ -1978,7 +2090,10 @@ function CameraGraphEditor({
                   textAnchor="middle"
                   className="text-[11px]"
                 >
-                  Add keyframes to draw a curve
+                  {t(
+                    "motion:graphEditor.graph.addKeyframes",
+                    "Add keyframes to draw a curve",
+                  )}
                 </text>
               ) : null}
             </svg>
@@ -1989,7 +2104,10 @@ function CameraGraphEditor({
           </div>
 
           <div className="grid grid-cols-2 gap-2.5">
-            <Field label="Value at playhead" hint={descriptor.unit}>
+            <Field
+              label={t("motion:graphEditor.fields.valueAtPlayhead", "Value at playhead")}
+              hint={descriptor.unit}
+            >
               <NumberInput
                 value={currentValue}
                 step={descriptor.step}
@@ -2010,7 +2128,10 @@ function CameraGraphEditor({
                 }
               />
             </Field>
-            <Field label="Base" hint={descriptor.unit}>
+            <Field
+              label={t("motion:graphEditor.fields.base", "Base")}
+              hint={descriptor.unit}
+            >
               <NumberInput
                 value={baseValue}
                 step={descriptor.step}
@@ -2026,7 +2147,7 @@ function CameraGraphEditor({
           </div>
         </Section>
 
-        <Section title="Keyframes" icon={Diamond}>
+        <Section title={t("motion:graphEditor.sections.keyframes", "Keyframes")} icon={Diamond}>
           <div className="space-y-1.5">
             <KeyframeTimingToolbar
               disabled={propertyKeyframes.length === 0}
@@ -2040,8 +2161,10 @@ function CameraGraphEditor({
             />
             {propertyKeyframes.length === 0 ? (
               <ToolcraftText type="supporting" color="secondary" className="block rounded-md border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-                No keyframes on this camera property yet. Add one at the current
-                playhead to shape the scene move.
+                {t(
+                  "motion:graphEditor.keyframes.emptyCamera",
+                  "No keyframes on this camera property yet. Add one at the current playhead to shape the scene move.",
+                )}
               </ToolcraftText>
             ) : (
               propertyKeyframes.map((keyframe) => (
@@ -2086,6 +2209,7 @@ function LightGraphEditor({
   setKeyframeClipboard: (clipboard: MotionKeyframeClipboard | null) => void;
   embedded?: boolean;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const svgRef = useRef<SVGSVGElement>(null);
   const keyframeDragRef = useRef<{
     readonly pointerId: number;
@@ -2245,7 +2369,12 @@ function LightGraphEditor({
 
   return (
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
-      {embedded ? null : <PanelHeader title="Light Graph" icon={Activity} />}
+      {embedded ? null : (
+        <PanelHeader
+          title={t("motion:graphEditor.light.title", "Light Graph")}
+          icon={Activity}
+        />
+      )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
         <Section title={light.name} icon={ListTree}>
           <div className="grid grid-cols-2 gap-1.5">
@@ -2287,7 +2416,11 @@ function LightGraphEditor({
             <div className="flex items-center gap-1">
               <IconButton
                 icon={Plus}
-                label={keyframeAtPlayhead ? "Update keyframe" : "Add keyframe"}
+                label={
+                  keyframeAtPlayhead
+                    ? t("motion:graphEditor.actions.updateKeyframe", "Update keyframe")
+                    : t("motion:graphEditor.actions.addKeyframe", "Add keyframe")
+                }
                 size="sm"
                 variant={keyframeAtPlayhead ? "solid" : "outline"}
                 onClick={() =>
@@ -2301,7 +2434,10 @@ function LightGraphEditor({
               />
               <IconButton
                 icon={Trash2}
-                label="Clear property keyframes"
+                label={t(
+                  "motion:graphEditor.actions.clearPropertyKeyframes",
+                  "Clear property keyframes",
+                )}
                 size="sm"
                 variant="danger"
                 disabled={propertyKeyframes.length === 0}
@@ -2318,7 +2454,14 @@ function LightGraphEditor({
               viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`}
               className="h-[148px] w-full overflow-visible"
               role="img"
-              aria-label={`${descriptor.label} keyframe graph`}
+              aria-label={t(
+                "motion:graphEditor.graph.ariaLabel",
+                "{{property}} {{type}} graph",
+                {
+                  property: descriptor.label,
+                  type: t("motion:graphEditor.graph.typeKeyframe", "keyframe"),
+                },
+              )}
             >
               {[0.25, 0.5, 0.75].map((ratio) => (
                 <line
@@ -2372,7 +2515,10 @@ function LightGraphEditor({
                   textAnchor="middle"
                   className="text-[11px]"
                 >
-                  Add keyframes to draw a curve
+                  {t(
+                    "motion:graphEditor.graph.addKeyframes",
+                    "Add keyframes to draw a curve",
+                  )}
                 </text>
               ) : null}
             </svg>
@@ -2383,7 +2529,10 @@ function LightGraphEditor({
           </div>
 
           <div className="grid grid-cols-2 gap-2.5">
-            <Field label="Value at playhead" hint={descriptor.unit}>
+            <Field
+              label={t("motion:graphEditor.fields.valueAtPlayhead", "Value at playhead")}
+              hint={descriptor.unit}
+            >
               <NumberInput
                 value={currentValue}
                 step={descriptor.step}
@@ -2399,7 +2548,10 @@ function LightGraphEditor({
                 }
               />
             </Field>
-            <Field label="Base" hint={descriptor.unit}>
+            <Field
+              label={t("motion:graphEditor.fields.base", "Base")}
+              hint={descriptor.unit}
+            >
               <NumberInput
                 value={baseValue}
                 step={descriptor.step}
@@ -2413,7 +2565,7 @@ function LightGraphEditor({
           </div>
         </Section>
 
-        <Section title="Keyframes" icon={Diamond}>
+        <Section title={t("motion:graphEditor.sections.keyframes", "Keyframes")} icon={Diamond}>
           <div className="space-y-1.5">
             <KeyframeTimingToolbar
               disabled={propertyKeyframes.length === 0}
@@ -2427,8 +2579,10 @@ function LightGraphEditor({
             />
             {propertyKeyframes.length === 0 ? (
               <ToolcraftText type="supporting" color="secondary" className="block rounded-md border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-                No keyframes on this light property yet. Add one at the current
-                playhead to animate the scene lighting.
+                {t(
+                  "motion:graphEditor.keyframes.emptyLight",
+                  "No keyframes on this light property yet. Add one at the current playhead to animate the scene lighting.",
+                )}
               </ToolcraftText>
             ) : (
               propertyKeyframes.map((keyframe) => (
@@ -2467,14 +2621,21 @@ function KeyframeRow({
     readonly onToggle: (next: boolean) => void;
   };
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const numericValue =
     typeof keyframe.value === "number" && Number.isFinite(keyframe.value)
       ? keyframe.value
       : 0;
   const isRoving = roving?.enabled === true;
   const roveDisabledTitle = roving?.canRove
-    ? "Rove: derive this keyframe's time for constant speed between neighbors"
-    : "The first and last keyframe of a property cannot rove";
+    ? t(
+        "motion:graphEditor.keyframe.roveHint",
+        "Rove: derive this keyframe's time for constant speed between neighbors",
+      )
+    : t(
+        "motion:graphEditor.keyframe.roveDisabled",
+        "The first and last keyframe of a property cannot rove",
+      );
   return (
     <div
       data-testid={`keyframe-row-${keyframe.id}`}
@@ -2501,7 +2662,7 @@ function KeyframeRow({
         />
         <IconButton
           icon={Trash2}
-          label="Delete keyframe"
+          label={t("motion:graphEditor.actions.deleteKeyframe", "Delete keyframe")}
           size="sm"
           variant="danger"
           onClick={onRemove}
@@ -2510,8 +2671,11 @@ function KeyframeRow({
       {roving ? (
         <div data-testid={`rove-switch-${keyframe.id}`} title={roveDisabledTitle}>
           <SwitchInput
-            label="Rove"
-            description="Auto-derive time for constant speed"
+            label={t("motion:graphEditor.fields.rove", "Rove")}
+            description={t(
+              "motion:graphEditor.fields.roveDescription",
+              "Auto-derive time for constant speed",
+            )}
             checked={isRoving}
             disabled={!roving.canRove}
             onChange={roving.onToggle}
@@ -2541,15 +2705,25 @@ function KeyframeTimingToolbar({
   onReverse: () => void;
   onScale: (scale: number) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
+  const chooseEasing = t(
+    "motion:graphEditor.fields.chooseEasing",
+    "Choose easing...",
+  );
   return (
     <div className="space-y-1.5 rounded-md border border-border bg-bg-2 p-2">
       <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-1.5">
-        <Field label="Set easing for property keys">
+        <Field
+          label={t(
+            "motion:graphEditor.fields.setEasing",
+            "Set easing for property keys",
+          )}
+        >
           <SelectInput
             value=""
             disabled={disabled}
-            placeholder="Choose easing..."
-            options={[{ value: "", label: "Choose easing..." }, ...EASING_OPTIONS]}
+            placeholder={chooseEasing}
+            options={[{ value: "", label: chooseEasing }, ...EASING_OPTIONS]}
             onChange={(easing) => {
               if (!easing) return;
               onApply(easing as EasingType);
@@ -2558,7 +2732,10 @@ function KeyframeTimingToolbar({
         </Field>
         <IconButton
           icon={Copy}
-          label="Copy property keyframes"
+          label={t(
+            "motion:graphEditor.actions.copyKeyframes",
+            "Copy property keyframes",
+          )}
           size="md"
           variant="outline"
           disabled={disabled}
@@ -2566,7 +2743,10 @@ function KeyframeTimingToolbar({
         />
         <IconButton
           icon={ClipboardPaste}
-          label="Paste keyframes at playhead"
+          label={t(
+            "motion:graphEditor.actions.pasteKeyframes",
+            "Paste keyframes at playhead",
+          )}
           size="md"
           variant="outline"
           disabled={!canPaste}
@@ -2576,25 +2756,37 @@ function KeyframeTimingToolbar({
       <div className="grid grid-cols-4 gap-1.5">
         <TimingToolButton
           label="+0.5s"
-          title="Duplicate keys forward by half a second"
+          title={t(
+            "motion:graphEditor.timing.duplicate",
+            "Duplicate keys forward by half a second",
+          )}
           disabled={disabled}
           onClick={() => onDuplicate(0.5)}
         />
         <TimingToolButton
-          label="Reverse"
-          title="Reverse keys inside their current time span"
+          label={t("motion:graphEditor.timing.reverse", "Reverse")}
+          title={t(
+            "motion:graphEditor.timing.reverseTitle",
+            "Reverse keys inside their current time span",
+          )}
           disabled={disabled}
           onClick={onReverse}
         />
         <TimingToolButton
           label="50%"
-          title="Compress key timing to half speed span"
+          title={t(
+            "motion:graphEditor.timing.compress",
+            "Compress key timing to half speed span",
+          )}
           disabled={disabled}
           onClick={() => onScale(0.5)}
         />
         <TimingToolButton
           label="200%"
-          title="Stretch key timing to double speed span"
+          title={t(
+            "motion:graphEditor.timing.stretch",
+            "Stretch key timing to double speed span",
+          )}
           disabled={disabled}
           onClick={() => onScale(2)}
         />

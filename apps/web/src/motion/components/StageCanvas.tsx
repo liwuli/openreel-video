@@ -178,6 +178,7 @@ import {
 } from "../motion-layer-factory";
 import { startNativeAuroraStagePreviewSession } from "../native-aurora-preview-session";
 import { ColorInput, IconButton, NumberInput } from "./primitives";
+import i18n, { useTranslation } from "../../i18n";
 
 interface StageCanvasProps {
   composition: MotionComposition;
@@ -197,6 +198,7 @@ function supportsMaskPathEditing(layer: MotionLayer): boolean {
 }
 
 export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
+  const { t } = useTranslation("motion");
   const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{
@@ -2671,7 +2673,10 @@ export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
       <div
         ref={containerRef}
         tabIndex={0}
-        aria-label="Motion stage keyboard surface"
+        aria-label={t(
+          "motion:stageCanvas.keyboardSurface",
+          "Motion stage keyboard surface",
+        )}
         onKeyDown={handleStageKeyDown}
         onPointerDown={handleContainerPointerDown}
         className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-12 focus:outline-none"
@@ -2690,14 +2695,19 @@ export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
         <div className="absolute left-3.5 top-3 z-20">
           <ViewportChip>
             <ViewportSelect
-              label="Active camera"
+              label={t("motion:stageCanvas.activeCamera", "Active camera")}
               value={previewCameraView}
               options={[
                 {
                   value: "active",
-                  label: composition.camera?.enabled ? "Active Camera" : "No Camera",
+                  label: composition.camera?.enabled
+                    ? t("motion:stageCanvas.activeCameraOption", "Active Camera")
+                    : t("motion:stageCanvas.noCameraOption", "No Camera"),
                 },
-                { value: "default", label: "Default View" },
+                {
+                  value: "default",
+                  label: t("motion:stageCanvas.defaultView", "Default View"),
+                },
               ]}
               onChange={(value) =>
                 setPreviewCameraView(value as MotionPreviewCameraView)
@@ -2708,12 +2718,21 @@ export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
         <div className="absolute right-3.5 top-3 z-20 flex items-center gap-2">
           <ViewportChip>
             <ViewportSelect
-              label="Preview quality"
+              label={t("motion:stageCanvas.previewQuality", "Preview quality")}
               value={previewResolution}
               options={[
-                { value: "full", label: "Adaptive" },
-                { value: "half", label: "Balanced" },
-                { value: "quarter", label: "Performance" },
+                {
+                  value: "full",
+                  label: t("motion:stageCanvas.qualityAdaptive", "Adaptive"),
+                },
+                {
+                  value: "half",
+                  label: t("motion:stageCanvas.qualityBalanced", "Balanced"),
+                },
+                {
+                  value: "quarter",
+                  label: t("motion:stageCanvas.qualityPerformance", "Performance"),
+                },
               ]}
               onChange={(value) =>
                 setPreviewResolution(value as MotionStagePreviewResolution)
@@ -2721,7 +2740,7 @@ export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
             />
           </ViewportChip>
           <span className="flex items-center gap-1.5 rounded-[7px] border border-white/[0.12] bg-white/[0.08] px-[11px] py-[6px] text-[12px] font-medium text-[#e8e8ee]">
-            1 View
+            {t("motion:stageCanvas.viewportCount", "1 View")}
           </span>
         </div>
         <div
@@ -2894,7 +2913,13 @@ export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
           {selectedMaskPaths.map(({ layer, mask, transform, localTime, points }) => (
             <StageShapePathEditor
               key={`mask-${layer.id}-${mask.id}`}
-              layer={{ ...layer, name: `${mask.name} path`, pathClosed: true }}
+              layer={{
+                ...layer,
+                name: t("motion:stageCanvas.maskPathName", "{{name}} path", {
+                  name: mask.name,
+                }),
+                pathClosed: true,
+              }}
               points={points}
               transform={transform}
               stageWidth={composition.width}
@@ -2996,7 +3021,9 @@ export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
               locked={false}
               showHandles
               stageScale={stageScale}
-              label={`${editableSelectedStageLayers.length} layers`}
+              label={t("motion:stageCanvas.layerCount", "{{total}} layers", {
+                total: editableSelectedStageLayers.length,
+              })}
               onResizeStart={beginSelectionResizeHandleDrag}
               onResizeMove={moveResizeHandleDrag}
               onResizeEnd={endResizeHandleDrag}
@@ -3033,20 +3060,29 @@ export function StageCanvas({ composition }: StageCanvasProps): JSX.Element {
                   transformOrigin: flipBelow ? "left top" : "left bottom",
                 }}
               >
-                <div className="w-28" title="Fill color">
+                <div
+                  className="w-28"
+                  title={t("motion:stageCanvas.fillColor", "Fill color")}
+                >
                   <ColorInput
                     value={hex(fillColor)}
                     onChange={(value) => updateShapeFill(shape.id, value)}
                   />
                 </div>
                 <span className="h-3 w-px bg-border" />
-                <div className="w-28" title="Stroke color">
+                <div
+                  className="w-28"
+                  title={t("motion:stageCanvas.strokeColor", "Stroke color")}
+                >
                   <ColorInput
                     value={hex(strokeColor)}
                     onChange={(color) => updateShapeStroke(shape.id, { color })}
                   />
                 </div>
-                <div className="w-16" title="Stroke width">
+                <div
+                  className="w-16"
+                  title={t("motion:stageCanvas.strokeWidth", "Stroke width")}
+                >
                   <NumberInput
                     value={Math.round(shape.style.stroke.width)}
                     onChange={(width) => updateShapeStroke(shape.id, { width })}
@@ -3285,11 +3321,26 @@ function PreviewTopBar({
   onToggleSnap: () => void;
   onFit: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <div className="flex h-[42px] shrink-0 items-center gap-3 border-b border-border bg-bg-1 px-3.5 text-fg-3">
-      <PreviewToolButton icon={Maximize} label="Fit to view" onClick={onFit} />
-      <PreviewToolButton icon={Ruler} label="Guides" active={showGuides} onClick={onToggleGuides} />
-      <PreviewToolButton icon={Grid3x3} label="Grid" active={showGrid} onClick={onToggleGrid} />
+      <PreviewToolButton
+        icon={Maximize}
+        label={t("motion:stageCanvas.fitToView", "Fit to view")}
+        onClick={onFit}
+      />
+      <PreviewToolButton
+        icon={Ruler}
+        label={t("motion:stageCanvas.guides", "Guides")}
+        active={showGuides}
+        onClick={onToggleGuides}
+      />
+      <PreviewToolButton
+        icon={Grid3x3}
+        label={t("motion:stageCanvas.grid", "Grid")}
+        active={showGrid}
+        onClick={onToggleGrid}
+      />
       <span className="h-[18px] w-px shrink-0 bg-border" />
       <button
         type="button"
@@ -3300,19 +3351,19 @@ function PreviewTopBar({
         }`}
       >
         <Magnet size={15} strokeWidth={1.7} aria-hidden />
-        <span>Snapping</span>
+        <span>{t("motion:stageCanvas.snapping", "Snapping")}</span>
       </button>
       <div className="ml-auto flex items-center gap-3">
         <span className="h-[18px] w-px shrink-0 bg-border" />
         <PreviewToolButton
           icon={Diamond}
-          label="Auto keyframe"
+          label={t("motion:stageCanvas.autoKeyframe", "Auto keyframe")}
           active={autoKeyframe}
           onClick={onToggleAutoKeyframe}
         />
         <PreviewToolButton
           icon={SquareDashed}
-          label="Title/action safe"
+          label={t("motion:stageCanvas.titleActionSafe", "Title/action safe")}
           active={safeMargins}
           onClick={onToggleSafeMargins}
         />
@@ -3367,11 +3418,12 @@ function PreviewBottomBar({
   const fps = frameRate > 0 ? frameRate : 30;
   const frameStep = 1 / fps;
   const zoomPct = Math.round(stageScale * 100);
+  const { t } = useTranslation("motion");
   return (
     <div className="flex h-[42px] shrink-0 items-center gap-3.5 border-t border-border bg-bg-1 px-3.5 text-fg-3">
       <BottomBarPill>
         <BottomPillSelect
-          label="Zoom level"
+          label={t("motion:stageCanvas.zoomLevel", "Zoom level")}
           value={String(zoomPct)}
           options={(() => {
             const presets = [25, 50, 75, 100, 150, 200];
@@ -3389,11 +3441,11 @@ function PreviewBottomBar({
       </BottomBarPill>
       <BottomBarPill startIcon={<Monitor size={13} strokeWidth={1.7} aria-hidden />}>
         <BottomPillSelect
-          label="Playback speed"
+          label={t("motion:stageCanvas.playbackSpeed", "Playback speed")}
           value={String(playbackRate)}
           options={[
             { value: "0.5", label: "0.5×" },
-            { value: "1", label: "Full" },
+            { value: "1", label: t("motion:stageCanvas.speedFull", "Full") },
             { value: "2", label: "2×" },
             { value: "4", label: "4×" },
           ]}
@@ -3404,34 +3456,49 @@ function PreviewBottomBar({
       <div className="flex flex-1 items-center justify-center gap-2.5">
         <PreviewToolButton
           icon={Grid2x2}
-          label="Transparency grid"
+          label={t("motion:stageCanvas.transparencyGrid", "Transparency grid")}
           active={transparencyGrid}
           onClick={onToggleTransparency}
         />
         <PreviewSelect
-          label="Render mode"
+          label={t("motion:stageCanvas.renderMode", "Render mode")}
           value={previewMode}
           options={[
             { value: "final", label: "3D" },
-            { value: "draft", label: "Fast 2D" },
+            {
+              value: "draft",
+              label: t("motion:stageCanvas.renderModeFast2d", "Fast 2D"),
+            },
           ]}
           onChange={(value) => onChangeMode(value as MotionStagePreviewMode)}
         />
-        <PreviewToolButton icon={Repeat} label="Loop" active={loop} onClick={onToggleLoop} />
+        <PreviewToolButton
+          icon={Repeat}
+          label={t("motion:stageCanvas.loop", "Loop")}
+          active={loop}
+          onClick={onToggleLoop}
+        />
         <span className="h-[18px] w-px shrink-0 bg-border" />
-        <PreviewToolButton icon={SkipBack} label="To start" onClick={() => onSeek(0)} />
+        <PreviewToolButton
+          icon={SkipBack}
+          label={t("motion:stageCanvas.toStart", "To start")}
+          onClick={() => onSeek(0)}
+        />
         <PreviewToolButton
           icon={StepBack}
-          label="Previous frame"
+          label={t("motion:stageCanvas.previousFrame", "Previous frame")}
           onClick={() => onSeek(Math.max(0, playhead - frameStep))}
         />
         <IconButton
           label={
             playbackDisabled
-              ? "Playback paused during export"
+              ? t(
+                  "motion:stageCanvas.playbackPausedExport",
+                  "Playback paused during export",
+                )
               : isPlaying
-                ? "Pause"
-                : "Play"
+                ? t("motion:stageCanvas.pause", "Pause")
+                : t("motion:stageCanvas.play", "Play")
           }
           icon={
             isPlaying ? (
@@ -3448,10 +3515,14 @@ function PreviewBottomBar({
         />
         <PreviewToolButton
           icon={StepForward}
-          label="Next frame"
+          label={t("motion:stageCanvas.nextFrame", "Next frame")}
           onClick={() => onSeek(Math.min(duration, playhead + frameStep))}
         />
-        <PreviewToolButton icon={SkipForward} label="To end" onClick={() => onSeek(duration)} />
+        <PreviewToolButton
+          icon={SkipForward}
+          label={t("motion:stageCanvas.toEnd", "To end")}
+          onClick={() => onSeek(duration)}
+        />
       </div>
 
       <span className="font-mono text-[12px] font-semibold tabular-nums text-fg-2">
@@ -3460,8 +3531,16 @@ function PreviewBottomBar({
       {ramPreviewEnabled ? (
         <RamPreviewButton duration={duration} frameRate={frameRate} />
       ) : null}
-      <PreviewToolButton icon={Camera} label="Save frame (PNG)" onClick={onSnapshot} />
-      <PreviewToolButton icon={Maximize} label="Fullscreen" onClick={onFullscreen} />
+      <PreviewToolButton
+        icon={Camera}
+        label={t("motion:stageCanvas.saveFramePng", "Save frame (PNG)")}
+        onClick={onSnapshot}
+      />
+      <PreviewToolButton
+        icon={Maximize}
+        label={t("motion:stageCanvas.fullscreen", "Fullscreen")}
+        onClick={onFullscreen}
+      />
     </div>
   );
 }
@@ -3497,10 +3576,11 @@ function RamPreviewButton({
   }, 0);
   const percent = Math.min(100, Math.round((cachedFrames / totalFrames) * 100));
   const active = requested || cacheState.filling;
+  const { t } = useTranslation("motion");
   return (
     <div className="flex items-center gap-1">
         <IconButton
-          label="Fill RAM preview"
+          label={t("motion:stageCanvas.fillRamPreview", "Fill RAM preview")}
           icon={
           cacheState.filling ? (
             <Loader2 size={15} className="animate-spin" aria-hidden />
@@ -3630,6 +3710,7 @@ function StageMotionPath({
   onPointMove: (event: ReactPointerEvent<SVGElement>) => void;
   onPointEnd: (event: ReactPointerEvent<SVGElement>) => void;
 }): JSX.Element | null {
+  const { t } = useTranslation("motion");
   if (points.length === 0) return null;
   const path = points
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
@@ -3641,7 +3722,11 @@ function StageMotionPath({
       className="pointer-events-none absolute inset-0 z-[66] overflow-visible"
       viewBox={`0 0 ${stageWidth} ${stageHeight}`}
       preserveAspectRatio="none"
-      aria-label={`${layer.name} motion path`}
+      aria-label={t(
+        "motion:stageCanvas.motionPathName",
+        "{{name}} motion path",
+        { name: layer.name },
+      )}
       role="img"
       style={{
         width: "100%",
@@ -3737,6 +3822,7 @@ function StageShapePathEditor({
   ) => void;
   selectedPointIndex: number | null;
 }): JSX.Element | null {
+  const { t } = useTranslation("motion");
   if (points.length === 0) return null;
   const stageHandledPoints = points.map((point) => {
     const anchor = getShapePathStagePoint(layer, transform, point);
@@ -3783,7 +3869,11 @@ function StageShapePathEditor({
       className="pointer-events-none absolute inset-0 z-[68] overflow-visible"
       viewBox={`0 0 ${stageWidth} ${stageHeight}`}
       preserveAspectRatio="none"
-      aria-label={`${layer.name} path editor`}
+      aria-label={t(
+        "motion:stageCanvas.pathEditorName",
+        "{{name}} path editor",
+        { name: layer.name },
+      )}
       role="img"
       style={{ width: "100%", height: "100%" }}
     >
@@ -3814,7 +3904,7 @@ function StageShapePathEditor({
             onInsertPoint(layer, point.index, localTime);
           }}
         >
-          <title>Insert path point</title>
+          <title>{t("motion:stageCanvas.insertPathPoint", "Insert path point")}</title>
           <circle
             cx={point.x}
             cy={point.y}
@@ -3862,7 +3952,13 @@ function StageShapePathEditor({
                 onPointerUp={onPointEnd}
                 onPointerCancel={onPointEnd}
               >
-                <title>{`Drag ${handle} handle of point ${index + 1}`}</title>
+                <title>
+                  {t(
+                    "motion:stageCanvas.dragHandle",
+                    "Drag {{handle}} handle of point {{index}}",
+                    { handle, index: index + 1 },
+                  )}
+                </title>
                 <circle
                   cx={handleX}
                   cy={handleY}
@@ -3902,7 +3998,13 @@ function StageShapePathEditor({
               onToggleSmooth(layer, index, localTime);
             }}
           >
-            <title>{`Drag point ${index + 1}; alt-drag handles asymmetric; double-click or alt-click toggles smooth; Delete removes`}</title>
+            <title>
+              {t(
+                "motion:stageCanvas.dragPoint",
+                "Drag point {{index}}; alt-drag handles asymmetric; double-click or alt-click toggles smooth; Delete removes",
+                { index: index + 1 },
+              )}
+            </title>
             <rect
               x={point.x - 5}
               y={point.y - 5}
@@ -3953,6 +4055,7 @@ function StagePuppetPinOverlay({
   onPinMove: (event: ReactPointerEvent<SVGElement>) => void;
   onPinEnd: (event: ReactPointerEvent<SVGElement>) => void;
 }): JSX.Element | null {
+  const { t } = useTranslation("motion");
   if (pins.length === 0) return null;
 
   return (
@@ -3960,7 +4063,11 @@ function StagePuppetPinOverlay({
       className="pointer-events-none absolute inset-0 z-[72] overflow-visible"
       viewBox={`0 0 ${stageWidth} ${stageHeight}`}
       preserveAspectRatio="none"
-      aria-label={`${layer.name} puppet pins`}
+      aria-label={t(
+        "motion:stageCanvas.puppetPinsName",
+        "{{name}} puppet pins",
+        { name: layer.name },
+      )}
       role="img"
       style={{ width: "100%", height: "100%" }}
     >
@@ -4009,7 +4116,11 @@ function StagePuppetPinOverlay({
               onPointerUp={onPinEnd}
               onPointerCancel={onPinEnd}
             >
-              <title>{`Drag ${pin.name}`}</title>
+              <title>
+                {t("motion:stageCanvas.dragPin", "Drag {{name}}", {
+                  name: pin.name,
+                })}
+              </title>
               <circle
                 cx={positionPoint.x}
                 cy={positionPoint.y}
@@ -4198,6 +4309,7 @@ function StageSelectionBox({
   const handleSize = Math.max(6, 12 / Math.max(0.1, stageScale));
   const rotationOffset = Math.max(24, 30 / Math.max(0.1, stageScale));
   const rotationHandleSize = Math.max(9, 14 / Math.max(0.1, stageScale));
+  const { t } = useTranslation("motion");
   return (
     <div
       className={`pointer-events-none absolute z-[70] border ${
@@ -4236,8 +4348,8 @@ function StageSelectionBox({
           <div
             role="button"
             tabIndex={0}
-            title="Rotate layer"
-            aria-label="Rotate layer"
+            title={t("motion:stageCanvas.rotateLayer", "Rotate layer")}
+            aria-label={t("motion:stageCanvas.rotateLayer", "Rotate layer")}
             onPointerDown={onRotateStart}
             onPointerMove={onRotateMove}
             onPointerUp={onRotateEnd}
@@ -4254,8 +4366,12 @@ function StageSelectionBox({
               key={handle.id}
               role="button"
               tabIndex={0}
-              title="Resize layer"
-              aria-label={`Resize layer ${handle.id}`}
+              title={t("motion:stageCanvas.resizeLayer", "Resize layer")}
+              aria-label={t(
+                "motion:stageCanvas.resizeLayerHandle",
+                "Resize layer {{handle}}",
+                { handle: handle.id },
+              )}
               onPointerDown={(event) => onResizeStart(handle.id, event)}
               onPointerMove={onResizeMove}
               onPointerUp={onResizeEnd}
@@ -4411,9 +4527,14 @@ function AuthoredGuideLine({
 }): JSX.Element {
   const isVertical = guide.orientation === "vertical";
   const color = guide.color ?? "var(--accent)";
+  const { t } = useTranslation("motion");
   return (
     <span
-      title={guide.locked ? "Locked guide" : "Drag guide"}
+      title={
+        guide.locked
+          ? t("motion:stageCanvas.lockedGuide", "Locked guide")
+          : t("motion:stageCanvas.dragGuide", "Drag guide")
+      }
       className={`absolute z-40 opacity-70 transition-opacity hover:opacity-100 ${
         guide.locked
           ? "pointer-events-none"
@@ -4516,6 +4637,7 @@ function StageLayerTree({
   onDragMove: (event: ReactPointerEvent<HTMLElement>) => void;
   onDragEnd: (event: ReactPointerEvent<HTMLElement>) => void;
 }): JSX.Element | null {
+  const { t } = useTranslation("motion");
   const layer = resolveMotionLayerVariableBindings(composition, sourceLayer);
   if (
     !layer.visible ||
@@ -4779,7 +4901,7 @@ function StageLayerTree({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center border border-dashed border-border bg-bg-2 text-[12px] font-medium text-fg-muted">
-            Missing precomp
+            {t("motion:stageCanvas.missingPrecomp", "Missing precomp")}
           </div>
         )}
       </div>
@@ -4964,6 +5086,7 @@ function RendererBackedStagePreview({
 }): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const renderer = useMemo(() => new MotionRenderer(), []);
+  const { t } = useTranslation("motion");
   useEffect(() => () => renderer.dispose(), [renderer]);
   const [renderError, setRenderError] = useState<string | null>(null);
   const hasReportedVisibleFrameRef = useRef(false);
@@ -5066,7 +5189,9 @@ function RendererBackedStagePreview({
     previewSizeRef.current = previewSize;
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) {
-      setRenderError("Canvas unavailable");
+      setRenderError(
+        i18n.t("motion:stageCanvas.canvasUnavailable", "Canvas unavailable"),
+      );
       return;
     }
     ctxRef.current = ctx;
@@ -5187,7 +5312,12 @@ function RendererBackedStagePreview({
             return;
           }
           setRenderError(
-            error instanceof Error ? error.message : "Renderer preview failed",
+            error instanceof Error
+              ? error.message
+              : i18n.t(
+                  "motion:stageCanvas.rendererPreviewFailed",
+                  "Renderer preview failed",
+                ),
           );
         });
     };
@@ -5315,7 +5445,8 @@ function RendererBackedStagePreview({
       />
       {renderError ? (
         <div className="pointer-events-none absolute right-3 top-3 z-[2] max-w-[260px] rounded-md border border-status-warning/40 bg-bg-elev/95 px-2.5 py-2 text-[11px] font-medium leading-snug text-status-warning shadow-lg">
-          Preview render failed: {renderError}
+          {t("motion:stageCanvas.previewRenderFailed", "Preview render failed:")}{" "}
+          {renderError}
         </div>
       ) : null}
     </>
@@ -5449,6 +5580,7 @@ function StageImageLayerVisual({
   contentStyle: CSSProperties;
 }): JSX.Element {
   const sourceUrl = useMotionAssetPreviewUrl(asset, mediaItems);
+  const { t } = useTranslation("motion");
   const mediaItem = asset?.mediaId
     ? mediaItems.find((item) => item.id === asset.mediaId)
     : undefined;
@@ -5471,7 +5603,7 @@ function StageImageLayerVisual({
         />
       ) : (
         <span className="px-3 text-center text-[12px] font-semibold text-white/50">
-          Missing image
+          {t("motion:stageCanvas.missingImage", "Missing image")}
         </span>
       )}
     </div>
@@ -5566,7 +5698,11 @@ function renderStageShapeVisual(
         className="block h-full w-full overflow-visible"
         viewBox={`${-evaluatedLayer.width / 2} ${-evaluatedLayer.height / 2} ${evaluatedLayer.width} ${evaluatedLayer.height}`}
         role="img"
-        aria-label={`${evaluatedLayer.name} trim path`}
+        aria-label={i18n.t(
+          "motion:stageCanvas.trimPathName",
+          "{{name}} trim path",
+          { name: evaluatedLayer.name },
+        )}
         style={{ width: evaluatedLayer.width, height: evaluatedLayer.height }}
       >
         <path

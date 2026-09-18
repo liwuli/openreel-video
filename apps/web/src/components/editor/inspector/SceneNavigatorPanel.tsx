@@ -13,6 +13,7 @@ import { ToolcraftSelectableCard as SelectableCard } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { useProjectStore } from "../../../stores/project-store";
 import { getPlaybackBridge } from "../../../bridges/playback-bridge";
+import { useTranslation } from "../../../i18n";
 
 interface Scene {
   id: string;
@@ -29,6 +30,7 @@ interface SceneNavigatorPanelProps {
 export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
   variant = "vertical",
 }) => {
+  const { t } = useTranslation("inspector");
   const { project, addMarker } = useProjectStore();
   const markers = project.timeline.markers;
   const duration = project.timeline.duration;
@@ -40,7 +42,7 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
       return [
         {
           id: "default",
-          label: "Full Timeline",
+          label: t("sceneNavigator.fullTimeline", "Full Timeline"),
           startTime: 0,
           endTime: duration,
           color: "#10b981",
@@ -67,7 +69,7 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
     if (sortedMarkers[0]?.time > 0) {
       sceneList.unshift({
         id: "intro",
-        label: "Intro",
+        label: t("sceneNavigator.intro", "Intro"),
         startTime: 0,
         endTime: sortedMarkers[0].time,
         color: "#10b981",
@@ -75,7 +77,7 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
     }
 
     return sceneList;
-  }, [markers, duration]);
+  }, [markers, duration, t]);
 
   const currentScene = scenes[currentSceneIndex] || scenes[0];
 
@@ -104,8 +106,14 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
   const handleAddScene = useCallback(() => {
     const bridge = getPlaybackBridge();
     const currentTime = bridge.getCurrentTime();
-    addMarker(currentTime, `Scene ${markers.length + 1}`, "#10b981");
-  }, [addMarker, markers.length]);
+    addMarker(
+      currentTime,
+      t("sceneNavigator.defaultSceneName", "Scene {{number}}", {
+        number: markers.length + 1,
+      }),
+      "#10b981",
+    );
+  }, [addMarker, markers.length, t]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -121,7 +129,7 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
     return (
       <div className="flex items-center gap-2">
         <IconButton
-          label="Previous scene"
+          label={t("sceneNavigator.previousScene", "Previous scene")}
           icon={<ChevronLeft size={16} className="text-fg-2" />}
           variant="ghost"
           size="sm"
@@ -133,7 +141,7 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
         <div className="flex items-center gap-1.5 px-2 py-1 bg-bg-2 rounded">
           <Film size={14} className="text-primary" />
           <span className="text-[11px] font-medium text-fg">
-            {currentScene?.label || "Scene"}
+            {currentScene?.label || t("sceneNavigator.scene", "Scene")}
           </span>
           <span className="text-[10px] text-fg-3">
             {currentSceneIndex + 1}/{scenes.length}
@@ -141,7 +149,7 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
         </div>
 
         <IconButton
-          label="Next scene"
+          label={t("sceneNavigator.nextScene", "Next scene")}
           icon={<ChevronRight size={16} className="text-fg-2" />}
           variant="ghost"
           size="sm"
@@ -160,20 +168,20 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
           <div className="flex items-center gap-2">
             <Film size={14} className="text-primary" />
             <span className="text-[11px] font-medium text-fg">
-              Scenes
+              {t("sceneNavigator.scenes", "Scenes")}
             </span>
             <span className="text-[10px] text-fg-3">
               ({scenes.length})
             </span>
           </div>
           <Button
-            label="Add scene"
+            label={t("sceneNavigator.addSceneLabel", "Add scene")}
             variant="primary"
             icon={<Plus size={10} />}
             onClick={handleAddScene}
             className="flex items-center gap-1 px-2 py-1 bg-primary hover:bg-primary/80 text-white rounded text-[10px] font-medium transition-colors"
           >
-            Add
+            {t("sceneNavigator.add", "Add")}
           </Button>
         </div>
 
@@ -238,10 +246,10 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
         <Layers size={16} className="text-emerald-500" />
         <div className="flex flex-col gap-0.5">
           <span className="text-[11px] font-medium text-fg">
-            Scene Navigator
+            {t("sceneNavigator.title", "Scene Navigator")}
           </span>
           <Text type="supporting" color="secondary" className="text-[9px] text-fg-3">
-            Navigate between sections
+            {t("sceneNavigator.subtitle", "Navigate between sections")}
           </Text>
         </div>
       </div>
@@ -250,20 +258,20 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
         <div className="flex items-center gap-2">
           <Film size={14} className="text-fg-2" />
           <span className="text-[11px] font-medium text-fg">
-            Scenes
+            {t("sceneNavigator.scenes", "Scenes")}
           </span>
           <span className="text-[10px] text-fg-3 bg-bg-2 px-1.5 py-0.5 rounded">
             {scenes.length}
           </span>
         </div>
         <Button
-          label="Add Scene"
+          label={t("sceneNavigator.addSceneTitle", "Add Scene")}
           variant="primary"
           icon={<Plus size={10} />}
           onClick={handleAddScene}
           className="flex items-center gap-1 px-2 py-1 bg-primary hover:bg-primary/80 text-white rounded text-[10px] font-medium transition-colors"
         >
-          Add Scene
+          {t("sceneNavigator.addSceneTitle", "Add Scene")}
         </Button>
       </div>
 
@@ -334,26 +342,29 @@ export const SceneNavigatorPanel: React.FC<SceneNavigatorPanelProps> = ({
 
       <div className="flex items-center justify-between pt-2 border-t border-border">
         <Button
-          label="Previous scene"
+          label={t("sceneNavigator.previousScene", "Previous scene")}
           variant="ghost"
           icon={<ChevronLeft size={12} />}
           onClick={handlePrevious}
           isDisabled={currentSceneIndex === 0}
           className="flex items-center gap-1 text-[10px] text-fg-3 hover:text-fg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
-          Previous
+          {t("sceneNavigator.previous", "Previous")}
         </Button>
         <span className="text-[9px] text-fg-3">
-          Scene {currentSceneIndex + 1} of {scenes.length}
+          {t("sceneNavigator.sceneOf", "Scene {{current}} of {{total}}", {
+            current: currentSceneIndex + 1,
+            total: scenes.length,
+          })}
         </span>
         <Button
-          label="Next scene"
+          label={t("sceneNavigator.nextScene", "Next scene")}
           variant="ghost"
           onClick={handleNext}
           isDisabled={currentSceneIndex === scenes.length - 1}
           className="flex items-center gap-1 text-[10px] text-fg-3 hover:text-fg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
-          Next
+          {t("sceneNavigator.next", "Next")}
           <ChevronRight size={12} />
         </Button>
       </div>

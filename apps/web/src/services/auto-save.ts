@@ -1,4 +1,5 @@
 import type { Project } from "@openreel/core";
+import i18n from "../i18n";
 
 export interface AutoSaveConfig {
   interval: number;
@@ -82,7 +83,13 @@ export class AutoSaveManager {
       this.db = await this.openDatabase();
     } catch (error) {
       console.error("[AutoSave] Failed to initialize:", error);
-      this.emit("error", { error, message: "Failed to initialize auto-save" });
+      this.emit("error", {
+        error,
+        message: i18n.t(
+          "messages:autoSave.initFailed",
+          "Failed to initialize auto-save",
+        ),
+      });
     }
   }
 
@@ -188,7 +195,10 @@ export class AutoSaveManager {
       this.isDirty = false;
     } catch (error) {
       console.error("[AutoSave] Save failed:", error);
-      this.emit("error", { error, message: "Auto-save failed" });
+      this.emit("error", {
+        error,
+        message: i18n.t("messages:autoSave.failed", "Auto-save failed"),
+      });
     }
   }
 
@@ -341,7 +351,13 @@ export class AutoSaveManager {
       return project;
     } catch (error) {
       console.error("[AutoSave] Recovery failed:", error);
-      this.emit("error", { error, message: "Failed to recover project" });
+      this.emit("error", {
+        error,
+        message: i18n.t(
+          "messages:autoSave.recoverFailed",
+          "Failed to recover project",
+        ),
+      });
       return null;
     }
   }

@@ -31,6 +31,7 @@ import { Icon } from "@/icons/Icon";
 import { useRouter } from "../hooks/use-router";
 import { useProjectStore } from "../stores/project-store";
 import { toast } from "../stores/notification-store";
+import { useTranslation } from "../i18n";
 import { useUIStore } from "../stores/ui-store";
 import { AnimationPresetsPanel } from "./components/AnimationPresetsPanel";
 import { AssetPanel } from "./components/AssetPanel";
@@ -63,24 +64,56 @@ interface MotionCreatorShellProps {
   embedded?: boolean;
 }
 
-const LEFT_TABS: Array<{ id: MotionLeftTab; label: string; icon: LucideIcon }> = [
-  { id: "start", label: "Start", icon: Sparkles },
-  { id: "layers", label: "Layers", icon: Layers },
-  { id: "assets", label: "Media", icon: Library },
-  { id: "templates", label: "Kits", icon: Sparkles },
-  { id: "creation", label: "Scenes", icon: Box },
+const LEFT_TABS: Array<{
+  id: MotionLeftTab;
+  labelKey: string;
+  label: string;
+  icon: LucideIcon;
+}> = [
+  {
+    id: "start",
+    labelKey: "motion:motionShell.leftTabs.start",
+    label: "Start",
+    icon: Sparkles,
+  },
+  {
+    id: "layers",
+    labelKey: "motion:motionShell.leftTabs.layers",
+    label: "Layers",
+    icon: Layers,
+  },
+  {
+    id: "assets",
+    labelKey: "motion:motionShell.leftTabs.assets",
+    label: "Media",
+    icon: Library,
+  },
+  {
+    id: "templates",
+    labelKey: "motion:motionShell.leftTabs.templates",
+    label: "Kits",
+    icon: Sparkles,
+  },
+  {
+    id: "creation",
+    labelKey: "motion:motionShell.leftTabs.creation",
+    label: "Scenes",
+    icon: Box,
+  },
 ];
 
 type InspectorGroupId = "edit" | "animate" | "assist" | "deliver";
 
 interface InspectorPanelDef {
   readonly id: MotionRightTab;
+  readonly labelKey: string;
   readonly label: string;
   readonly render: (composition: MotionComposition) => ReactNode;
 }
 
 interface InspectorGroupDef {
   readonly id: InspectorGroupId;
+  readonly labelKey: string;
   readonly label: string;
   readonly icon: LucideIcon;
   readonly defaultTab: MotionRightTab;
@@ -90,12 +123,14 @@ interface InspectorGroupDef {
 const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
   {
     id: "edit",
+    labelKey: "motion:motionShell.groups.edit",
     label: "Edit",
     icon: SlidersHorizontal,
     defaultTab: "properties",
     panels: [
       {
         id: "properties",
+        labelKey: "motion:motionShell.panels.properties",
         label: "Properties",
         render: (composition) => (
           <PropertiesPanel composition={composition} embedded />
@@ -103,11 +138,13 @@ const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
       },
       {
         id: "effects",
+        labelKey: "motion:motionShell.panels.effects",
         label: "Effects",
         render: (composition) => <EffectsPanel composition={composition} embedded />,
       },
       {
         id: "masks",
+        labelKey: "motion:motionShell.panels.masks",
         label: "Masks",
         render: (composition) => <MasksPanel composition={composition} embedded />,
       },
@@ -115,12 +152,14 @@ const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
   },
   {
     id: "animate",
+    labelKey: "motion:motionShell.groups.animate",
     label: "Animate",
     icon: Diamond,
     defaultTab: "presets",
     panels: [
       {
         id: "presets",
+        labelKey: "motion:motionShell.panels.presets",
         label: "Animation Presets",
         render: (composition) => (
           <AnimationPresetsPanel composition={composition} embedded />
@@ -128,6 +167,7 @@ const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
       },
       {
         id: "graph",
+        labelKey: "motion:motionShell.panels.graph",
         label: "Graph Editor",
         render: (composition) => (
           <GraphEditorPanel composition={composition} embedded />
@@ -135,11 +175,13 @@ const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
       },
       {
         id: "deform",
+        labelKey: "motion:motionShell.panels.deform",
         label: "Deform",
         render: (composition) => <DeformPanel composition={composition} embedded />,
       },
       {
         id: "sync",
+        labelKey: "motion:motionShell.panels.sync",
         label: "Sync",
         render: (composition) => (
           <MotionSyncPanel composition={composition} embedded />
@@ -149,12 +191,14 @@ const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
   },
   {
     id: "assist",
+    labelKey: "motion:motionShell.groups.assist",
     label: "Assist",
     icon: Radar,
     defaultTab: "tracker",
     panels: [
       {
         id: "tracker",
+        labelKey: "motion:motionShell.panels.tracker",
         label: "Motion Tracking",
         render: (composition) => (
           <MotionTrackingPanel composition={composition} embedded />
@@ -162,6 +206,7 @@ const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
       },
       {
         id: "variables",
+        labelKey: "motion:motionShell.panels.variables",
         label: "Variables",
         render: (composition) => (
           <VariablesPanel composition={composition} embedded />
@@ -171,12 +216,14 @@ const INSPECTOR_GROUPS: readonly InspectorGroupDef[] = [
   },
   {
     id: "deliver",
+    labelKey: "motion:motionShell.groups.deliver",
     label: "Deliver",
     icon: GitBranch,
     defaultTab: "queue",
     panels: [
       {
         id: "queue",
+        labelKey: "motion:motionShell.panels.queue",
         label: "Render Queue",
         render: (composition) => (
           <RenderQueuePanel composition={composition} embedded />
@@ -248,6 +295,7 @@ export function MotionCreatorShell({
   composition,
   embedded = false,
 }: MotionCreatorShellProps): JSX.Element {
+  const { t } = useTranslation("motion");
   const [isExportingScene, setIsExportingScene] = useState(false);
   const [exportProgress, setExportProgress] = useState<number | null>(null);
   const setExportActive = useMotionStore((state) => state.setExportActive);
@@ -333,13 +381,21 @@ export function MotionCreatorShell({
       : null;
   const inspectorSubtitle = selectedLayer
     ? selectedLayer.name
-    : "Composition";
+    : t("motion:motionShell.composition", "Composition");
   const inspectorType =
     selectedLayerIds.length > 1
-      ? `${selectedLayerIds.length} layers selected`
+      ? t(
+          "motion:motionShell.layersSelected",
+          "{{count}} layers selected",
+          { count: selectedLayerIds.length },
+        )
       : selectedLayer
-        ? LAYER_TYPE_LABEL[selectedLayer.type] ?? "Layer"
-        : "Scene settings";
+        ? t(
+            `motion:motionShell.layerTypes.${selectedLayer.type}`,
+            LAYER_TYPE_LABEL[selectedLayer.type] ??
+              t("motion:motionShell.layerFallback", "Layer"),
+          )
+        : t("motion:motionShell.sceneSettings", "Scene settings");
 
   leftPanelWidthRef.current = leftPanelWidth;
   rightPanelWidthRef.current = rightPanelWidth;
@@ -666,23 +722,39 @@ export function MotionCreatorShell({
       const instance = await insertMotionInstance(composition.id);
       if (!instance) {
         toast.error(
-          "Could not add motion scene",
-          "The scene could not be placed on the editor timeline.",
+          t(
+            "motion:motionShell.couldNotAddMotionScene",
+            "Could not add motion scene",
+          ),
+          t(
+            "motion:motionShell.couldNotPlaceScene",
+            "The scene could not be placed on the editor timeline.",
+          ),
         );
         return;
       }
       toast.success(
-        "Motion scene added",
-        `${composition.name} is on the editor timeline.`,
+        t("motion:motionShell.motionSceneAdded", "Motion scene added"),
+        t(
+          "motion:motionShell.sceneOnTimeline",
+          "{{name}} is on the editor timeline.",
+          { name: composition.name },
+        ),
       );
       setDesktopPage("edit");
       navigate("editor");
     } catch (error) {
       toast.error(
-        "Could not add motion scene",
+        t(
+          "motion:motionShell.couldNotAddMotionScene",
+          "Could not add motion scene",
+        ),
         error instanceof Error
           ? error.message
-          : "The scene could not be placed on the editor timeline.",
+          : t(
+              "motion:motionShell.couldNotPlaceScene",
+              "The scene could not be placed on the editor timeline.",
+            ),
       );
     }
   };
@@ -690,14 +762,22 @@ export function MotionCreatorShell({
   const undoMotionEdit = async () => {
     const result = await undo();
     if (!result.success) {
-      toast.error("Undo failed", result.error?.message ?? "Could not undo the last edit.");
+      toast.error(
+        t("motion:motionShell.undoFailed", "Undo failed"),
+        result.error?.message ??
+          t("motion:motionShell.couldNotUndo", "Could not undo the last edit."),
+      );
     }
   };
 
   const redoMotionEdit = async () => {
     const result = await redo();
     if (!result.success) {
-      toast.error("Redo failed", result.error?.message ?? "Could not redo the last edit.");
+      toast.error(
+        t("motion:motionShell.redoFailed", "Redo failed"),
+        result.error?.message ??
+          t("motion:motionShell.couldNotRedo", "Could not redo the last edit."),
+      );
     }
   };
 
@@ -715,22 +795,27 @@ export function MotionCreatorShell({
           setExportProgress(Math.round(progress.progress * 100));
         },
       });
-      toast.success("Motion scene exported", result.filename);
+      toast.success(
+        t("motion:motionShell.motionSceneExported", "Motion scene exported"),
+        result.filename,
+      );
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
         return;
       }
       console.error("[MotionCreator] Scene export failed:", error);
       toast.error(
-        "Motion export failed",
-        error instanceof Error ? error.message : "Could not export the scene.",
+        t("motion:motionShell.motionExportFailed", "Motion export failed"),
+        error instanceof Error
+          ? error.message
+          : t("motion:motionShell.couldNotExportScene", "Could not export the scene."),
       );
     } finally {
       setIsExportingScene(false);
       setExportActive(false);
       setExportProgress(null);
     }
-  }, [composition, isExportingScene, project, setExportActive]);
+  }, [composition, isExportingScene, project, setExportActive, t]);
 
   useEffect(() => {
     const openMotionExport = () => {
@@ -775,7 +860,7 @@ export function MotionCreatorShell({
           {!embedded ? (
             <WorkspaceModeTabs
               activeMode="motion"
-              ariaLabel="Workspaces"
+              ariaLabel={t("motion:motionShell.workspaces", "Workspaces")}
               onSelectMode={(mode) => {
                 if (mode === "video") {
                   navigate("editor");
@@ -794,13 +879,13 @@ export function MotionCreatorShell({
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <MotionHeaderIconButton
             icon="arrow.uturn.backward"
-            label="Undo"
+            label={t("motion:motionShell.undo", "Undo")}
             disabled={!canUndo || isExportingScene}
             onClick={undoMotionEdit}
           />
           <MotionHeaderIconButton
             icon="arrow.uturn.forward"
-            label="Redo"
+            label={t("motion:motionShell.redo", "Redo")}
             disabled={!canRedo || isExportingScene}
             onClick={redoMotionEdit}
           />
@@ -829,7 +914,10 @@ export function MotionCreatorShell({
               style={{ gridColumn: 1, gridRow: 1 }}
             >
               <nav
-                aria-label="Motion workspace tabs"
+                aria-label={t(
+                  "motion:motionShell.motionWorkspaceTabs",
+                  "Motion workspace tabs",
+                )}
                 className="flex shrink-0 flex-wrap items-center gap-1 border-b border-border px-2 py-2"
               >
                 {LEFT_TABS.map((tab) => {
@@ -838,7 +926,7 @@ export function MotionCreatorShell({
                   return (
                     <Button
                       key={tab.id}
-                      label={tab.label}
+                      label={t(tab.labelKey, tab.label)}
                       icon={<Icon size={14} aria-hidden />}
                       variant={active ? "secondary" : "ghost"}
                       size="sm"
@@ -861,7 +949,7 @@ export function MotionCreatorShell({
 
             <PanelResizeHandle
               side="left"
-              label="Resize workspace"
+              label={t("motion:motionShell.resizeWorkspace", "Resize workspace")}
               value={leftPanelWidth}
               min={MIN_LEFT_PANEL_WIDTH}
               max={MAX_LEFT_PANEL_WIDTH}
@@ -881,7 +969,7 @@ export function MotionCreatorShell({
 
             <PanelResizeHandle
               side="right"
-              label="Resize inspector"
+              label={t("motion:motionShell.resizeInspector", "Resize inspector")}
               value={rightPanelWidth}
               min={MIN_RIGHT_PANEL_WIDTH}
               max={MAX_RIGHT_PANEL_WIDTH}
@@ -912,7 +1000,7 @@ export function MotionCreatorShell({
                     return (
                       <Button
                         key={group.id}
-                        label={group.label}
+                        label={t(group.labelKey, group.label)}
                         icon={<Icon size={13} aria-hidden />}
                         variant={active ? "secondary" : "ghost"}
                         size="sm"
@@ -972,14 +1060,19 @@ export function MotionCreatorShell({
         <div className="flex items-center gap-2">
           {parentCompositionId ? (
             <Button
-              label="Back"
+              label={t("motion:motionShell.back", "Back")}
               variant="ghost"
               size="sm"
               icon={<ChevronLeft size={13} aria-hidden />}
               tooltip={
                 parentComposition
-                  ? `Back to ${parentComposition.name}`
-                  : "Back to parent scene"
+                  ? t("motion:motionShell.backToScene", "Back to {{name}}", {
+                      name: parentComposition.name,
+                    })
+                  : t(
+                      "motion:motionShell.backToParentScene",
+                      "Back to parent scene",
+                    )
               }
               onClick={goBackComposition}
             />
@@ -987,33 +1080,42 @@ export function MotionCreatorShell({
           <div className="flex items-center gap-0.5">
             <FooterToggle
               icon={LayoutGrid}
-              label="Show layer switches"
+              label={t("motion:motionShell.showLayerSwitches", "Show layer switches")}
               active={timelineColumnMode === "switches"}
               onClick={() => setTimelineColumnMode("switches")}
             />
             <FooterToggle
               icon={SlidersHorizontal}
-              label="Show transfer modes"
+              label={t("motion:motionShell.showTransferModes", "Show transfer modes")}
               active={timelineColumnMode === "modes"}
               onClick={() => setTimelineColumnMode("modes")}
             />
             <FooterToggle
               icon={Diamond}
-              label={autoKeyframe ? "Auto-keyframe on" : "Auto-keyframe off"}
+              label={
+                autoKeyframe
+                  ? t("motion:motionShell.autoKeyframeOn", "Auto-keyframe on")
+                  : t("motion:motionShell.autoKeyframeOff", "Auto-keyframe off")
+              }
               active={autoKeyframe}
               onClick={() => setAutoKeyframe(!autoKeyframe)}
             />
           </div>
           <span className="tabular-nums">
-            Frame Render Time: <span className="text-fg-3">2.1ms</span>
+            {t("motion:motionShell.frameRenderTime", "Frame Render Time:")}{" "}
+            <span className="text-fg-3">2.1ms</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
           {exportProgress !== null ? (
-            <span className="tabular-nums text-accent">Exporting {exportProgress}%</span>
+            <span className="tabular-nums text-accent">
+              {t("motion:motionShell.exportingProgress", "Exporting {{progress}}%", {
+                progress: exportProgress,
+              })}
+            </span>
           ) : null}
           <span className="text-fg-3">{composition.width}×{composition.height}</span>
-          <span>Toggle Switches / Modes</span>
+          <span>{t("motion:motionShell.toggleSwitchesModes", "Toggle Switches / Modes")}</span>
         </div>
       </footer>
     </div>
@@ -1035,6 +1137,7 @@ function InspectorWorkflowGroup({
   onToggle: () => void;
   onSelectPanel: (tab: MotionRightTab) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const GroupIcon = group.icon;
   const hasActivePanel = group.panels.some((panel) => panel.id === activeTab);
 
@@ -1057,7 +1160,7 @@ function InspectorWorkflowGroup({
         />
         <GroupIcon size={14} aria-hidden className="shrink-0" />
         <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">
-          {group.label}
+          {t(group.labelKey, group.label)}
         </span>
       </button>
       {open ? (
@@ -1075,7 +1178,7 @@ function InspectorWorkflowGroup({
                       : "bg-bg-1 text-fg-2 hover:bg-bg-2"
                   }`}
                 >
-                  <span className="truncate">{panel.label}</span>
+                  <span className="truncate">{t(panel.labelKey, panel.label)}</span>
                   {active ? (
                     <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                   ) : null}
@@ -1155,22 +1258,23 @@ function ExportButton({
   onExport: () => void;
   onUseInEditor: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
       <div className="flex items-stretch overflow-hidden rounded-[8px] shadow-sm">
         <button
           type="button"
-          aria-label="Export"
+          aria-label={t("motion:motionShell.export", "Export")}
           disabled={exporting}
           onClick={() => setOpen((value) => !value)}
           className="flex items-center bg-accent px-[18px] py-[9px] text-[13px] font-semibold text-white transition-colors hover:bg-accent/90 disabled:opacity-60"
         >
-          {exporting ? `${progress ?? 0}%` : "Export"}
+          {exporting ? `${progress ?? 0}%` : t("motion:motionShell.export", "Export")}
         </button>
         <button
           type="button"
-          aria-label="Export options"
+          aria-label={t("motion:motionShell.exportOptions", "Export options")}
           aria-expanded={open}
           disabled={exporting}
           onClick={() => setOpen((value) => !value)}
@@ -1188,7 +1292,7 @@ function ExportButton({
           />
           <div className="absolute right-0 top-[calc(100%+6px)] z-50 w-52 overflow-hidden rounded-lg border border-border bg-bg-elev p-1.5 shadow-lg">
             <Button
-              label="Export video (MP4)"
+              label={t("motion:motionShell.exportVideoMp4", "Export video (MP4)")}
               variant="ghost"
               size="sm"
               icon={<Icon name="square.and.arrow.up" size={15} ariaHidden className="text-fg-3" />}
@@ -1199,7 +1303,7 @@ function ExportButton({
               className="w-full justify-start"
             />
             <Button
-              label="Use in Editor"
+              label={t("motion:motionShell.useInEditor", "Use in Editor")}
               variant="ghost"
               size="sm"
               icon={<Icon name="paperplane" size={15} ariaHidden className="text-fg-3" />}
@@ -1231,16 +1335,17 @@ function TimelineResizeHandle({
   onDoubleClick: () => void;
   onKeyDown: (event: ReactKeyboardEvent<HTMLDivElement>) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <div
       role="separator"
       aria-orientation="horizontal"
-      aria-label="Resize timeline"
+      aria-label={t("motion:motionShell.resizeTimeline", "Resize timeline")}
       aria-valuemin={min}
       aria-valuemax={Math.round(max)}
       aria-valuenow={Math.round(value)}
       tabIndex={0}
-      title="Resize timeline"
+      title={t("motion:motionShell.resizeTimeline", "Resize timeline")}
       onPointerDown={onPointerDown}
       onDoubleClick={onDoubleClick}
       onKeyDown={onKeyDown}
@@ -1305,6 +1410,7 @@ function SceneSwitcher({
 }: {
   composition: MotionComposition;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const [open, setOpen] = useState(false);
   const compositions = useProjectStore(
     (state) => state.project.motionCompositions ?? [],
@@ -1322,7 +1428,9 @@ function SceneSwitcher({
   };
 
   const createScene = async () => {
-    const created = await createMotionComposition("Motion Scene");
+    const created = await createMotionComposition(
+      t("motion:motionShell.defaultSceneName", "Motion Scene"),
+    );
     if (created) setActiveCompositionId(created.id);
     setOpen(false);
   };
@@ -1352,7 +1460,9 @@ function SceneSwitcher({
               weight="semibold"
               className="border-b border-border px-3 py-2 uppercase tracking-[0.08em]"
             >
-              Sequences · {compositions.length}
+              {t("motion:motionShell.sequencesCount", "Sequences · {{count}}", {
+                count: compositions.length,
+              })}
             </ToolcraftText>
             <div className="max-h-72 overflow-auto p-1.5">
               {compositions.map((scene) => {
@@ -1360,7 +1470,9 @@ function SceneSwitcher({
                 return (
                   <ToolcraftClickableCard
                     key={scene.id}
-                    label={`Open ${scene.name}`}
+                    label={t("motion:motionShell.openScene", "Open {{name}}", {
+                      name: scene.name,
+                    })}
                     onClick={() => selectComposition(scene.id)}
                     active={active}
                     variant={active ? "selected" : "transparent"}
@@ -1389,7 +1501,7 @@ function SceneSwitcher({
               })}
             </div>
             <Button
-              label="New sequence"
+              label={t("motion:motionShell.newSequence", "New sequence")}
               icon={<Plus size={15} aria-hidden />}
               variant="ghost"
               size="sm"

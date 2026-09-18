@@ -1,0 +1,81 @@
+{
+  "chat": {
+    "noProject": "Open or create a project before chatting.",
+    "chooseApiFormat": "Choose an API format in AI settings.",
+    "enterModelId": "Enter or choose a model ID in AI settings.",
+    "invalidEndpoint": "Enter a valid compatible endpoint URL.",
+    "unlockSecureStorage": "Unlock secure storage to use your API key.",
+    "apiKeyNotLoaded": "The configured endpoint API key could not be loaded.",
+    "turnFailed": "The AI turn failed.",
+    "stoppedMaxSteps": "I stopped after reaching this turn's step limit. Ask me to continue if more work is needed.",
+    "stoppedMaxToolCalls": "I stopped after reaching this turn's tool-call limit. Ask me to continue if more work is needed.",
+    "stoppedBudget": "The model stopped at its response or token limit. Ask me to continue, or increase the model's output limit.",
+    "emptyWithTools": "The edits finished, but the model did not provide a written summary.",
+    "emptyResponse": "The model returned an empty response. Try again or choose another model."
+  },
+  "project": {
+    "clipboardEmpty": "Clipboard is empty",
+    "noCompatibleTrack": "No compatible unlocked track for {{kind}} clip",
+    "couldNotPlaceClip": "Could not place {{kind}} clip",
+    "pasteClipFailed": "Failed to paste {{kind}} clip",
+    "noEffectsInClipboard": "No effects in clipboard",
+    "noResults": "No results",
+    "clipIdNotFound": "Clip {{clipId}} not found",
+    "blendOpacityRange": "Blend opacity must be between 0 and 100",
+    "noProjectOpen": "No project is open",
+    "history": {
+      "applyTemplate": "Apply {{name}}",
+      "updateTemplate": "Update {{name}}",
+      "pasteClips": "Paste timeline clips"
+    }
+  },
+  "clip": {
+    "mediaItemNotFound": "Media item not found",
+    "newTrackNotFound": "Could not find newly created track",
+    "noAudioToSeparate": "Media has no audio to separate",
+    "createAudioTrackFailed": "Failed to create audio track",
+    "audioTrackNotFound": "Could not find or create audio track",
+    "moveClipsGroup": "Move clips"
+  },
+  "errors": {
+    "clipNotFound": "Clip not found",
+    "trackNotFound": "Track not found"
+  },
+  "settings": {
+    "services": {
+      "elevenlabs": "AI voice generation and text-to-speech",
+      "openaiCompatible": "Any OpenAI-compatible API host; API key optional",
+      "anthropicCompatible": "Any Anthropic Messages-compatible API host; API key optional",
+      "kieAi": "AI aggregator for video/image generation, upscaling, and editing",
+      "freepik": "AI aggregator for image generation, vectors, and creative assets"
+    }
+  },
+  "recorder": {
+    "errorOccurred": "Recording error occurred",
+    "permissionDenied": "Permission denied",
+    "noScreenStream": "No screen stream available",
+    "startFailed": "Failed to start recording",
+    "stopFailed": "Failed to stop recording"
+  },
+  "autoSave": {
+    "initFailed": "Failed to initialize auto-save",
+    "failed": "Auto-save failed",
+    "recoverFailed": "Failed to recover project"
+  },
+  "processing": {
+    "waiting": "Waiting to start...",
+    "complete": "Complete",
+    "failed": "Failed"
+  },
+  "projectManager": {
+    "emptyFile": "Project file is empty",
+    "parseError": "Parse error",
+    "invalidFile": "Invalid project file: {{detail}}",
+    "expectedObject": "Invalid project file: expected a JSON object",
+    "missingIdOrName": "Invalid project file: missing project id or name"
+  },
+  "templateCloud": {
+    "uploadFailed": "Upload failed",
+    "deleteFailed": "Delete failed"
+  }
+}

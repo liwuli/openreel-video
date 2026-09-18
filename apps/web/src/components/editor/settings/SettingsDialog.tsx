@@ -63,7 +63,7 @@ export const SettingsDialog: React.FC = () => {
               className="w-full"
             >
               <TabsList
-                aria-label="Settings"
+                aria-label={t("settings:title")}
                 className="grid h-auto w-full gap-0.5 rounded-[7px] border border-border bg-bg-1 p-0.5"
                 layoutId="settings-tabs"
                 style={{

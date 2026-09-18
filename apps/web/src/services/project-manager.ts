@@ -1,6 +1,7 @@
 import type { Project, ProjectSettings } from "@openreel/core";
 import { normalizeProjectStoredFields } from "@openreel/core";
 import { v4 as uuidv4 } from "uuid";
+import i18n from "../i18n";
 
 interface FilePickerAcceptType {
   description: string;
@@ -187,7 +188,9 @@ class ProjectManager {
   private parseProjectContent(content: string): Project {
     const trimmed = content.trim();
     if (!trimmed) {
-      throw new Error("Project file is empty");
+      throw new Error(
+        i18n.t("messages:projectManager.emptyFile", "Project file is empty"),
+      );
     }
 
     let parsed: unknown;
@@ -195,12 +198,26 @@ class ProjectManager {
       parsed = JSON.parse(trimmed);
     } catch (error) {
       throw new Error(
-        `Invalid project file: ${error instanceof Error ? error.message : "Parse error"}`,
+        i18n.t(
+          "messages:projectManager.invalidFile",
+          "Invalid project file: {{detail}}",
+          {
+            detail:
+              error instanceof Error
+                ? error.message
+                : i18n.t("messages:projectManager.parseError", "Parse error"),
+          },
+        ),
       );
     }
 
     if (!parsed || typeof parsed !== "object") {
-      throw new Error("Invalid project file: expected a JSON object");
+      throw new Error(
+        i18n.t(
+          "messages:projectManager.expectedObject",
+          "Invalid project file: expected a JSON object",
+        ),
+      );
     }
 
     const candidate = parsed as Record<string, unknown>;
@@ -211,7 +228,12 @@ class ProjectManager {
 
     const rawProject = (isWrapped ? candidate.project : parsed) as Project;
     if (typeof rawProject.id !== "string" || typeof rawProject.name !== "string") {
-      throw new Error("Invalid project file: missing project id or name");
+      throw new Error(
+        i18n.t(
+          "messages:projectManager.missingIdOrName",
+          "Invalid project file: missing project id or name",
+        ),
+      );
     }
 
     return normalizeProjectStoredFields(rawProject);

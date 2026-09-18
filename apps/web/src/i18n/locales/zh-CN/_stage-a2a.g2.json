@@ -1,0 +1,147 @@
+{
+  "motionTimeline": {
+    "selectNamed": "选择 {{name}}",
+    "keyframeLabel": "{{name}} 关键帧",
+    "cameraProperty": {
+      "camera": "相机",
+      "positionX": "相机 X",
+      "positionY": "相机 Y",
+      "positionZ": "相机深度",
+      "zoom": "相机缩放",
+      "rotation": "相机旋转",
+      "perspective": "相机透视",
+      "focusDistance": "对焦距离",
+      "aperture": "相机光圈",
+      "maxBlur": "最大模糊"
+    },
+    "lightProperty": {
+      "light": "灯光"
+    },
+    "parent": {
+      "missing": "缺失"
+    },
+    "toolbar": {
+      "title": "时间轴",
+      "audioClip": "音频片段",
+      "selectLayer": "选择一个图层",
+      "noLayer": "未选择图层",
+      "keyframeNudgeHint": "Alt+左/右 微调选中的关键帧；按住 Shift 每次 10 帧",
+      "keyframeCount": "{{count}} 个关键帧",
+      "previousKeyframe": "上一个关键帧 (J)",
+      "nextKeyframe": "下一个关键帧 (K)",
+      "addKeyframe": "在播放头添加关键帧",
+      "removeKeyframe": "移除播放头处的关键帧",
+      "duplicateKeyframes": "在播放头复制选中的关键帧 (⌘D)",
+      "deleteKeyframes": "删除选中的 {{count}} 个关键帧",
+      "addMarker": "在播放头添加标记 (M)",
+      "removeMarker": "移除播放头处的标记 (M)",
+      "manageMarkers": "管理合成标记",
+      "copySelection": "复制时间轴选中项 (⌘C)",
+      "pasteAtPlayhead": "在播放头粘贴 (⌘V)",
+      "splitAtPlayhead": "在播放头分割选中项",
+      "rippleDelete": "波纹删除选中项",
+      "rippleEdit": "波纹编辑",
+      "zoomOut": "缩小时间轴",
+      "zoomIn": "放大时间轴",
+      "zoomFit": "适应",
+      "zoomLabel": "动态图形时间轴缩放",
+      "workAreaIn": "入点",
+      "workAreaOut": "出点",
+      "clearWorkArea": "清除",
+      "timing": "时间",
+      "layersSuffix": "图层",
+      "audioSuffix": "音频"
+    },
+    "timingAssistant": {
+      "title": "时间助手",
+      "selected": "已选 {{count}} 个",
+      "gapUnit": "间隔",
+      "offsetUnit": "偏移",
+      "alignIn": "对齐入点",
+      "alignOut": "对齐出点",
+      "sequence": "顺序排列",
+      "stagger": "错开",
+      "fitToWorkArea": "将选中项适配到工作区"
+    },
+    "filterBar": {
+      "search": "搜索时间轴图层",
+      "searchPlaceholder": "搜索图层、效果…",
+      "clearSearch": "清除时间轴搜索",
+      "filter": {
+        "all": "全部",
+        "selected": "已选中",
+        "animated": "含动画"
+      },
+      "matchCount": "{{count}} / {{total}}",
+      "resetFilters": "重置筛选"
+    },
+    "rail": {
+      "layers": "图层",
+      "composition": "合成",
+      "hideShyLayers": "隐藏害羞图层",
+      "showShyLayers": "显示害羞图层",
+      "layerName": "图层名称",
+      "modes": "模式",
+      "switches": "开关",
+      "parent": "父级",
+      "timing": "时间"
+    },
+    "ruler": {
+      "beat": "节拍 {{index}}"
+    },
+    "cameraTrack": {
+      "badge": "相机",
+      "select": "选择相机",
+      "name": "相机",
+      "view": "视图"
+    },
+    "lightTrack": {
+      "name": "灯光"
+    },
+    "audioTrack": {
+      "defaultName": "音频 {{index}}",
+      "select": "选择音频片段 {{name}}",
+      "mute": "静音音频片段",
+      "unmute": "取消静音音频片段",
+      "delete": "删除音频片段",
+      "type": "音频",
+      "timelineClip": "音频时间轴片段 {{name}}",
+      "move": "在时间上移动音频片段 {{name}}",
+      "trimIn": "修剪音频入点",
+      "trimOut": "修剪音频出点",
+      "trimInPoint": "修剪 {{name}} 的入点",
+      "trimOutPoint": "修剪 {{name}} 的出点"
+    },
+    "empty": {
+      "noMatch": "没有图层符合当前的时间轴筛选条件。",
+      "allShy": "所有图层都被害羞开关隐藏了。",
+      "noLayers": "添加的图层会在这里显示为轨道。"
+    },
+    "layers": {
+      "expandProperties": "展开 {{name}} 的属性",
+      "collapseProperties": "收起 {{name}} 的属性",
+      "blendMode": "图层混合模式",
+      "visibility": "图层可见性",
+      "solo": "独奏图层",
+      "lock": "锁定图层",
+      "guide": "参考图层",
+      "shy": "害羞图层",
+      "move": "在时间上移动 {{name}}",
+      "trimIn": "修剪图层入点",
+      "trimOut": "修剪图层出点",
+      "trimInPoint": "修剪 {{name}} 的入点",
+      "trimOutPoint": "修剪 {{name}} 的出点"
+    },
+    "markers": {
+      "defaultLabel": "标记 {{index}}"
+    },
+    "markerManager": {
+      "title": "合成标记",
+      "empty": "在播放头处按 M 键添加标记。",
+      "defaultName": "标记",
+      "seek": "跳转到 {{label}}",
+      "labelFor": "{{label}} 的标记名称",
+      "delete": "删除 {{label}}"
+    }
+  }
+}

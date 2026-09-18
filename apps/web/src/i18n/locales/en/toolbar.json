@@ -47,7 +47,6 @@
   },
   "toasts": {
     "importSuccess": "{{count}} recording imported!",
-    "importSuccessPlural": "{{count}} recordings imported!",
     "screenWebcamAdded": "Screen and webcam added to assets. Use the timeline to composite them.",
     "screenOnlyAdded": "Screen recording added to assets.",
     "importFailed": "Import failed"

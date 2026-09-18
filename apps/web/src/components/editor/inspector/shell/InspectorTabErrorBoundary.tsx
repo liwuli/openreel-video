@@ -1,4 +1,5 @@
 import * as React from "react";
+import i18n from "../../../../i18n";
 
 interface Props {
   children: React.ReactNode;
@@ -19,7 +20,10 @@ export class InspectorTabErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="p-4 text-center text-xs text-fg-2">
-          This panel hit an error. Switch tabs and back to retry.
+          {i18n.t(
+            "inspector:tabErrorBoundary.message",
+            "This panel hit an error. Switch tabs and back to retry.",
+          )}
         </div>
       );
     }

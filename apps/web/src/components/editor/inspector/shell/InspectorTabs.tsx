@@ -18,7 +18,7 @@ export const InspectorTabs: React.FC<InspectorTabsProps> = ({ tabs, activeId, on
       className="shrink-0"
     >
       <TabsList
-        aria-label="Inspector tabs"
+        aria-label={t("inspectorTabs.ariaLabel", "Inspector tabs")}
         className="flex h-auto items-center justify-start gap-0.5 overflow-x-auto rounded-none border-b border-border bg-transparent px-2 py-1 scrollbar-none"
         layoutId="inspector-tabs"
       >

@@ -495,15 +495,24 @@ export const InspectorPanel: React.FC = () => {
             );
 
             if (!result.success) {
-              throw new Error(result.error ?? "Failed to apply noise cleanup");
+              throw new Error(
+                result.error ??
+                  t(
+                    "inspector:inspectorPanel.failedToApplyNoiseCleanup",
+                    "Failed to apply noise cleanup",
+                  ),
+              );
             }
           }
 
           setAudioEnhanced(true);
           setTimeout(() => setAudioEnhanced(false), 2000);
           toast.success(
-            "Noise cleanup applied",
-            "Fine-tune or switch presets in Background Noise Removal.",
+            t("inspector:inspectorPanel.noiseCleanupApplied", "Noise cleanup applied"),
+            t(
+              "inspector:inspectorPanel.noiseCleanupAppliedDetail",
+              "Fine-tune or switch presets in Background Noise Removal.",
+            ),
           );
 
           forceUpdate();
@@ -512,10 +521,13 @@ export const InspectorPanel: React.FC = () => {
     } catch (error) {
       console.error("Failed to enhance audio:", error);
       toast.error(
-        "Could not clean up audio",
+        t("inspector:inspectorPanel.couldNotCleanUpAudio", "Could not clean up audio"),
         error instanceof Error
           ? error.message
-          : "Noise cleanup could not be applied to this clip.",
+          : t(
+              "inspector:inspectorPanel.noiseCleanupFailedDetail",
+              "Noise cleanup could not be applied to this clip.",
+            ),
       );
     } finally {
       setIsEnhancingAudio(false);
@@ -527,6 +539,7 @@ export const InspectorPanel: React.FC = () => {
     getAudioEffects,
     toggleAudioEffect,
     updateAudioEffect,
+    t,
   ]);
 
   const handleAutoColor = useCallback(async () => {
@@ -580,25 +593,45 @@ export const InspectorPanel: React.FC = () => {
         if (result.success) {
           if (result.errors.length > 0) {
             toast.warning(
-              "Captions imported with warnings",
-              `${result.errors.length} subtitle segment(s) were skipped.`,
+              t(
+                "inspector:inspectorPanel.captionsImportedWithWarnings",
+                "Captions imported with warnings",
+              ),
+              t(
+                "inspector:inspectorPanel.captionsSkippedDetail",
+                "{{count}} subtitle segment(s) were skipped.",
+                { count: result.errors.length },
+              ),
             );
           } else {
             toast.success(
-              "Captions imported",
-              "Each cue is now an editable text clip on the Captions track.",
+              t("inspector:inspectorPanel.captionsImported", "Captions imported"),
+              t(
+                "inspector:inspectorPanel.captionsImportedDetail",
+                "Each cue is now an editable text clip on the Captions track.",
+              ),
             );
           }
         } else {
-          toast.error("Caption import failed", result.errors[0] || "No valid captions found.");
+          toast.error(
+            t("inspector:inspectorPanel.captionImportFailed", "Caption import failed"),
+            result.errors[0] ||
+              t("inspector:inspectorPanel.noValidCaptions", "No valid captions found."),
+          );
         }
       } catch {
-        toast.error("Caption import failed", "Could not read the selected subtitle file.");
+        toast.error(
+          t("inspector:inspectorPanel.captionImportFailed", "Caption import failed"),
+          t(
+            "inspector:inspectorPanel.captionReadFailed",
+            "Could not read the selected subtitle file.",
+          ),
+        );
       } finally {
         event.target.value = "";
       }
     },
-    [captionWordsPerLine, importSRT, selectedTimelineClip?.id],
+    [captionWordsPerLine, importSRT, selectedTimelineClip?.id, t],
   );
 
   const handleSubtitleFontUpload = useCallback(
@@ -607,7 +640,11 @@ export const InspectorPanel: React.FC = () => {
 
       const result = await registerCustomFont(file);
       if (!result.success) {
-        toast.error("Font upload failed", result.error ?? "Unknown error.");
+        toast.error(
+          t("inspector:inspectorPanel.fontUploadFailed", "Font upload failed"),
+          result.error ??
+            t("inspector:inspectorPanel.unknownError", "Unknown error."),
+        );
       } else {
         updateSubtitle(selectedSubtitle.id, {
           style: {
@@ -615,10 +652,17 @@ export const InspectorPanel: React.FC = () => {
             fontFamily: result.fontFamily,
           } as typeof selectedSubtitle.style,
         });
-        toast.success("Custom font uploaded", `${result.fontFamily} is ready to use.`);
+        toast.success(
+          t("inspector:inspectorPanel.customFontUploaded", "Custom font uploaded"),
+          t(
+            "inspector:inspectorPanel.customFontUploadedDetail",
+            "{{font}} is ready to use.",
+            { font: result.fontFamily },
+          ),
+        );
       }
     },
-    [selectedSubtitle, updateSubtitle],
+    [selectedSubtitle, updateSubtitle, t],
   );
 
   // Default transform
@@ -712,9 +756,15 @@ export const InspectorPanel: React.FC = () => {
   );
   const noiseReductionSectionTitle = selectedNoiseReductionEffect
     ? selectedNoiseReductionEffect.enabled
-      ? "Background Noise Removal (Active)"
-      : "Background Noise Removal (Configured)"
-    : "Background Noise Removal";
+      ? t(
+          "inspector:audio.backgroundNoiseRemovalActive",
+          "Background Noise Removal (Active)",
+        )
+      : t(
+          "inspector:audio.backgroundNoiseRemovalConfigured",
+          "Background Noise Removal (Configured)",
+        )
+    : t("inspector:audio.backgroundNoiseRemoval", "Background Noise Removal");
   const appliedEditingTemplates =
     selectedTimelineClip?.metadata?.appliedTemplates || [];
   const handleRecipeControlChange = useCallback(
@@ -779,7 +829,13 @@ export const InspectorPanel: React.FC = () => {
 
       const template = getEditingTemplate(templateId);
       if (!template) {
-        toast.error("Recipe unavailable", "This recipe definition is no longer available.");
+        toast.error(
+          t("inspector:inspectorPanel.recipeUnavailable", "Recipe unavailable"),
+          t(
+            "inspector:inspectorPanel.recipeUnavailableDetail",
+            "This recipe definition is no longer available.",
+          ),
+        );
         return;
       }
 
@@ -793,17 +849,31 @@ export const InspectorPanel: React.FC = () => {
       );
 
       if (!updated) {
-        toast.error("Could not update recipe", "The recipe controls could not be saved for this clip.");
+        toast.error(
+          t("inspector:inspectorPanel.couldNotUpdateRecipe", "Could not update recipe"),
+          t(
+            "inspector:inspectorPanel.recipeControlsSaveFailed",
+            "The recipe controls could not be saved for this clip.",
+          ),
+        );
         return;
       }
 
-      toast.success("Recipe updated", `${template.name} was updated on this clip.`);
+      toast.success(
+        t("inspector:inspectorPanel.recipeUpdated", "Recipe updated"),
+        t(
+          "inspector:inspectorPanel.recipeUpdatedDetail",
+          "{{name}} was updated on this clip.",
+          { name: template.name },
+        ),
+      );
     },
     [
       getEditingTemplate,
       recipeControlValues,
       selectedTimelineClip,
       updateEditingTemplateApplication,
+      t,
     ],
   );
   const showVideoControls = clipType === "video" || clipType === "image";
@@ -833,10 +903,10 @@ export const InspectorPanel: React.FC = () => {
             )?.name ??
             (clipType
               ? clipType.charAt(0).toUpperCase() + clipType.slice(1)
-              : "Clip")
+              : t("inspector:inspectorPanel.clipFallback", "Clip"))
           }
           durationSeconds={selectedClip.duration}
-          typeLabel={clipType ?? "clip"}
+          typeLabel={clipType ?? t("inspector:inspectorPanel.clipTypeFallback", "clip")}
         />
       )}
 
@@ -956,18 +1026,27 @@ export const InspectorPanel: React.FC = () => {
                 <Shuffle size={14} className="text-accent" aria-hidden />
                 <Text type="supporting" weight="bold" className="text-fg">
                   {selectedTransition.edge === "in"
-                    ? "Intro Transition"
+                    ? t("inspector:inspectorPanel.introTransition", "Intro Transition")
                     : selectedTransition.edge === "out"
-                      ? "Outro Transition"
-                      : "Transition"}
+                      ? t("inspector:inspectorPanel.outroTransition", "Outro Transition")
+                      : t("inspector:inspectorPanel.transition", "Transition")}
                 </Text>
               </div>
               <Text type="supporting" display="block" className="mt-1 text-[10px] text-fg-3">
                 {selectedTransition.edge === "in"
-                  ? "From the project background into this clip"
+                  ? t(
+                      "inspector:inspectorPanel.introTransitionDetail",
+                      "From the project background into this clip",
+                    )
                   : selectedTransition.edge === "out"
-                    ? "From this clip into the project background"
-                    : "Between two clips - centered on the cut"}
+                    ? t(
+                        "inspector:inspectorPanel.outroTransitionDetail",
+                        "From this clip into the project background",
+                      )
+                    : t(
+                        "inspector:inspectorPanel.transitionDetail",
+                        "Between two clips - centered on the cut",
+                      )}
               </Text>
             </Card>
             <TransitionInspector
@@ -991,7 +1070,7 @@ export const InspectorPanel: React.FC = () => {
               <div className="flex items-center gap-2 mb-1">
                 <Captions size={14} className="text-accent" aria-hidden />
                 <Text type="supporting" weight="bold" className="text-accent">
-                  Subtitle
+                  {t("inspector:inspectorPanel.subtitle", "Subtitle")}
                 </Text>
               </div>
               <Text type="supporting" display="block" className="text-[10px] text-fg-3">
@@ -1001,10 +1080,10 @@ export const InspectorPanel: React.FC = () => {
             </Card>
 
             {/* Subtitle Text Editor */}
-            <Section title="Text Content">
+            <Section title={t("inspector:inspectorPanel.textContent", "Text Content")}>
               <div className="space-y-3">
                 <ToolcraftTextAreaControl
-                  label="Subtitle text"
+                  label={t("inspector:inspectorPanel.subtitleText", "Subtitle text")}
                   isLabelHidden
                   value={selectedSubtitle.text}
                   onChange={(text) =>
@@ -1013,21 +1092,24 @@ export const InspectorPanel: React.FC = () => {
                     })
                   }
                   rows={4}
-                  placeholder="Enter subtitle text..."
+                  placeholder={t(
+                    "inspector:inspectorPanel.subtitleTextPlaceholder",
+                    "Enter subtitle text...",
+                  )}
                   width="100%"
                 />
               </div>
             </Section>
 
             {/* Subtitle Timing */}
-            <Section title="Timing">
+            <Section title={t("inspector:inspectorPanel.timing", "Timing")}>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <Text type="supporting" color="secondary" className="text-[10px]">
-                    Start Time
+                    {t("inspector:inspectorPanel.startTime", "Start Time")}
                   </Text>
                   <ToolcraftNumberInputControl
-                    label="Start Time"
+                    label={t("inspector:inspectorPanel.startTime", "Start Time")}
                     isLabelHidden
                     step={0.1}
                     value={selectedSubtitle.startTime}
@@ -1042,10 +1124,10 @@ export const InspectorPanel: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <Text type="supporting" color="secondary" className="text-[10px]">
-                    End Time
+                    {t("inspector:inspectorPanel.endTime", "End Time")}
                   </Text>
                   <ToolcraftNumberInputControl
-                    label="End Time"
+                    label={t("inspector:inspectorPanel.endTime", "End Time")}
                     isLabelHidden
                     step={0.1}
                     value={selectedSubtitle.endTime}
@@ -1062,12 +1144,12 @@ export const InspectorPanel: React.FC = () => {
             </Section>
 
             {/* Subtitle Position */}
-            <Section title="Position">
+            <Section title={t("inspector:inspectorPanel.position", "Position")}>
               <div className="grid grid-cols-3 gap-2">
                 {(["top", "center", "bottom"] as const).map((pos) => (
                   <SelectableCard
                     key={pos}
-                    label={pos}
+                    label={t(`inspector:inspectorPanel.subtitlePosition.${pos}`, pos)}
                     isSelected={(selectedSubtitle.style?.position || "bottom") === pos}
                     onChange={() =>
                       updateSubtitle(selectedSubtitle.id, {
@@ -1081,21 +1163,21 @@ export const InspectorPanel: React.FC = () => {
                     variant={(selectedSubtitle.style?.position || "bottom") === pos ? "green" : "muted"}
                     className="text-center capitalize"
                   >
-                    {pos}
+                    {t(`inspector:inspectorPanel.subtitlePosition.${pos}`, pos)}
                   </SelectableCard>
                 ))}
               </div>
             </Section>
 
             {/* Subtitle Animation Style */}
-            <Section title="Animation">
+            <Section title={t("inspector:inspectorPanel.animation", "Animation")}>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <Text type="supporting" color="secondary" className="text-[10px]">
-                    Style
+                    {t("inspector:inspectorPanel.style", "Style")}
                   </Text>
                   <Selector
-                    label="Animation style"
+                    label={t("inspector:inspectorPanel.animationStyle", "Animation style")}
                     isLabelHidden
                     value={selectedSubtitle.animationStyle || "none"}
                     onChange={(v) =>
@@ -1113,26 +1195,46 @@ export const InspectorPanel: React.FC = () => {
                 </div>
                 <Text type="supporting" color="secondary" display="block" className="text-[9px]">
                   {selectedSubtitle.animationStyle === "karaoke" &&
-                    "Words fill with color as they're spoken"}
+                    t(
+                      "inspector:inspectorPanel.animationStyleHints.karaoke",
+                      "Words fill with color as they're spoken",
+                    )}
                   {selectedSubtitle.animationStyle === "word-highlight" &&
-                    "Current word is highlighted and scaled"}
+                    t(
+                      "inspector:inspectorPanel.animationStyleHints.wordHighlight",
+                      "Current word is highlighted and scaled",
+                    )}
                   {selectedSubtitle.animationStyle === "word-by-word" &&
-                    "Shows one word at a time"}
+                    t(
+                      "inspector:inspectorPanel.animationStyleHints.wordByWord",
+                      "Shows one word at a time",
+                    )}
                   {selectedSubtitle.animationStyle === "bounce" &&
-                    "Words bounce in as they appear"}
+                    t(
+                      "inspector:inspectorPanel.animationStyleHints.bounce",
+                      "Words bounce in as they appear",
+                    )}
                   {selectedSubtitle.animationStyle === "typewriter" &&
-                    "Words appear progressively like typing"}
+                    t(
+                      "inspector:inspectorPanel.animationStyleHints.typewriter",
+                      "Words appear progressively like typing",
+                    )}
                   {(!selectedSubtitle.animationStyle ||
                     selectedSubtitle.animationStyle === "none") &&
-                    "Static text, no animation"}
+                    t(
+                      "inspector:inspectorPanel.animationStyleHints.none",
+                      "Static text, no animation",
+                    )}
                 </Text>
                 {selectedSubtitle.animationStyle &&
                   selectedSubtitle.animationStyle !== "none" &&
                   !selectedSubtitle.words?.length && (
                     <Card variant="muted" padding={2} className="bg-amber-400/10">
                       <Text type="supporting" display="block" className="text-[9px] text-amber-400">
-                      No word-level timing data. Re-generate captions to
-                      enable animation.
+                      {t(
+                        "inspector:inspectorPanel.noWordTimingData",
+                        "No word-level timing data. Re-generate captions to enable animation.",
+                      )}
                       </Text>
                     </Card>
                   )}
@@ -1143,7 +1245,7 @@ export const InspectorPanel: React.FC = () => {
                     <div className="pt-2 border-t border-border space-y-2">
                       <div className="flex items-center justify-between">
                         <Text type="supporting" color="secondary" className="text-[10px]">
-                          Highlight Color
+                          {t("inspector:inspectorPanel.highlightColor", "Highlight Color")}
                         </Text>
                         <div className="flex items-center gap-2">
                           <ColorSelector
@@ -1151,7 +1253,10 @@ export const InspectorPanel: React.FC = () => {
                               selectedSubtitle.style?.highlightColor ||
                               "#ffff00"
                             }
-                            label="Select highlight color"
+                            label={t(
+                              "inspector:inspectorPanel.selectHighlightColor",
+                              "Select highlight color",
+                            )}
                             onChange={(highlightColor) =>
                               updateSubtitle(selectedSubtitle.id, {
                                 style: {
@@ -1201,14 +1306,14 @@ export const InspectorPanel: React.FC = () => {
             </Section>
 
             {/* Subtitle Font Settings */}
-            <Section title="Font">
+            <Section title={t("inspector:inspectorPanel.font", "Font")}>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <Text type="supporting" color="secondary" className="text-[10px]">
-                    Font Family
+                    {t("inspector:inspectorPanel.fontFamily", "Font Family")}
                   </Text>
                   <Selector
-                    label="Font family"
+                    label={t("inspector:inspectorPanel.fontFamilyLabel", "Font family")}
                     isLabelHidden
                     value={selectedSubtitle.style?.fontFamily || "Inter"}
                     onChange={(v) =>
@@ -1228,7 +1333,11 @@ export const InspectorPanel: React.FC = () => {
                       ),
                       ...customFonts.map((font) => ({
                         value: font,
-                        label: `${font} (Custom)`,
+                        label: t(
+                          "inspector:inspectorPanel.fontCustomSuffix",
+                          "{{font}} (Custom)",
+                          { font },
+                        ),
                       })),
                     ]}
                     size="sm"
@@ -1236,7 +1345,7 @@ export const InspectorPanel: React.FC = () => {
                   />
                 </div>
                 <FileInput
-                  label="Upload Custom Font"
+                  label={t("inspector:inspectorPanel.uploadCustomFont", "Upload Custom Font")}
                   isLabelHidden
                   value={null}
                   onChange={(picked) => {
@@ -1246,7 +1355,10 @@ export const InspectorPanel: React.FC = () => {
                   }}
                   accept={FONT_FILE_ACCEPT}
                   mode="input"
-                  placeholder="Upload Custom Font"
+                  placeholder={t(
+                    "inspector:inspectorPanel.uploadCustomFont",
+                    "Upload Custom Font",
+                  )}
                   width="100%"
                 />
                 <div className="flex items-center justify-between">

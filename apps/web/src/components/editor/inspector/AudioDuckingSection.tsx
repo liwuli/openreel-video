@@ -26,6 +26,7 @@ import { PropertySlider } from "./shell/PropertySlider";
 import { MockToggle } from "./shell/InspectorControls";
 import { useProjectStore } from "../../../stores/project-store";
 import type { AudioDuckingSettings } from "../../../stores/project";
+import i18n, { useTranslation } from "../../../i18n";
 
 interface AudioDuckingSectionProps {
   clipId: string;
@@ -43,26 +44,31 @@ const DEFAULT_SETTINGS: AudioDuckingSettings = {
 
 const PRESET_CONFIGS: {
   id: string;
+  nameKey: string;
   name: string;
   settings: Partial<AudioDuckingSettings>;
 }[] = [
   {
     id: "subtle",
+    nameKey: "inspector:audioDucking.presetSubtle",
     name: "Subtle",
     settings: { threshold: -35, reduction: 0.4, attack: 0.15, release: 0.5 },
   },
   {
     id: "moderate",
+    nameKey: "inspector:audioDucking.presetModerate",
     name: "Moderate",
     settings: { threshold: -30, reduction: 0.6, attack: 0.1, release: 0.3 },
   },
   {
     id: "aggressive",
+    nameKey: "inspector:audioDucking.presetAggressive",
     name: "Aggressive",
     settings: { threshold: -25, reduction: 0.8, attack: 0.05, release: 0.2 },
   },
   {
     id: "podcast",
+    nameKey: "inspector:audioDucking.presetPodcast",
     name: "Podcast",
     settings: {
       threshold: -28,
@@ -107,7 +113,12 @@ const findClipById = (project: Project, clipId: string): Clip | null => {
 };
 
 const getTrackLabel = (track: Track): string => {
-  return track.name || `Track ${track.id.slice(-4)}`;
+  return (
+    track.name ||
+    i18n.t("inspector:audioDucking.fallbackTrack", "Track {{id}}", {
+      id: track.id.slice(-4),
+    })
+  );
 };
 
 interface DuckingSliderProps {
@@ -163,7 +174,12 @@ const buildTriggerTrackBuffer = async (
   });
 
   if (overlappingClips.length === 0) {
-    throw new Error("No overlapping trigger clips were found for this clip.");
+    throw new Error(
+      i18n.t(
+        "inspector:audioDucking.noOverlappingClips",
+        "No overlapping trigger clips were found for this clip.",
+      ),
+    );
   }
 
   const decodeContext = new AudioContext();
@@ -226,7 +242,12 @@ const buildTriggerTrackBuffer = async (
     }
 
     if (scheduledSources === 0) {
-      throw new Error("No decodable trigger audio was found on the selected source track.");
+      throw new Error(
+        i18n.t(
+          "inspector:audioDucking.noDecodableAudio",
+          "No decodable trigger audio was found on the selected source track.",
+        ),
+      );
     }
 
     return offlineContext.startRendering();
@@ -238,6 +259,7 @@ const buildTriggerTrackBuffer = async (
 export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const project = useProjectStore((state) => state.project);
   const setClipAudioDucking = useProjectStore(
     (state) => state.setClipAudioDucking,
@@ -332,7 +354,12 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
     );
 
     if (!sourceTrack) {
-      setErrorMessage("Select a valid trigger source track.");
+      setErrorMessage(
+        t(
+          "inspector:audioDucking.invalidSourceTrack",
+          "Select a valid trigger source track.",
+        ),
+      );
       return;
     }
 
@@ -354,7 +381,10 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
 
       if (keyframes.length === 0) {
         throw new Error(
-          "No speech crossed the trigger threshold. Lower the threshold or choose a louder source track.",
+          t(
+            "inspector:audioDucking.belowThreshold",
+            "No speech crossed the trigger threshold. Lower the threshold or choose a louder source track.",
+          ),
         );
       }
 
@@ -362,31 +392,43 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
       const applied = setClipAudioDucking(audioTargetClip.id, persisted, keyframes);
 
       if (!applied) {
-        throw new Error("Failed to persist ducking on this clip.");
+        throw new Error(
+          t(
+            "inspector:audioDucking.persistFailed",
+            "Failed to persist ducking on this clip.",
+          ),
+        );
       }
 
       window.dispatchEvent(new CustomEvent("openreel:preview-invalidate"));
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to apply ducking.",
+        error instanceof Error
+          ? error.message
+          : t("inspector:audioDucking.applyFailed", "Failed to apply ducking."),
       );
     } finally {
       setIsApplying(false);
     }
-  }, [audioTargetClip, project, setClipAudioDucking, settings]);
+  }, [audioTargetClip, project, setClipAudioDucking, settings, t]);
 
   const handleRemoveDucking = useCallback(() => {
     const cleared = clearClipAudioDucking(audioTargetClip?.id ?? clipId);
 
     if (!cleared) {
-      setErrorMessage("Failed to remove ducking from this clip.");
+      setErrorMessage(
+        t(
+          "inspector:audioDucking.removeFailed",
+          "Failed to remove ducking from this clip.",
+        ),
+      );
       return;
     }
 
     setSettings(DEFAULT_SETTINGS);
     setErrorMessage(null);
     window.dispatchEvent(new CustomEvent("openreel:preview-invalidate"));
-  }, [audioTargetClip?.id, clearClipAudioDucking, clipId]);
+  }, [audioTargetClip?.id, clearClipAudioDucking, clipId, t]);
 
   return (
     <div className="space-y-3">
@@ -398,10 +440,13 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
         <VolumeX size={16} className="text-primary" aria-hidden />
         <div className="flex flex-1 flex-col gap-0.5">
           <Text type="body" color="primary" weight="bold" className="block text-[11px]">
-            Audio Ducking
+            {t("inspector:audioDucking.title", "Audio Ducking")}
           </Text>
           <Text type="supporting" color="secondary" className="block text-[9px]">
-            Auto-lower music when speech plays
+            {t(
+              "inspector:audioDucking.subtitle",
+              "Auto-lower music when speech plays",
+            )}
           </Text>
         </div>
       </Card>
@@ -418,11 +463,16 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
             }`}
           />
           <Text type="supporting" color="primary" weight="bold">
-            {showControls ? "Ducking Enabled" : "Ducking Disabled"}
+            {showControls
+              ? t("inspector:audioDucking.enabled", "Ducking Enabled")
+              : t("inspector:audioDucking.disabled", "Ducking Disabled")}
           </Text>
         </div>
         <MockToggle
-          ariaLabel="Enable audio ducking"
+          ariaLabel={t(
+            "inspector:audioDucking.enableLabel",
+            "Enable audio ducking",
+          )}
           checked={settings.enabled}
           onChange={(checked) => updateSetting("enabled", checked)}
         />
@@ -438,7 +488,10 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
               className="flex items-center gap-2"
             >
               <Mic size={12} aria-hidden />
-              Trigger Source (Voice Track)
+              {t(
+                "inspector:audioDucking.triggerSource",
+                "Trigger Source (Voice Track)",
+              )}
             </Text>
             {availableSourceTracks.length > 0 ? (
               <div className="space-y-1">
@@ -447,7 +500,11 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
                   .map((track) => (
                   <ClickableCard
                     key={track.id}
-                    label={`Use ${getTrackLabel(track)} as ducking trigger`}
+                    label={t(
+                      "inspector:audioDucking.useTrack",
+                      "Use {{name}} as ducking trigger",
+                      { name: getTrackLabel(track) },
+                    )}
                     onClick={() => updateSetting("sourceTrackId", track.id)}
                     padding={2}
                     variant={
@@ -479,7 +536,10 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
                   aria-hidden
                 />
                 <Text type="supporting" color="secondary" className="text-[10px]">
-                  Add another audio or video track with speech to use as trigger
+                  {t(
+                    "inspector:audioDucking.noTriggerTracks",
+                    "Add another audio or video track with speech to use as trigger",
+                  )}
                 </Text>
               </Card>
             )}
@@ -495,13 +555,13 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
                   className="flex items-center gap-2"
                 >
                   <Music size={12} aria-hidden />
-                  Ducking Presets
+                  {t("inspector:audioDucking.presets", "Ducking Presets")}
                 </Text>
                 <div className="grid grid-cols-2 gap-1">
                   {PRESET_CONFIGS.map((preset) => (
                     <Button
                       key={preset.id}
-                      label={preset.name}
+                      label={t(preset.nameKey, preset.name)}
                       variant="secondary"
                       size="sm"
                       onClick={() => applyPreset(preset.id)}
@@ -513,30 +573,42 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
 
               <div className="space-y-3">
                 <DuckingSlider
-                  label="Detection Threshold"
+                  label={t(
+                    "inspector:audioDucking.detectionThreshold",
+                    "Detection Threshold",
+                  )}
                   min={-50}
                   max={-10}
                   step={1}
                   value={settings.threshold}
                   onChange={(value) => updateSetting("threshold", value)}
                   formatValue={(value) => `${Math.round(value)} dB`}
-                  description="Voice level that triggers ducking"
+                  description={t(
+                    "inspector:audioDucking.detectionThresholdDescription",
+                    "Voice level that triggers ducking",
+                  )}
                 />
 
                 <DuckingSlider
-                  label="Volume Reduction"
+                  label={t(
+                    "inspector:audioDucking.volumeReduction",
+                    "Volume Reduction",
+                  )}
                   min={0}
                   max={100}
                   step={5}
                   value={settings.reduction * 100}
                   onChange={(value) => updateSetting("reduction", value / 100)}
                   formatValue={(value) => `${Math.round(value)}%`}
-                  description="How much to lower background music"
+                  description={t(
+                    "inspector:audioDucking.volumeReductionDescription",
+                    "How much to lower background music",
+                  )}
                 />
               </div>
 
               <Button
-                label="Timing Controls"
+                label={t("inspector:audioDucking.timingControls", "Timing Controls")}
                 variant="ghost"
                 size="sm"
                 icon={
@@ -553,43 +625,56 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
               {showAdvanced && (
                 <Card variant="muted" padding={2} className="space-y-3">
                   <DuckingSlider
-                    label="Attack"
+                    label={t("inspector:audioDucking.attack", "Attack")}
                     min={0.01}
                     max={0.5}
                     step={0.01}
                     value={settings.attack}
                     onChange={(value) => updateSetting("attack", value)}
                     formatValue={(value) => `${value.toFixed(2)}s`}
-                    description="How fast volume drops when voice starts"
+                    description={t(
+                      "inspector:audioDucking.attackDescription",
+                      "How fast volume drops when voice starts",
+                    )}
                   />
 
                   <DuckingSlider
-                    label="Release"
+                    label={t("inspector:audioDucking.release", "Release")}
                     min={0.1}
                     max={1}
                     step={0.05}
                     value={settings.release}
                     onChange={(value) => updateSetting("release", value)}
                     formatValue={(value) => `${value.toFixed(2)}s`}
-                    description="How fast volume returns after voice stops"
+                    description={t(
+                      "inspector:audioDucking.releaseDescription",
+                      "How fast volume returns after voice stops",
+                    )}
                   />
 
                   <DuckingSlider
-                    label="Hold Time"
+                    label={t("inspector:audioDucking.holdTime", "Hold Time")}
                     min={0}
                     max={0.5}
                     step={0.05}
                     value={settings.holdTime}
                     onChange={(value) => updateSetting("holdTime", value)}
                     formatValue={(value) => `${value.toFixed(2)}s`}
-                    description="Minimum time to stay ducked between words"
+                    description={t(
+                      "inspector:audioDucking.holdTimeDescription",
+                      "Minimum time to stay ducked between words",
+                    )}
                   />
                 </Card>
               )}
 
               {!hasAppliedDucking ? (
                 <Button
-                  label={isApplying ? "Analyzing..." : "Apply Ducking"}
+                  label={
+                    isApplying
+                      ? t("inspector:audioDucking.analyzing", "Analyzing...")
+                      : t("inspector:audioDucking.apply", "Apply Ducking")
+                  }
                   icon={
                     isApplying ? (
                       <RefreshCw size={14} className="animate-spin" aria-hidden />
@@ -613,12 +698,16 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
                   >
                     <Check size={12} className="text-green-400" aria-hidden />
                     <Text type="supporting" className="text-[10px] text-green-400">
-                      Ducking Applied
+                      {t("inspector:audioDucking.applied", "Ducking Applied")}
                     </Text>
                   </Card>
                   <div className="grid grid-cols-2 gap-2">
                     <Button
-                      label={isApplying ? "Updating..." : "Update"}
+                      label={
+                        isApplying
+                          ? t("inspector:audioDucking.updating", "Updating...")
+                          : t("inspector:audioDucking.update", "Update")
+                      }
                       icon={
                         <RefreshCw
                           size={10}
@@ -633,7 +722,7 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
                       isLoading={isApplying}
                     />
                     <Button
-                      label="Remove"
+                      label={t("inspector:audioDucking.remove", "Remove")}
                       variant="secondary"
                       size="sm"
                       onClick={handleRemoveDucking}
@@ -663,7 +752,10 @@ export const AudioDuckingSection: React.FC<AudioDuckingSectionProps> = ({
 
       <div className="pt-2 border-t border-border">
         <Text type="supporting" color="secondary" className="block text-[9px] text-center">
-          Automatically reduces music volume when voice is detected
+          {t(
+            "inspector:audioDucking.footer",
+            "Automatically reduces music volume when voice is detected",
+          )}
         </Text>
       </div>
     </div>

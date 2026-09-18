@@ -3,29 +3,34 @@ import { useState } from "react";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ChevronRight, Loader2, Check, X, Ban, Wrench } from "@/icons/lucide-compat";
 import type { ToolCallView } from "../../../stores/chat-store";
+import { useTranslation } from "../../../i18n";
 
 const STATUS_META: Record<
   ToolCallView["status"],
-  { icon: JSX.Element; tint: string; label: string }
+  { icon: JSX.Element; tint: string; labelKey: string; label: string }
 > = {
   running: {
     icon: <Loader2 size={12} className="animate-spin" />,
     tint: "text-fg-2",
+    labelKey: "chat:toolCall.running",
     label: "Running",
   },
   done: {
     icon: <Check size={12} />,
     tint: "text-status-success",
+    labelKey: "chat:toolCall.done",
     label: "Done",
   },
   error: {
     icon: <X size={12} />,
     tint: "text-status-error",
+    labelKey: "chat:toolCall.failed",
     label: "Failed",
   },
   rejected: {
     icon: <Ban size={12} />,
     tint: "text-fg-muted",
+    labelKey: "chat:toolCall.skipped",
     label: "Skipped",
   },
 };
@@ -44,15 +49,17 @@ function previewArgs(args: Record<string, unknown>): string {
 }
 
 export function ToolCallCard({ call }: { call: ToolCallView }): JSX.Element {
+  const { t } = useTranslation("chat");
   const [open, setOpen] = useState(false);
   const meta = STATUS_META[call.status];
+  const statusLabel = t(meta.labelKey, meta.label);
   const hasDetail =
     Object.keys(call.args ?? {}).length > 0 || call.result !== undefined;
 
   return (
     <div className="rounded-md border border-border bg-bg-1/60 text-[11px]">
       <Button
-        label={`${call.name} ${meta.label}`}
+        label={`${call.name} ${statusLabel}`}
         variant="ghost"
         isDisabled={!hasDetail}
         onClick={() => setOpen((v) => !v)}
@@ -69,7 +76,7 @@ export function ToolCallCard({ call }: { call: ToolCallView }): JSX.Element {
         <span className="font-mono text-fg">{call.name}</span>
         <span className={`ml-auto flex items-center gap-1 ${meta.tint}`}>
           {meta.icon}
-          <span className="text-[10px]">{meta.label}</span>
+          <span className="text-[10px]">{statusLabel}</span>
         </span>
       </Button>
 
@@ -78,7 +85,7 @@ export function ToolCallCard({ call }: { call: ToolCallView }): JSX.Element {
           {Object.keys(call.args ?? {}).length > 0 && (
             <div>
               <div className="mb-0.5 text-[9px] uppercase tracking-wide text-fg-muted">
-                Arguments
+                {t("chat:toolCall.arguments", "Arguments")}
               </div>
               <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded bg-bg-2 p-1.5 font-mono text-[10px] text-fg-2">
                 {JSON.stringify(call.args, null, 2)}
@@ -88,7 +95,7 @@ export function ToolCallCard({ call }: { call: ToolCallView }): JSX.Element {
           {call.result && (
             <div>
               <div className="mb-0.5 text-[9px] uppercase tracking-wide text-fg-muted">
-                Result
+                {t("chat:toolCall.result", "Result")}
               </div>
               <div
                 className={

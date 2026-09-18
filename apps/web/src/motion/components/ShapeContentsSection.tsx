@@ -36,17 +36,39 @@ import {
   type ShapeType,
 } from "@openreel/core";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 import { ColorInput, Field, NumberInput, Section } from "./primitives";
 
 const MERGE_MODE_OPTIONS: ReadonlyArray<{
   value: MotionShapeMergeMode;
+  labelKey: string;
   label: string;
 }> = [
-  { value: "none", label: "None" },
-  { value: "union", label: "Union" },
-  { value: "subtract", label: "Subtract" },
-  { value: "intersect", label: "Intersect" },
-  { value: "exclude", label: "Exclude" },
+  {
+    value: "none",
+    labelKey: "motion:shapeContents.mergeMode.none",
+    label: "None",
+  },
+  {
+    value: "union",
+    labelKey: "motion:shapeContents.mergeMode.union",
+    label: "Union",
+  },
+  {
+    value: "subtract",
+    labelKey: "motion:shapeContents.mergeMode.subtract",
+    label: "Subtract",
+  },
+  {
+    value: "intersect",
+    labelKey: "motion:shapeContents.mergeMode.intersect",
+    label: "Intersect",
+  },
+  {
+    value: "exclude",
+    labelKey: "motion:shapeContents.mergeMode.exclude",
+    label: "Exclude",
+  },
 ];
 
 const PATH_SHAPE_TYPES: readonly ShapeType[] = [
@@ -70,6 +92,17 @@ const OPERATOR_LABELS: Record<MotionShapeModifierType, string> = {
   "offset-paths": "Offset Paths",
   "pucker-bloat": "Pucker & Bloat",
   twist: "Twist",
+};
+
+const OPERATOR_LABEL_KEYS: Record<MotionShapeModifierType, string> = {
+  "trim-paths": "motion:shapeContents.operators.trimPaths",
+  repeater: "motion:shapeContents.operators.repeater",
+  "zig-zag": "motion:shapeContents.operators.zigZag",
+  "round-corners": "motion:shapeContents.operators.roundCorners",
+  "wiggle-paths": "motion:shapeContents.operators.wigglePaths",
+  "offset-paths": "motion:shapeContents.operators.offsetPaths",
+  "pucker-bloat": "motion:shapeContents.operators.puckerBloat",
+  twist: "motion:shapeContents.operators.twist",
 };
 
 const RESERVED_OPERATOR_KEYS: readonly string[] = ["id", "type", "name", "enabled"];
@@ -111,6 +144,7 @@ export function ShapeContentsSection({
   composition: MotionComposition;
   layer: MotionShapeLayer;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const upsertMotionComposition = useProjectStore(
     (state) => state.upsertMotionComposition,
   );
@@ -395,18 +429,20 @@ export function ShapeContentsSection({
 
   if (!explicit) {
     return (
-      <Section title="Contents" icon={Shapes}>
+      <Section title={t("motion:shapeContents.section.title", "Contents")} icon={Shapes}>
         <div className="rounded-lg border border-border bg-bg-1 p-3">
           <p className="mb-2.5 text-[12px] text-fg-3">
-            Convert this shape into a contents tree to build groups, merge paths,
-            and stack per-group operators.
+            {t(
+              "motion:shapeContents.materialize.description",
+              "Convert this shape into a contents tree to build groups, merge paths, and stack per-group operators.",
+            )}
           </p>
           <button
             type="button"
             onClick={handleMaterialize}
             className="w-full rounded-[7px] border border-border bg-bg-2 px-3 py-2 text-[13px] font-medium text-fg-2 transition-colors hover:border-accent"
           >
-            Group contents
+            {t("motion:shapeContents.materialize.action", "Group contents")}
           </button>
         </div>
       </Section>
@@ -414,27 +450,27 @@ export function ShapeContentsSection({
   }
 
   return (
-    <Section title="Contents" icon={Shapes}>
+    <Section title={t("motion:shapeContents.section.title", "Contents")} icon={Shapes}>
       <div className="flex flex-wrap items-center gap-1.5">
         <button
           type="button"
           onClick={handleAddGroup}
           className="rounded-[7px] border border-border bg-bg-1 px-2.5 py-1.5 text-[12px] font-medium text-fg-2 transition-colors hover:border-accent"
         >
-          Add group
+          {t("motion:shapeContents.actions.addGroup", "Add group")}
         </button>
         <button
           type="button"
           onClick={handleAddShape}
           className="rounded-[7px] border border-border bg-bg-1 px-2.5 py-1.5 text-[12px] font-medium text-fg-2 transition-colors hover:border-accent"
         >
-          Add shape
+          {t("motion:shapeContents.actions.addShape", "Add shape")}
         </button>
         <button
           type="button"
           disabled={!selectedItemId}
           onClick={() => selectedItemId && handleMove(selectedItemId, "up")}
-          aria-label="Move up"
+          aria-label={t("motion:shapeContents.actions.moveUp", "Move up")}
           className="rounded-[7px] border border-border bg-bg-1 p-1.5 text-fg-2 transition-colors hover:border-accent disabled:opacity-40"
         >
           <MoveUp size={14} aria-hidden />
@@ -443,7 +479,7 @@ export function ShapeContentsSection({
           type="button"
           disabled={!selectedItemId}
           onClick={() => selectedItemId && handleMove(selectedItemId, "down")}
-          aria-label="Move down"
+          aria-label={t("motion:shapeContents.actions.moveDown", "Move down")}
           className="rounded-[7px] border border-border bg-bg-1 p-1.5 text-fg-2 transition-colors hover:border-accent disabled:opacity-40"
         >
           <MoveDown size={14} aria-hidden />
@@ -452,7 +488,7 @@ export function ShapeContentsSection({
           type="button"
           disabled={!selectedItemId}
           onClick={() => selectedItemId && handleRemove(selectedItemId)}
-          aria-label="Delete"
+          aria-label={t("motion:shapeContents.actions.delete", "Delete")}
           className="rounded-[7px] border border-border bg-bg-1 p-1.5 text-fg-2 transition-colors hover:border-danger disabled:opacity-40"
         >
           <Trash2 size={14} aria-hidden />
@@ -476,7 +512,11 @@ export function ShapeContentsSection({
               {isGroup ? (
                 <button
                   type="button"
-                  aria-label={isExpanded ? "Collapse group" : "Expand group"}
+                  aria-label={
+                    isExpanded
+                      ? t("motion:shapeContents.tree.collapseGroup", "Collapse group")
+                      : t("motion:shapeContents.tree.expandGroup", "Expand group")
+                  }
                   onClick={() => toggleExpanded(item.id)}
                   className="shrink-0 text-fg-muted"
                 >
@@ -496,7 +536,7 @@ export function ShapeContentsSection({
               )}
               {renamingId === item.id ? (
                 <input
-                  aria-label="Rename item"
+                  aria-label={t("motion:shapeContents.tree.renameItem", "Rename item")}
                   autoFocus
                   value={renameDraft}
                   onChange={(event) => setRenameDraft(event.target.value)}
@@ -524,7 +564,10 @@ export function ShapeContentsSection({
               )}
               <button
                 type="button"
-                aria-label="Toggle visibility"
+                aria-label={t(
+                  "motion:shapeContents.tree.toggleVisibility",
+                  "Toggle visibility",
+                )}
                 onClick={() => handleToggleVisibility(item)}
                 className="shrink-0 text-fg-muted transition-colors hover:text-fg-2"
               >
@@ -608,12 +651,13 @@ function GroupDetail({
     direction: "up" | "down",
   ) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const { transform } = group;
   const operators = group.operators ?? [];
   return (
     <>
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Position X">
+        <Field label={t("motion:shapeContents.fields.positionX", "Position X")}>
           <NumberInput
             value={transform.position.x}
             onChange={(x) =>
@@ -624,7 +668,7 @@ function GroupDetail({
             }
           />
         </Field>
-        <Field label="Position Y">
+        <Field label={t("motion:shapeContents.fields.positionY", "Position Y")}>
           <NumberInput
             value={transform.position.y}
             onChange={(y) =>
@@ -635,7 +679,7 @@ function GroupDetail({
             }
           />
         </Field>
-        <Field label="Scale X">
+        <Field label={t("motion:shapeContents.fields.scaleX", "Scale X")}>
           <NumberInput
             value={transform.scale.x}
             step={0.05}
@@ -647,7 +691,7 @@ function GroupDetail({
             }
           />
         </Field>
-        <Field label="Scale Y">
+        <Field label={t("motion:shapeContents.fields.scaleY", "Scale Y")}>
           <NumberInput
             value={transform.scale.y}
             step={0.05}
@@ -659,7 +703,7 @@ function GroupDetail({
             }
           />
         </Field>
-        <Field label="Rotation">
+        <Field label={t("motion:shapeContents.fields.rotation", "Rotation")}>
           <NumberInput
             value={transform.rotation}
             unit="deg"
@@ -668,7 +712,7 @@ function GroupDetail({
             }
           />
         </Field>
-        <Field label="Opacity">
+        <Field label={t("motion:shapeContents.fields.opacity", "Opacity")}>
           <NumberInput
             value={transform.opacity}
             min={0}
@@ -681,9 +725,9 @@ function GroupDetail({
         </Field>
       </div>
 
-      <Field label="Merge mode">
+      <Field label={t("motion:shapeContents.fields.mergeMode", "Merge mode")}>
         <select
-          aria-label="Merge mode"
+          aria-label={t("motion:shapeContents.fields.mergeMode", "Merge mode")}
           value={group.mergeMode ?? "none"}
           onChange={(event) =>
             onMergeMode(group, event.target.value as MotionShapeMergeMode)
@@ -692,7 +736,7 @@ function GroupDetail({
         >
           {MERGE_MODE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
-              {option.label}
+              {t(option.labelKey, option.label)}
             </option>
           ))}
         </select>
@@ -701,7 +745,7 @@ function GroupDetail({
       <div className="space-y-2">
         <div className="flex items-center gap-1.5">
           <select
-            aria-label="Add operator"
+            aria-label={t("motion:shapeContents.operators.addOperator", "Add operator")}
             value={pendingOperator}
             onChange={(event) =>
               onPendingOperatorChange(
@@ -712,18 +756,21 @@ function GroupDetail({
           >
             {MOTION_SHAPE_MODIFIER_TYPES.map((type) => (
               <option key={type} value={type}>
-                {OPERATOR_LABELS[type]}
+                {t(OPERATOR_LABEL_KEYS[type], OPERATOR_LABELS[type])}
               </option>
             ))}
           </select>
           <button
             type="button"
-            aria-label="Add operator to group"
+            aria-label={t(
+              "motion:shapeContents.operators.addOperatorToGroup",
+              "Add operator to group",
+            )}
             onClick={() => onAddOperator(group)}
             className="flex shrink-0 items-center gap-1 rounded-[7px] border border-border bg-bg-2 px-2.5 py-2 text-[12px] font-medium text-fg-2 transition-colors hover:border-accent"
           >
             <Plus size={13} aria-hidden />
-            Add
+            {t("motion:shapeContents.actions.add", "Add")}
           </button>
         </div>
 
@@ -774,6 +821,7 @@ function OperatorRow({
   onMoveDown: () => void;
   onRemove: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const numericParams = Object.entries(operator).filter(
     ([key, value]) =>
       !RESERVED_OPERATOR_KEYS.includes(key) &&
@@ -784,17 +832,26 @@ function OperatorRow({
       <div className="flex items-center gap-1.5">
         <input
           type="checkbox"
-          aria-label={`${OPERATOR_LABELS[operator.type]} enabled`}
+          aria-label={t(
+            "motion:shapeContents.operators.enabled",
+            "{{name}} enabled",
+            {
+              name: t(OPERATOR_LABEL_KEYS[operator.type], OPERATOR_LABELS[operator.type]),
+            },
+          )}
           checked={operator.enabled}
           onChange={(event) => onToggle(event.target.checked)}
           className="h-3.5 w-3.5"
         />
         <span className="min-w-0 flex-1 truncate text-[12px] font-semibold text-fg-2">
-          {OPERATOR_LABELS[operator.type]}
+          {t(OPERATOR_LABEL_KEYS[operator.type], OPERATOR_LABELS[operator.type])}
         </span>
         <button
           type="button"
-          aria-label="Move operator up"
+          aria-label={t(
+            "motion:shapeContents.operators.moveUp",
+            "Move operator up",
+          )}
           disabled={isFirst}
           onClick={onMoveUp}
           className="text-fg-muted transition-colors hover:text-fg-2 disabled:opacity-40"
@@ -803,7 +860,10 @@ function OperatorRow({
         </button>
         <button
           type="button"
-          aria-label="Move operator down"
+          aria-label={t(
+            "motion:shapeContents.operators.moveDown",
+            "Move operator down",
+          )}
           disabled={isLast}
           onClick={onMoveDown}
           className="text-fg-muted transition-colors hover:text-fg-2 disabled:opacity-40"
@@ -812,7 +872,10 @@ function OperatorRow({
         </button>
         <button
           type="button"
-          aria-label="Remove operator"
+          aria-label={t(
+            "motion:shapeContents.operators.remove",
+            "Remove operator",
+          )}
           onClick={onRemove}
           className="text-fg-muted transition-colors hover:text-danger"
         >
@@ -850,6 +913,7 @@ function PathDetail({
     patch: Partial<Omit<MotionShapePathItem, "kind" | "id">>,
   ) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const inherits = item.style === undefined;
   const style = item.style;
   const fillColor =
@@ -875,9 +939,9 @@ function PathDetail({
 
   return (
     <>
-      <Field label="Shape type">
+      <Field label={t("motion:shapeContents.fields.shapeType", "Shape type")}>
         <select
-          aria-label="Shape type"
+          aria-label={t("motion:shapeContents.fields.shapeType", "Shape type")}
           value={item.shapeType}
           onChange={(event) =>
             onPatch(item, { shapeType: event.target.value as ShapeType })
@@ -893,7 +957,7 @@ function PathDetail({
       </Field>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Width">
+        <Field label={t("motion:shapeContents.fields.width", "Width")}>
           <NumberInput
             value={item.width}
             min={1}
@@ -901,7 +965,7 @@ function PathDetail({
             onChange={(width) => onPatchNumber(item, { width })}
           />
         </Field>
-        <Field label="Height">
+        <Field label={t("motion:shapeContents.fields.height", "Height")}>
           <NumberInput
             value={item.height}
             min={1}
@@ -909,7 +973,7 @@ function PathDetail({
             onChange={(height) => onPatchNumber(item, { height })}
           />
         </Field>
-        <Field label="Position X">
+        <Field label={t("motion:shapeContents.fields.positionX", "Position X")}>
           <NumberInput
             value={item.position.x}
             onChange={(x) =>
@@ -917,7 +981,7 @@ function PathDetail({
             }
           />
         </Field>
-        <Field label="Position Y">
+        <Field label={t("motion:shapeContents.fields.positionY", "Position Y")}>
           <NumberInput
             value={item.position.y}
             onChange={(y) =>
@@ -930,17 +994,17 @@ function PathDetail({
       <label className="flex items-center gap-2 text-[12px] font-medium text-fg-2">
         <input
           type="checkbox"
-          aria-label="Inherit style"
+          aria-label={t("motion:shapeContents.fields.inheritStyle", "Inherit style")}
           checked={inherits}
           onChange={(event) => setInherit(event.target.checked)}
           className="h-3.5 w-3.5"
         />
-        Inherit group style
+        {t("motion:shapeContents.labels.inheritGroupStyle", "Inherit group style")}
       </label>
 
       {!inherits && style ? (
         <div className="grid grid-cols-1 gap-2.5">
-          <Field label="Fill color">
+          <Field label={t("motion:shapeContents.fields.fillColor", "Fill color")}>
             <ColorInput
               value={fillColor}
               onChange={(color) =>
@@ -951,7 +1015,7 @@ function PathDetail({
               }
             />
           </Field>
-          <Field label="Stroke color">
+          <Field label={t("motion:shapeContents.fields.strokeColor", "Stroke color")}>
             <ColorInput
               value={strokeColor}
               onChange={(color) =>

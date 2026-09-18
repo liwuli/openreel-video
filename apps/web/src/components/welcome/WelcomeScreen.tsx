@@ -282,7 +282,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ initialTab }) => {
               return (
                 <ClickableCard
                   key={option.id}
-                  label={`Create ${optionLabel} project`}
+                  label={t("welcome:formats.createProjectLabel", {
+                    name: optionLabel,
+                    defaultValue: "Create {{name}} project",
+                  })}
                   onClick={() => handleCreateProject(option)}
                   onMouseEnter={() => setHoveredFormat(option.id)}
                   onMouseLeave={() => setHoveredFormat(null)}

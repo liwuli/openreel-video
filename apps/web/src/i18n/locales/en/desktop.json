@@ -1,0 +1,25 @@
+{
+  "start": {
+    "title": "New Project",
+    "subtitle": "Choose a workspace and format. You can change this later.",
+    "videoEditor": "Video Editor",
+    "videoEditorDescription": "Cut, trim, caption, color, and export quickly.",
+    "motionCreator": "Motion Creator",
+    "motionCreatorDescription": "Design animated ads, lower thirds, app demos, and scene graphics.",
+    "formatLabel": "{{format}} {{mode}}",
+    "recentTitle": "Recent",
+    "loadingRecents": "Loading recent projects...",
+    "noRecents": "No recent projects yet. Start a new project above.",
+    "openRecent": "Open {{name}}",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{{count}} days ago",
+    "daysAgo_plural": "{{count}} days ago"
+  },
+  "exportButton": {
+    "export": "Export",
+    "saved": "Saved!",
+    "cancelExport": "Cancel export",
+    "dismissError": "Dismiss export error"
+  }
+}

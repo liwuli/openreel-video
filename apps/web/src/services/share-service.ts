@@ -1,4 +1,5 @@
 import { OPENREEL_CLOUD_URL } from "../config/api-endpoints";
+import i18n from "../i18n";
 import { shareBaseOrigin } from "./share-origin";
 
 export interface ShareResult {
@@ -112,17 +113,17 @@ export function formatExpiresIn(expiresAt: number): string {
   const diff = expiresAt - now;
 
   if (diff <= 0) {
-    return "Expired";
+    return i18n.t("share:expires.expired", "Expired");
   }
 
   const hours = Math.floor(diff / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
   if (hours > 0) {
-    return `${hours}h ${minutes}m remaining`;
+    return i18n.t("share:expires.hoursMinutes", "{{hours}}h {{minutes}}m remaining", { hours, minutes });
   }
 
-  return `${minutes}m remaining`;
+  return i18n.t("share:expires.minutes", "{{minutes}}m remaining", { minutes });
 }
 
 export function isShareExpired(expiresAt: number): boolean {

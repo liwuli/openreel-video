@@ -1,0 +1,22 @@
+{
+  "loading": "正在加载视频...",
+  "loadFailed": "分享内容加载失败",
+  "notFoundTitle": "视频未找到",
+  "notFoundDescription": "该视频不存在，或链接已失效。",
+  "expiredTitle": "链接已失效",
+  "expiredDescription": "此分享链接已过期。分享链接的有效期仅为 24 小时。",
+  "expires": {
+    "expired": "已过期",
+    "hoursMinutes": "剩余 {{hours}} 小时 {{minutes}} 分钟",
+    "minutes": "剩余 {{minutes}} 分钟"
+  },
+  "errorTitle": "错误",
+  "errorDescription": "出现了一些问题",
+  "tryAgain": "重试",
+  "createYourOwnVideo": "创作你自己的视频",
+  "sharedVideo": "分享的视频",
+  "download": "下载",
+  "createYourOwn": "创作你的作品",
+  "videoUnsupported": "你的浏览器不支持 video 标签。",
+  "madeWith": "使用"
+}

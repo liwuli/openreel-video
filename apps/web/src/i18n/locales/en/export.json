@@ -63,7 +63,11 @@
     },
     "savings": "Saves ~{{percent}}% of file size",
     "originalSize": "Original estimate: {{size}}",
-    "compressedSize": "Compressed estimate: {{size}}"
+    "compressedSize": "Compressed estimate: {{size}}",
+    "intro": "Re-encode your project to a smaller file. Pick a quality tier, or a target size for sharing on email, WhatsApp, or Discord.",
+    "addClipsHint": "Add clips to the timeline to estimate a compressed size.",
+    "bitrateSummary": "{{videoBitrate}} kbps video",
+    "audioBitrateSummary": "{{audioBitrate}} kbps audio"
   },
   "custom": {
     "videoSettings": "Video Encoding Settings",
@@ -76,7 +80,24 @@
     "audioBitrate": "Audio Bitrate",
     "upscaling": "AI Upscaling",
     "upscalingQuality": "Upscaling Quality",
-    "sharpening": "Sharpening"
+    "sharpening": "Sharpening",
+    "title": "Custom export",
+    "subtitle": "Control the video, encoding, and audio settings for this file.",
+    "videoSection": "Video",
+    "videoSectionHint": "Container, codec, resolution, and frame rate",
+    "qualitySection": "Quality & encoding",
+    "qualitySectionHint": "Balance output quality, speed, and file size",
+    "bitrateKbps": "Bitrate (kbps)",
+    "exportMode": "Export mode",
+    "audioSectionHint": "Format, sample rate, and bitrate",
+    "encodeModes": {
+      "fast": "Fast",
+      "fastHint": "Hardware, quickest",
+      "balanced": "Balanced",
+      "balancedHint": "Hardware, great quality + small",
+      "smallest": "Smallest",
+      "smallestHint": "Software, smallest file"
+    }
   },
   "compressDialog": {
     "title": "Compress Video",
@@ -97,6 +118,56 @@
     "customSize": "Custom target size",
     "custom": "Custom",
     "compressBtn": "Start Compress",
-    "close": "Close"
+    "close": "Close",
+    "videoFile": "Video file",
+    "modeAria": "Compression mode",
+    "readError": "Couldn't read that video — try a different file.",
+    "failed": "Compression failed — try a lighter setting.",
+    "from": "from {{size}}",
+    "smaller": "-{{percent}}% smaller",
+    "compressing": "Compressing… {{percent}}%",
+    "progressLabel": "Compression progress"
+  },
+  "smaller": "Smaller",
+  "better": "Better",
+  "none": "None",
+  "max": "Max",
+  "estimatedOutput": "Estimated output",
+  "recommendedForThisVideo": "Recommended for this video",
+  "selectPresetHint": "Select a preset to see its estimated size and export time.",
+  "optionsCount": "{{count}} options",
+  "maxDuration": "Max {{seconds}}s",
+  "resolutionOriginal": "Original ({{width}}x{{height}})",
+  "resolutionVertical": "Vertical 1080p",
+  "resolutionSquare": "Square 1080",
+  "browserLimit": "Browser limit: exports at {{width}}×{{height}} · {{fps}} fps",
+  "browserLimitAdjusted": "Browser safety limits will export this video at {{width}}×{{height}} • {{frameRate}}fps.",
+  "webGuardrail": "Web export can't produce ProRes or alpha — this will encode H.264 without transparency. Use the desktop app for ProRes/alpha.",
+  "h264NoTransparency": "Will encode H.264 without transparency.",
+  "exportH264Anyway": "Export as H.264 anyway",
+  "aria": {
+    "exportMode": "Export mode"
+  },
+  "upscale": {
+    "heading": "Enhance quality",
+    "hint": "Sharpen exports above the source resolution",
+    "aria": "Enhance quality with upscaling",
+    "note": "Best used when exporting above the project resolution. It adds processing time.",
+    "qualityLevels": {
+      "fast": "Fast",
+      "balanced": "Balanced",
+      "quality": "Quality"
+    }
+  },
+  "device": {
+    "estimate": "Estimate",
+    "getAccurateEstimate": "Get accurate estimate",
+    "testing": "Testing...",
+    "cores": "{{n}} cores",
+    "unknown": "Unknown",
+    "hwEncode": "HW Encode",
+    "softwareOnly": "Software only",
+    "codecs": "Codecs",
+    "showDetails": "Show device export estimate details"
   }
 }

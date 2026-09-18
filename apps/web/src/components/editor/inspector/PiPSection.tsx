@@ -13,6 +13,7 @@ import {
   RotateCcw,
 } from "@/icons/lucide-compat";
 import { useProjectStore } from "../../../stores/project-store";
+import { useTranslation } from "../../../i18n";
 import type { Transform } from "@openreel/core";
 
 interface PiPSectionProps {
@@ -22,6 +23,7 @@ interface PiPSectionProps {
 interface PiPPreset {
   id: string;
   name: string;
+  labelKey: string;
   icon: "corner" | "split" | "center" | "custom";
   transform: Partial<Transform>;
 }
@@ -30,6 +32,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "top-left",
     name: "Top Left",
+    labelKey: "pip.presets.topLeft",
     icon: "corner",
     transform: {
       position: { x: -0.35, y: -0.35 },
@@ -39,6 +42,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "top-right",
     name: "Top Right",
+    labelKey: "pip.presets.topRight",
     icon: "corner",
     transform: {
       position: { x: 0.35, y: -0.35 },
@@ -48,6 +52,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "bottom-left",
     name: "Bottom Left",
+    labelKey: "pip.presets.bottomLeft",
     icon: "corner",
     transform: {
       position: { x: -0.35, y: 0.35 },
@@ -57,6 +62,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "bottom-right",
     name: "Bottom Right",
+    labelKey: "pip.presets.bottomRight",
     icon: "corner",
     transform: {
       position: { x: 0.35, y: 0.35 },
@@ -66,6 +72,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "split-left",
     name: "Split Left",
+    labelKey: "pip.presets.splitLeft",
     icon: "split",
     transform: {
       position: { x: -0.25, y: 0 },
@@ -75,6 +82,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "split-right",
     name: "Split Right",
+    labelKey: "pip.presets.splitRight",
     icon: "split",
     transform: {
       position: { x: 0.25, y: 0 },
@@ -84,6 +92,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "split-top",
     name: "Split Top",
+    labelKey: "pip.presets.splitTop",
     icon: "split",
     transform: {
       position: { x: 0, y: -0.25 },
@@ -93,6 +102,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "split-bottom",
     name: "Split Bottom",
+    labelKey: "pip.presets.splitBottom",
     icon: "split",
     transform: {
       position: { x: 0, y: 0.25 },
@@ -102,6 +112,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "center-small",
     name: "Center Small",
+    labelKey: "pip.presets.centerSmall",
     icon: "center",
     transform: {
       position: { x: 0, y: 0 },
@@ -111,6 +122,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "center-medium",
     name: "Center Medium",
+    labelKey: "pip.presets.centerMedium",
     icon: "center",
     transform: {
       position: { x: 0, y: 0 },
@@ -120,6 +132,7 @@ const PIP_PRESETS: PiPPreset[] = [
   {
     id: "fullscreen",
     name: "Full Screen",
+    labelKey: "pip.presets.fullScreen",
     icon: "center",
     transform: {
       position: { x: 0, y: 0 },
@@ -176,24 +189,29 @@ const PresetButton: React.FC<{
   preset: PiPPreset;
   isActive: boolean;
   onClick: () => void;
-}> = ({ preset, isActive, onClick }) => (
-  <ClickableCard
-    label={preset.name}
-    onClick={onClick}
-    className={`flex flex-col items-center gap-1 p-2 rounded-lg border transition-colors ${
-      isActive
-        ? "bg-primary/20 border-primary text-primary"
-        : "bg-bg-2 border-border text-fg-3 hover:text-fg hover:border-primary/50"
-    }`}
-  >
-    <PresetIcon type={preset.icon} />
-    <Text type="supporting" className="truncate max-w-full text-[8px]">
-      {preset.name}
-    </Text>
-  </ClickableCard>
-);
+}> = ({ preset, isActive, onClick }) => {
+  const { t } = useTranslation("inspector");
+  const presetName = t(preset.labelKey, preset.name);
+  return (
+    <ClickableCard
+      label={presetName}
+      onClick={onClick}
+      className={`flex flex-col items-center gap-1 p-2 rounded-lg border transition-colors ${
+        isActive
+          ? "bg-primary/20 border-primary text-primary"
+          : "bg-bg-2 border-border text-fg-3 hover:text-fg hover:border-primary/50"
+      }`}
+    >
+      <PresetIcon type={preset.icon} />
+      <Text type="supporting" className="truncate max-w-full text-[8px]">
+        {presetName}
+      </Text>
+    </ClickableCard>
+  );
+};
 
 export const PiPSection: React.FC<PiPSectionProps> = ({ clipId }) => {
+  const { t } = useTranslation("inspector");
   const project = useProjectStore((state) => state.project);
   const updateClipTransform = useProjectStore(
     (state) => state.updateClipTransform,
@@ -334,17 +352,17 @@ export const PiPSection: React.FC<PiPSectionProps> = ({ clipId }) => {
         <PictureInPicture2 size={16} className="text-primary" />
         <div className="flex-1 flex flex-col gap-0.5">
           <Text type="supporting" color="primary" className="text-[11px] font-medium">
-            Picture-in-Picture
+            {t("pip.title", "Picture-in-Picture")}
           </Text>
           <Text type="supporting" color="secondary" className="text-[9px]">
-            Position and scale video overlay
+            {t("pip.subtitle", "Position and scale video overlay")}
           </Text>
         </div>
       </Card>
 
       <div className="space-y-2">
         <Text type="supporting" color="secondary" className="text-[10px] font-medium">
-          Corner Positions
+          {t("pip.cornerPositions", "Corner Positions")}
         </Text>
         <div className="grid grid-cols-4 gap-1">
           {cornerPresets.map((preset) => (
@@ -360,7 +378,7 @@ export const PiPSection: React.FC<PiPSectionProps> = ({ clipId }) => {
 
       <div className="space-y-2">
         <Text type="supporting" color="secondary" className="text-[10px] font-medium">
-          Split Screen
+          {t("pip.splitScreen", "Split Screen")}
         </Text>
         <div className="grid grid-cols-4 gap-1">
           {splitPresets.map((preset) => (
@@ -376,7 +394,7 @@ export const PiPSection: React.FC<PiPSectionProps> = ({ clipId }) => {
 
       <div className="space-y-2">
         <Text type="supporting" color="secondary" className="text-[10px] font-medium">
-          Center & Full
+          {t("pip.centerAndFull", "Center & Full")}
         </Text>
         <div className="grid grid-cols-3 gap-1">
           {centerPresets.map((preset) => (
@@ -391,7 +409,11 @@ export const PiPSection: React.FC<PiPSectionProps> = ({ clipId }) => {
       </div>
 
       <Button
-        label={`${showAdvanced ? "Hide" : "Show"} Advanced Controls`}
+        label={
+          showAdvanced
+            ? t("pip.hideAdvancedControls", "Hide Advanced Controls")
+            : t("pip.showAdvancedControls", "Show Advanced Controls")
+        }
         variant="secondary"
         size="sm"
         onClick={() => setShowAdvanced(!showAdvanced)}
@@ -402,17 +424,17 @@ export const PiPSection: React.FC<PiPSectionProps> = ({ clipId }) => {
         <div className="space-y-3 pt-2 border-t border-border">
           <div className="space-y-2">
             <Text type="supporting" color="secondary" className="text-[10px] font-medium">
-              Position
+              {t("pip.position", "Position")}
             </Text>
             <ControlSlider
-              label="X Position"
+              label={t("pip.xPosition", "X Position")}
               value={currentTransform.position.x}
               onChange={(v) => handlePositionChange("x", v)}
               min={-1}
               max={1}
             />
             <ControlSlider
-              label="Y Position"
+              label={t("pip.yPosition", "Y Position")}
               value={currentTransform.position.y}
               onChange={(v) => handlePositionChange("y", v)}
               min={-1}
@@ -422,10 +444,10 @@ export const PiPSection: React.FC<PiPSectionProps> = ({ clipId }) => {
 
           <div className="space-y-2">
             <Text type="supporting" color="secondary" className="text-[10px] font-medium">
-              Scale
+              {t("pip.scale", "Scale")}
             </Text>
             <ControlSlider
-              label="Uniform Scale"
+              label={t("pip.uniformScale", "Uniform Scale")}
               value={currentTransform.scale.x}
               onChange={(v) => handleScaleChange("both", v)}
               min={0.1}

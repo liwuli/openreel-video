@@ -1,0 +1,147 @@
+{
+  "motionTimeline": {
+    "selectNamed": "Select {{name}}",
+    "keyframeLabel": "{{name}} keyframe",
+    "cameraProperty": {
+      "camera": "Camera",
+      "positionX": "Camera X",
+      "positionY": "Camera Y",
+      "positionZ": "Camera Depth",
+      "zoom": "Camera Zoom",
+      "rotation": "Camera Roll",
+      "perspective": "Camera Perspective",
+      "focusDistance": "Focus Distance",
+      "aperture": "Camera Aperture",
+      "maxBlur": "Max Blur"
+    },
+    "lightProperty": {
+      "light": "Light"
+    },
+    "parent": {
+      "missing": "Missing"
+    },
+    "toolbar": {
+      "title": "Timeline",
+      "audioClip": "Audio clip",
+      "selectLayer": "Select a layer",
+      "noLayer": "No layer",
+      "keyframeNudgeHint": "Alt+Left/Right nudges selected keyframes; add Shift for 10 frames",
+      "keyframeCount": "{{count}} KF",
+      "previousKeyframe": "Previous keyframe (J)",
+      "nextKeyframe": "Next keyframe (K)",
+      "addKeyframe": "Add keyframe at playhead",
+      "removeKeyframe": "Remove keyframe at playhead",
+      "duplicateKeyframes": "Duplicate selected keyframes at playhead (⌘D)",
+      "deleteKeyframes": "Delete {{count}} selected keyframes",
+      "addMarker": "Add marker at playhead (M)",
+      "removeMarker": "Remove marker at playhead (M)",
+      "manageMarkers": "Manage composition markers",
+      "copySelection": "Copy timeline selection (⌘C)",
+      "pasteAtPlayhead": "Paste at playhead (⌘V)",
+      "splitAtPlayhead": "Split selection at playhead",
+      "rippleDelete": "Ripple delete selection",
+      "rippleEdit": "Ripple edit",
+      "zoomOut": "Zoom out timeline",
+      "zoomIn": "Zoom in timeline",
+      "zoomFit": "Fit",
+      "zoomLabel": "Motion timeline zoom",
+      "workAreaIn": "In",
+      "workAreaOut": "Out",
+      "clearWorkArea": "Clear",
+      "timing": "Timing",
+      "layersSuffix": "layers",
+      "audioSuffix": "audio"
+    },
+    "timingAssistant": {
+      "title": "Timing Assistant",
+      "selected": "{{count}} selected",
+      "gapUnit": "gap",
+      "offsetUnit": "offset",
+      "alignIn": "Align In",
+      "alignOut": "Align Out",
+      "sequence": "Sequence",
+      "stagger": "Stagger",
+      "fitToWorkArea": "Fit selection to work area"
+    },
+    "filterBar": {
+      "search": "Search timeline layers",
+      "searchPlaceholder": "Search layers, effects…",
+      "clearSearch": "Clear timeline search",
+      "filter": {
+        "all": "all",
+        "selected": "selected",
+        "animated": "animated"
+      },
+      "matchCount": "{{count}} of {{total}}",
+      "resetFilters": "Reset filters"
+    },
+    "rail": {
+      "layers": "Layers",
+      "composition": "Composition",
+      "hideShyLayers": "Hide shy layers",
+      "showShyLayers": "Show shy layers",
+      "layerName": "Layer Name",
+      "modes": "Modes",
+      "switches": "Switches",
+      "parent": "Parent",
+      "timing": "Timing"
+    },
+    "ruler": {
+      "beat": "Beat {{index}}"
+    },
+    "cameraTrack": {
+      "badge": "CAM",
+      "select": "Select Camera",
+      "name": "Camera",
+      "view": "View"
+    },
+    "lightTrack": {
+      "name": "Light"
+    },
+    "audioTrack": {
+      "defaultName": "Audio {{index}}",
+      "select": "Select audio clip {{name}}",
+      "mute": "Mute audio clip",
+      "unmute": "Unmute audio clip",
+      "delete": "Delete audio clip",
+      "type": "Audio",
+      "timelineClip": "Audio timeline clip {{name}}",
+      "move": "Move audio clip {{name}} in time",
+      "trimIn": "Trim audio in",
+      "trimOut": "Trim audio out",
+      "trimInPoint": "Trim {{name}} in point",
+      "trimOutPoint": "Trim {{name}} out point"
+    },
+    "empty": {
+      "noMatch": "No layers match the current timeline filters.",
+      "allShy": "All layers are hidden by the shy switch.",
+      "noLayers": "Layers you add will appear here as tracks."
+    },
+    "layers": {
+      "expandProperties": "Expand {{name}} properties",
+      "collapseProperties": "Collapse {{name}} properties",
+      "blendMode": "Layer blend mode",
+      "visibility": "Layer visibility",
+      "solo": "Solo layer",
+      "lock": "Lock layer",
+      "guide": "Guide layer",
+      "shy": "Shy layer",
+      "move": "Move {{name}} in time",
+      "trimIn": "Trim layer in",
+      "trimOut": "Trim layer out",
+      "trimInPoint": "Trim {{name}} in point",
+      "trimOutPoint": "Trim {{name}} out point"
+    },
+    "markers": {
+      "defaultLabel": "Marker {{index}}"
+    },
+    "markerManager": {
+      "title": "Composition markers",
+      "empty": "Add a marker at the playhead with M.",
+      "defaultName": "Marker",
+      "seek": "Seek to {{label}}",
+      "labelFor": "Marker label for {{label}}",
+      "delete": "Delete {{label}}"
+    }
+  }
+}

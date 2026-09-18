@@ -27,6 +27,7 @@ import {
 import { ToolcraftClickableCard, ToolcraftText } from "@openreel/ui";
 import { useProjectStore } from "../../stores/project-store";
 import { toast } from "../../stores/notification-store";
+import { useTranslation } from "../../i18n";
 import { useMotionStore } from "../stores/motion-store";
 import { autoTrackVideoFeature } from "../motion-auto-track";
 import {
@@ -54,6 +55,7 @@ export function MotionTrackingPanel({
   composition,
   embedded = false,
 }: MotionTrackingPanelProps): JSX.Element {
+  const { t } = useTranslation("motion");
   const tracks = normalizeMotionTracks(composition);
   const [activeTrackId, setActiveTrackId] = useState<string | null>(
     tracks[0]?.id ?? null,
@@ -107,7 +109,9 @@ export function MotionTrackingPanel({
   const addTrack = () => {
     const track = createMotionTrack({
       id: makeId("motion-track"),
-      name: `Track ${tracks.length + 1}`,
+      name: t("motion:motionTracking.trackName", "Track {{count}}", {
+        count: tracks.length + 1,
+      }),
     });
     updateComposition(addMotionTrack(composition, track));
     setActiveTrackId(track.id);
@@ -125,7 +129,9 @@ export function MotionTrackingPanel({
     if (!activeTrack) return;
     const point: MotionTrackPoint = {
       id: makeId("motion-track-point"),
-      name: `Track Point ${activeTrack.points.length + 1}`,
+      name: t("motion:motionTracking.trackPointName", "Track Point {{count}}", {
+        count: activeTrack.points.length + 1,
+      }),
       color: activeTrack.points.length === 0 ? "#22d3ee" : "#f59e0b",
       frames: [],
     };
@@ -164,7 +170,13 @@ export function MotionTrackingPanel({
         (item.blob || item.fileHandle || item.originalUrl),
     );
     if (!videoMedia) {
-      toast.error("No video source", "Import a video clip to auto-track from.");
+      toast.error(
+        t("motion:motionTracking.noVideoSource", "No video source"),
+        t(
+          "motion:motionTracking.noVideoSourceBody",
+          "Import a video clip to auto-track from.",
+        ),
+      );
       return;
     }
     setIsAutoTracking(true);
@@ -177,7 +189,13 @@ export function MotionTrackingPanel({
             ? await (await fetch(videoMedia.originalUrl)).blob()
             : null;
       if (!blob) {
-        toast.error("Auto-track failed", "Could not read the video source.");
+        toast.error(
+          t("motion:motionTracking.autoTrackFailed", "Auto-track failed"),
+          t(
+            "motion:motionTracking.couldNotReadVideo",
+            "Could not read the video source.",
+          ),
+        );
         return;
       }
       const frames = await autoTrackVideoFeature({
@@ -190,7 +208,13 @@ export function MotionTrackingPanel({
         startTime: playhead,
       });
       if (frames.length < 2) {
-        toast.error("Auto-track failed", "Could not analyze enough frames.");
+        toast.error(
+          t("motion:motionTracking.autoTrackFailed", "Auto-track failed"),
+          t(
+            "motion:motionTracking.couldNotAnalyzeFrames",
+            "Could not analyze enough frames.",
+          ),
+        );
         return;
       }
       patchTrack(activeTrack.id, (track) => {
@@ -207,11 +231,21 @@ export function MotionTrackingPanel({
         }
         return next;
       });
-      toast.success("Auto-track complete", `${frames.length} frames tracked.`);
+      toast.success(
+        t("motion:motionTracking.autoTrackComplete", "Auto-track complete"),
+        t("motion:motionTracking.framesTracked", "{{count}} frames tracked.", {
+          count: frames.length,
+        }),
+      );
     } catch (error) {
       toast.error(
-        "Auto-track failed",
-        error instanceof Error ? error.message : "Unexpected tracking error.",
+        t("motion:motionTracking.autoTrackFailed", "Auto-track failed"),
+        error instanceof Error
+          ? error.message
+          : t(
+              "motion:motionTracking.unexpectedTrackingError",
+              "Unexpected tracking error.",
+            ),
       );
     } finally {
       setIsAutoTracking(false);
@@ -243,12 +277,12 @@ export function MotionTrackingPanel({
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
       {embedded ? null : (
         <PanelHeader
-          title="Tracker"
+          title={t("motion:motionTracking.title", "Tracker")}
           icon={Route}
           actions={
             <IconButton
               icon={Plus}
-              label="Add motion track"
+              label={t("motion:motionTracking.addMotionTrack", "Add motion track")}
               size="sm"
               onClick={addTrack}
             />
@@ -256,19 +290,24 @@ export function MotionTrackingPanel({
         />
       )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
-        <Section title="Tracks" icon={Route}>
+        <Section title={t("motion:motionTracking.tracks", "Tracks")} icon={Route}>
           {tracks.length === 0 ? (
             <EmptyState
               icon={Route}
-              title="No motion tracks"
-              description="Create a point track, sample positions over time, then apply it to a selected layer."
+              title={t("motion:motionTracking.noMotionTracks", "No motion tracks")}
+              description={t(
+                "motion:motionTracking.noMotionTracksDescription",
+                "Create a point track, sample positions over time, then apply it to a selected layer.",
+              )}
             />
           ) : (
             <div className="space-y-2">
               {tracks.map((track) => (
                 <ToolcraftClickableCard
                   key={track.id}
-                  label={`Select ${track.name}`}
+                  label={t("motion:motionTracking.selectTrack", "Select {{name}}", {
+                    name: track.name,
+                  })}
                   onClick={() => {
                     setActiveTrackId(track.id);
                     setActivePointId(track.points[0]?.id ?? null);
@@ -293,23 +332,35 @@ export function MotionTrackingPanel({
                       color="secondary"
                       className="shrink-0 tabular-nums"
                     >
-                      {countTrackFrames(track)} frames
+                      {t("motion:motionTracking.framesCount", "{{count}} frames", {
+                        count: countTrackFrames(track),
+                      })}
                     </ToolcraftText>
                   </span>
                   <ToolcraftText type="supporting" color="secondary" maxLines={1} className="mt-1">
-                    {track.points.length} point{track.points.length === 1 ? "" : "s"}
+                    {track.points.length}{" "}
+                    {track.points.length === 1
+                      ? t("motion:motionTracking.pointOne", "point")
+                      : t("motion:motionTracking.pointOther", "points")}
                   </ToolcraftText>
                 </ToolcraftClickableCard>
               ))}
             </div>
           )}
-          <Button label="Add Track" icon={Plus} onClick={addTrack} />
+          <Button
+            label={t("motion:motionTracking.addTrack", "Add Track")}
+            icon={Plus}
+            onClick={addTrack}
+          />
         </Section>
 
         {activeTrack ? (
           <>
-            <Section title="Active Track" icon={SlidersHorizontal}>
-              <Field label="Name">
+            <Section
+              title={t("motion:motionTracking.activeTrack", "Active Track")}
+              icon={SlidersHorizontal}
+            >
+              <Field label={t("motion:motionTracking.name", "Name")}>
                 <TextInput
                   value={activeTrack.name}
                   onChange={(name) =>
@@ -321,7 +372,7 @@ export function MotionTrackingPanel({
                   }
                 />
               </Field>
-              <Field label="Point">
+              <Field label={t("motion:motionTracking.point", "Point")}>
                 <SelectInput
                   value={activePoint?.id ?? ""}
                   options={activeTrack.points.map((point) => ({
@@ -332,9 +383,13 @@ export function MotionTrackingPanel({
                 />
               </Field>
               <div className="grid grid-cols-2 gap-2">
-                <Button label="Add Point" icon={Crosshair} onClick={addPoint} />
                 <Button
-                  label="Delete"
+                  label={t("motion:motionTracking.addPoint", "Add Point")}
+                  icon={Crosshair}
+                  onClick={addPoint}
+                />
+                <Button
+                  label={t("motion:motionTracking.delete", "Delete")}
                   icon={Trash2}
                   variant="danger"
                   onClick={() => {
@@ -346,9 +401,12 @@ export function MotionTrackingPanel({
               </div>
             </Section>
 
-            <Section title="Sample Frame" icon={LocateFixed}>
+            <Section
+              title={t("motion:motionTracking.sampleFrame", "Sample Frame")}
+              icon={LocateFixed}
+            >
               <div className="grid grid-cols-3 gap-2.5">
-                <Field label="Time" hint="s">
+                <Field label={t("motion:motionTracking.time", "Time")} hint="s">
                   <NumberInput
                     value={playhead}
                     min={0}
@@ -357,28 +415,41 @@ export function MotionTrackingPanel({
                     onChange={setPlayhead}
                   />
                 </Field>
-                <Field label="X">
+                <Field label={t("motion:motionTracking.x", "X")}>
                   <NumberInput value={sampleX} step={1} onChange={setSampleX} />
                 </Field>
-                <Field label="Y">
+                <Field label={t("motion:motionTracking.y", "Y")}>
                   <NumberInput value={sampleY} step={1} onChange={setSampleY} />
                 </Field>
               </div>
               <Button
-                label="Add Frame At Playhead"
+                label={t(
+                  "motion:motionTracking.addFrameAtPlayhead",
+                  "Add Frame At Playhead",
+                )}
                 icon={Plus}
                 variant="solid"
                 disabled={!activePoint}
                 onClick={addFrame}
               />
               <Button
-                label="Use Selected Layer Position"
+                label={t(
+                  "motion:motionTracking.useSelectedLayerPosition",
+                  "Use Selected Layer Position",
+                )}
                 icon={LocateFixed}
                 disabled={!selectedLayer}
                 onClick={useSelectedLayerPosition}
               />
               <Button
-                label={isAutoTracking ? "Tracking..." : "Auto-Track From Video"}
+                label={
+                  isAutoTracking
+                    ? t("motion:motionTracking.tracking", "Tracking...")
+                    : t(
+                        "motion:motionTracking.autoTrackFromVideo",
+                        "Auto-Track From Video",
+                      )
+                }
                 icon={Route}
                 disabled={!activePoint || isAutoTracking}
                 onClick={() => void autoTrack()}
@@ -386,15 +457,21 @@ export function MotionTrackingPanel({
               {activePoint ? <TrackPointFrames point={activePoint} setPlayhead={setPlayhead} /> : null}
             </Section>
 
-            <Section title="Apply" icon={Route}>
-              <Field label="Mode">
+            <Section title={t("motion:motionTracking.apply", "Apply")} icon={Route}>
+              <Field label={t("motion:motionTracking.mode", "Mode")}>
                 <SelectInput
                   value={applyMode}
                   options={[
-                    { value: "position", label: "Position" },
+                    {
+                      value: "position",
+                      label: t("motion:motionTracking.applyModePosition", "Position"),
+                    },
                     {
                       value: "position-scale-rotation",
-                      label: "Position, scale, rotation",
+                      label: t(
+                        "motion:motionTracking.applyModePositionScaleRotation",
+                        "Position, scale, rotation",
+                      ),
                     },
                   ]}
                   onChange={(mode) =>
@@ -403,7 +480,7 @@ export function MotionTrackingPanel({
                 />
               </Field>
               <div className="grid grid-cols-2 gap-2.5">
-                <Field label="Smooth">
+                <Field label={t("motion:motionTracking.smooth", "Smooth")}>
                   <NumberInput
                     value={smoothWindow}
                     min={0}
@@ -414,7 +491,10 @@ export function MotionTrackingPanel({
                 </Field>
                 <div className="self-end">
                   <SwitchInput
-                    label="Preserve offset"
+                    label={t(
+                      "motion:motionTracking.preserveOffset",
+                      "Preserve offset",
+                    )}
                     checked={preserveOffset}
                     onChange={setPreserveOffset}
                   />
@@ -422,13 +502,13 @@ export function MotionTrackingPanel({
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <Button
-                  label="Smooth"
+                  label={t("motion:motionTracking.smooth", "Smooth")}
                   icon={SlidersHorizontal}
                   onClick={smoothTrack}
                   disabled={countTrackFrames(activeTrack) === 0}
                 />
                 <Button
-                  label="Apply"
+                  label={t("motion:motionTracking.apply", "Apply")}
                   icon={Route}
                   variant="solid"
                   disabled={
@@ -455,10 +535,14 @@ function TrackPointFrames({
   point: MotionTrackPoint;
   setPlayhead: (time: number) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   if (point.frames.length === 0) {
     return (
       <ToolcraftText type="supporting" color="secondary" className="block rounded-md border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-        Add at least two samples to generate useful tracking keyframes.
+        {t(
+          "motion:motionTracking.addSamplesHint",
+          "Add at least two samples to generate useful tracking keyframes.",
+        )}
       </ToolcraftText>
     );
   }
@@ -468,7 +552,11 @@ function TrackPointFrames({
       {point.frames.map((frame) => (
         <ToolcraftClickableCard
           key={`${point.id}-${frame.time}`}
-          label={`Go to sample at ${frame.time.toFixed(2)} seconds`}
+          label={t(
+            "motion:motionTracking.goToSample",
+            "Go to sample at {{time}} seconds",
+            { time: frame.time.toFixed(2) },
+          )}
           onClick={() => setPlayhead(frame.time)}
           variant="transparent"
           padding={2}

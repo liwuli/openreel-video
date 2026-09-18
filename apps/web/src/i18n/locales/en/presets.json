@@ -1,0 +1,432 @@
+{
+  "transitionTypes": {
+    "crossfade": {
+      "name": "Crossfade",
+      "description": "Smooth blend between clips"
+    },
+    "dipToBlack": {
+      "name": "Dip to Black",
+      "description": "Fade through black"
+    },
+    "dipToWhite": {
+      "name": "Dip to White",
+      "description": "Fade through white"
+    },
+    "wipe": {
+      "name": "Wipe",
+      "description": "Wipe from one clip to another"
+    },
+    "slide": {
+      "name": "Slide",
+      "description": "Slide incoming clip over outgoing"
+    },
+    "zoom": {
+      "name": "Zoom",
+      "description": "Zoom transition between clips"
+    },
+    "push": {
+      "name": "Push",
+      "description": "Push outgoing clip with incoming"
+    },
+    "circleReveal": {
+      "name": "Circle Reveal",
+      "description": "Iris reveal from the center"
+    },
+    "blur": {
+      "name": "Blur Dissolve",
+      "description": "Blur out and back into the next clip"
+    },
+    "whipPan": {
+      "name": "Whip Pan",
+      "description": "Fast motion-blurred pan"
+    },
+    "radialWipe": {
+      "name": "Radial Wipe",
+      "description": "Clock-style angular sweep"
+    },
+    "pixelate": {
+      "name": "Pixelate",
+      "description": "Chunky pixel mosaic through the cut"
+    },
+    "glitch": {
+      "name": "Glitch Cut",
+      "description": "Digital slice displacement"
+    },
+    "blinds": {
+      "name": "Venetian Blinds",
+      "description": "Repeating slat reveal"
+    },
+    "diamondReveal": {
+      "name": "Diamond Reveal",
+      "description": "Geometric center reveal"
+    },
+    "spin": {
+      "name": "Spin",
+      "description": "Rotating scale handoff"
+    },
+    "flip": {
+      "name": "Flip",
+      "description": "Card-style horizontal or vertical flip"
+    },
+    "splitReveal": {
+      "name": "Split Reveal",
+      "description": "Reveal outward from the center"
+    },
+    "flash": {
+      "name": "Flash Cut",
+      "description": "High-energy white flash edit"
+    },
+    "filmBurn": {
+      "name": "Film Burn",
+      "description": "Warm analog light leak through the edit"
+    },
+    "mosaic": {
+      "name": "Mosaic Reveal",
+      "description": "Shuffled tile reveal between shots"
+    },
+    "ripple": {
+      "name": "Ripple",
+      "description": "Fluid horizontal wave distortion"
+    },
+    "pageTurn": {
+      "name": "Page Turn",
+      "description": "Fold the outgoing shot away like a page"
+    },
+    "colorSplit": {
+      "name": "Color Split",
+      "description": "Prismatic channel ghosts through the cut"
+    }
+  },
+  "exportPresets": {
+    "youtube-4k": {
+      "name": "YouTube 4K",
+      "description": "Best quality for YouTube 4K - 50Mbps"
+    },
+    "youtube-4k-60": {
+      "name": "YouTube 4K 60fps",
+      "description": "4K 60fps for gaming/motion - 65Mbps"
+    },
+    "youtube-1080p": {
+      "name": "YouTube 1080p HD",
+      "description": "Standard HD quality for YouTube"
+    },
+    "youtube-shorts": {
+      "name": "YouTube Shorts",
+      "description": "Vertical format for YouTube Shorts (60s max)"
+    },
+    "tiktok": {
+      "name": "TikTok",
+      "description": "Optimized for TikTok (3min max)"
+    },
+    "instagram-reels": {
+      "name": "Instagram Reels",
+      "description": "Vertical format for Reels (90s max)"
+    },
+    "instagram-feed": {
+      "name": "Instagram Feed Video",
+      "description": "Square format for feed posts (60s max)"
+    },
+    "instagram-story": {
+      "name": "Instagram Story",
+      "description": "Vertical format for Stories (15s per clip)"
+    },
+    "twitter": {
+      "name": "Twitter/X",
+      "description": "Optimized for Twitter (2min 20s max)"
+    },
+    "facebook-feed": {
+      "name": "Facebook Feed",
+      "description": "Standard format for Facebook feed"
+    },
+    "linkedin": {
+      "name": "LinkedIn",
+      "description": "Professional format for LinkedIn (10min max)"
+    },
+    "broadcast-4k-master": {
+      "name": "4K Master Quality",
+      "description": "Maximum quality 4K - 80Mbps H.265"
+    },
+    "broadcast-4k-prores-hq": {
+      "name": "4K ProRes HQ",
+      "description": "Professional ProRes for editing/mastering"
+    },
+    "broadcast-4k-prores-4444": {
+      "name": "4K ProRes 4444",
+      "description": "Highest quality ProRes with alpha support"
+    },
+    "broadcast-4k-60": {
+      "name": "4K 60fps High Motion",
+      "description": "4K at 60fps for sports/gaming - 65Mbps"
+    },
+    "broadcast-4k": {
+      "name": "Broadcast 4K UHD",
+      "description": "4K broadcast quality - 50Mbps"
+    },
+    "broadcast-1080p-high": {
+      "name": "1080p High Quality",
+      "description": "High bitrate 1080p - 20Mbps"
+    },
+    "broadcast-1080p-prores": {
+      "name": "1080p ProRes HQ",
+      "description": "ProRes HQ for 1080p editing"
+    },
+    "broadcast-hd": {
+      "name": "Broadcast HD 1080p",
+      "description": "Standard broadcast quality"
+    },
+    "web-hd": {
+      "name": "Web HD",
+      "description": "Balanced quality for web embedding"
+    },
+    "web-small": {
+      "name": "Web Optimized",
+      "description": "Smaller file size for faster loading"
+    },
+    "webm-vp9": {
+      "name": "WebM VP9",
+      "description": "Modern web format with VP9 codec (720p recommended)"
+    },
+    "archive-4k-prores": {
+      "name": "Archive 4K ProRes",
+      "description": "Lossless 4K ProRes for long-term archival"
+    },
+    "archive-master": {
+      "name": "Archive Master H.265",
+      "description": "High quality 4K H.265 - 80Mbps"
+    },
+    "archive-1080p-prores": {
+      "name": "Archive 1080p ProRes",
+      "description": "ProRes HQ for 1080p archival"
+    },
+    "archive-proxy": {
+      "name": "Archive Proxy",
+      "description": "Lower quality proxy for editing"
+    },
+    "audio-mp3-320": {
+      "name": "MP3 High Quality",
+      "description": "320kbps MP3 for music"
+    },
+    "audio-wav": {
+      "name": "WAV Lossless",
+      "description": "Uncompressed WAV audio"
+    },
+    "audio-aac": {
+      "name": "AAC High Quality",
+      "description": "256kbps AAC for compatibility"
+    }
+  },
+  "motionPresets": {
+    "fade-in": {
+      "name": "Fade In",
+      "description": "Smooth fade in from transparent"
+    },
+    "slide-in-left": {
+      "name": "Slide In Left",
+      "description": "Slide in from the left edge"
+    },
+    "slide-in-right": {
+      "name": "Slide In Right",
+      "description": "Slide in from the right edge"
+    },
+    "slide-in-top": {
+      "name": "Slide In Top",
+      "description": "Slide in from the top edge"
+    },
+    "slide-in-bottom": {
+      "name": "Slide In Bottom",
+      "description": "Slide in from the bottom edge"
+    },
+    "scale-in": {
+      "name": "Scale In",
+      "description": "Pop in with scale animation"
+    },
+    "pop": {
+      "name": "Pop",
+      "description": "Quick pop entrance with overshoot"
+    },
+    "bounce-in": {
+      "name": "Bounce In",
+      "description": "Bouncy scale entrance"
+    },
+    "flip-in": {
+      "name": "Flip In",
+      "description": "3D flip entrance effect"
+    },
+    "blur-in": {
+      "name": "Blur In",
+      "description": "Fade in with blur effect"
+    },
+    "fade-out": {
+      "name": "Fade Out",
+      "description": "Smooth fade out to transparent"
+    },
+    "slide-out-left": {
+      "name": "Slide Out Left",
+      "description": "Slide out to the left edge"
+    },
+    "slide-out-right": {
+      "name": "Slide Out Right",
+      "description": "Slide out to the right edge"
+    },
+    "scale-out": {
+      "name": "Scale Out",
+      "description": "Shrink and fade out"
+    },
+    "shrink": {
+      "name": "Shrink",
+      "description": "Quick shrink exit"
+    },
+    "blur-out": {
+      "name": "Blur Out",
+      "description": "Fade out with blur effect"
+    },
+    "pulse": {
+      "name": "Pulse",
+      "description": "Subtle pulsing scale effect"
+    },
+    "shake": {
+      "name": "Shake",
+      "description": "Quick horizontal shake"
+    },
+    "bounce": {
+      "name": "Bounce",
+      "description": "Bouncing attention effect"
+    },
+    "wiggle": {
+      "name": "Wiggle",
+      "description": "Playful wiggle rotation"
+    },
+    "rubber-band": {
+      "name": "Rubber Band",
+      "description": "Elastic stretch effect"
+    },
+    "glow-pulse": {
+      "name": "Glow Pulse",
+      "description": "Subtle opacity pulse"
+    },
+    "cross-dissolve": {
+      "name": "Cross Dissolve",
+      "description": "Simple opacity crossfade"
+    },
+    "wipe-left": {
+      "name": "Wipe Left",
+      "description": "Wipe transition to the left"
+    },
+    "zoom-transition": {
+      "name": "Zoom Transition",
+      "description": "Zoom out transition"
+    }
+  },
+  "noiseReductionPresets": {
+    "balanced": {
+      "label": "Balanced",
+      "description": "General cleanup for moderate room noise without pushing too hard."
+    },
+    "speech": {
+      "label": "Speech Focus",
+      "description": "Preserve dialog presence while reducing hiss and ambient bed."
+    },
+    "whiteNoise": {
+      "label": "White Noise",
+      "description": "Aggressive broadband hiss removal for fans, air, camera preamp noise, and room tone."
+    },
+    "music": {
+      "label": "Music Bed",
+      "description": "Pushes background music down while keeping speech presence forward."
+    },
+    "heavy": {
+      "label": "Heavy Noise",
+      "description": "More aggressive broadband cleanup for loud air, fan, and street wash."
+    },
+    "wind": {
+      "label": "Wind & Rumble",
+      "description": "Targets low-end rumble, handling noise, and outdoor wind pressure."
+    },
+    "hum": {
+      "label": "Hum & HVAC",
+      "description": "Focused cleanup for tonal hum, AC drone, and power-line style noise."
+    }
+  },
+  "mographTour": {
+    "steps": {
+      "intro": {
+        "title": "Motion Graphics & Animation",
+        "description": "A quick map of the current animation tools: keyframes in the Inspector, timing in the timeline, and motion scenes from the left action rail."
+      },
+      "keyframes-inspector": {
+        "title": "Keyframe Animation",
+        "description": "Select a clip and open its animation controls in the Inspector. Add keyframes to animate position, scale, rotation, opacity, and more.",
+        "tips": [
+          "Click the diamond icon to add a keyframe at current time",
+          "Each property can have its own animation curve",
+          "Choose from 30+ easing presets for smooth motion"
+        ]
+      },
+      "keyframes-timeline": {
+        "title": "Timeline Keyframe View",
+        "description": "The lower timeline is where animation timing becomes visible. Expand tracks and drag keyframe diamonds to adjust timing.",
+        "tips": [
+          "Diamond markers show keyframe positions",
+          "Drag horizontally to change timing",
+          "Click the curve between keyframes to edit easing"
+        ]
+      },
+      "keyframe-editor": {
+        "title": "Graph Editor",
+        "description": "Use the action rail on the far left to open animation utilities, including the Keyframe Editor for precise curve control.",
+        "tips": [
+          "Drag keyframe points to adjust time and value",
+          "Select multiple keyframes with Shift+click",
+          "Apply easing presets to selected keyframes"
+        ]
+      },
+      "motion-path": {
+        "title": "Motion Paths",
+        "description": "Create smooth movement along custom paths. Enable Motion Path mode to draw bezier curves directly on the preview canvas.",
+        "tips": [
+          "Click on the canvas to add path points",
+          "Drag control handles to curve the path",
+          "Elements follow the path as they animate",
+          "Great for flying logos and dynamic text"
+        ]
+      },
+      "particle-effects": {
+        "title": "Particle Effects",
+        "description": "Add cinematic particle effects like confetti, sparkles, dust, and explosions. Find them in the Inspector's Particle Effects section.",
+        "tips": [
+          "Choose from preset effects or customize",
+          "Adjust particle count, speed, and colors",
+          "Set timing for when effects appear",
+          "Combine with keyframes for dramatic reveals"
+        ]
+      },
+      "emphasis-animations": {
+        "title": "Emphasis Animations",
+        "description": "Make elements pop with attention-grabbing animations. Pulse, bounce, shake, wiggle, and more - perfect for highlighting important content.",
+        "tips": [
+          "24 built-in emphasis presets",
+          "Set duration and loop count",
+          "Combine with entrance/exit animations"
+        ]
+      },
+      "text-animations": {
+        "title": "Text Animation Presets",
+        "description": "Animate text with professional presets. Characters can fade in, slide, bounce, or appear with typewriter effects.",
+        "tips": [
+          "25 text animation styles available",
+          "Per-character or per-word animation",
+          "Customize timing and easing"
+        ]
+      },
+      "complete": {
+        "title": "Start Animating!",
+        "description": "You're ready to create professional motion graphics. Select a clip and start experimenting with keyframes and effects.",
+        "tips": [
+          "Press K to add a keyframe at playhead",
+          "Use ? to see all keyboard shortcuts",
+          "Combine effects for unique animations"
+        ]
+      }
+    }
+  }
+}

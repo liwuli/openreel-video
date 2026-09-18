@@ -14,39 +14,69 @@ export interface ServiceConfig {
 /**
  * Registry of supported external services that require API keys.
  * Add new services here as the app integrates more third-party APIs.
+ *
+ * `description` is exposed as a getter rather than a plain string: this array is
+ * a module-level constant, so translating it inline would freeze the language at
+ * import time. Resolving on access keeps the text following the active UI
+ * language without changing the `ServiceConfig` shape or its consumers.
  */
 export const SERVICE_REGISTRY: readonly ServiceConfig[] = [
   {
     id: "elevenlabs",
     label: "ElevenLabs",
-    description: "AI voice generation and text-to-speech",
+    get description(): string {
+      return i18n.t(
+        "messages:settings.services.elevenlabs",
+        "AI voice generation and text-to-speech",
+      );
+    },
     docsUrl: "https://elevenlabs.io/docs/api-reference",
   },
   {
     id: "openai-compatible",
     label: "OpenAI-compatible endpoint",
-    description: "Any OpenAI-compatible API host; API key optional",
+    get description(): string {
+      return i18n.t(
+        "messages:settings.services.openaiCompatible",
+        "Any OpenAI-compatible API host; API key optional",
+      );
+    },
     keyOptional: true,
   },
   {
     id: "anthropic-compatible",
     label: "Anthropic-compatible endpoint",
-    description: "Any Anthropic Messages-compatible API host; API key optional",
+    get description(): string {
+      return i18n.t(
+        "messages:settings.services.anthropicCompatible",
+        "Any Anthropic Messages-compatible API host; API key optional",
+      );
+    },
     keyOptional: true,
   },
   {
     id: "kie-ai",
     label: "Kie.ai",
-    description: "AI aggregator for video/image generation, upscaling, and editing",
+    get description(): string {
+      return i18n.t(
+        "messages:settings.services.kieAi",
+        "AI aggregator for video/image generation, upscaling, and editing",
+      );
+    },
     docsUrl: "https://kie.ai",
   },
   {
     id: "freepik",
     label: "Freepik",
-    description: "AI aggregator for image generation, vectors, and creative assets",
+    get description(): string {
+      return i18n.t(
+        "messages:settings.services.freepik",
+        "AI aggregator for image generation, vectors, and creative assets",
+      );
+    },
     docsUrl: "https://www.freepik.com/api",
   },
-] as const;
+];
 
 export type TtsProvider = "elevenlabs";
 export type LlmProvider = "openai-compatible" | "anthropic-compatible";

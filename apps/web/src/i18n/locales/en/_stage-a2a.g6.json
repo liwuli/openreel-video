@@ -1,0 +1,42 @@
+{
+  "effectsPanel": {
+    "title": "Effects",
+    "selectLayer": "Select a layer",
+    "selectLayerDescription": "Layer effects can be stacked, reordered, and rendered into editor preview and export.",
+    "addEffect": "Add Effect",
+    "multiLayerNotice": "New effects will be added to all {{count}} selected layers.",
+    "searchStandardEffects": "Search standard effects",
+    "searchPlaceholder": "Search effects",
+    "categoriesLabel": "Effect categories",
+    "categories": {
+      "all": "All",
+      "color": "Color",
+      "blur": "Blur",
+      "stylize": "Stylize",
+      "distort": "Distort"
+    },
+    "noMatches": "No standard effects match “{{query}}”.",
+    "addNamed": "Add {{name}}",
+    "shaders": "Shaders",
+    "effectPreviews": "Effect previews",
+    "expressionControls": "Expression controls",
+    "stackTitle": "Stack ({{count}})",
+    "copyStack": "Copy stack",
+    "pasteAppend": "Paste append",
+    "pasteReplace": "Paste replace",
+    "clearStack": "Clear stack",
+    "emptyStack": "Add blur, glow, shadow, or color adjustment effects to build a reusable motion look for this layer.",
+    "moveUp": "Move effect up",
+    "moveDown": "Move effect down",
+    "disableEffect": "Disable effect",
+    "enableEffect": "Enable effect",
+    "duplicateEffect": "Duplicate effect",
+    "removeEffect": "Remove effect",
+    "color": "Color",
+    "unknownShader": "Unknown shader.",
+    "useHint": "use:",
+    "checkbox": "Checkbox",
+    "addKeyframe": "Add {{name}} keyframe",
+    "removeKeyframe": "Remove {{name}} keyframe"
+  }
+}

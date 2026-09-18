@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import type { StoreApi } from "zustand";
+import i18n from "../../i18n";
 import type { Action, ActionResult } from "@openreel/core";
 import type { ProjectState } from "../project-store";
 import { calculateTimelineDuration } from "./index";
@@ -52,7 +53,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
           success: false,
           error: {
             code: "MEDIA_NOT_FOUND" as const,
-            message: "Media item not found",
+            message: i18n.t(
+              "messages:clip.mediaItemNotFound",
+              "Media item not found",
+            ),
           },
         };
       }
@@ -78,7 +82,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
           success: false,
           error: {
             code: "TRACK_NOT_FOUND" as const,
-            message: "Could not find newly created track",
+            message: i18n.t(
+              "messages:clip.newTrackNotFound",
+              "Could not find newly created track",
+            ),
           },
         };
       }
@@ -105,7 +112,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
       if (!videoClip) {
         return {
           success: false,
-          error: { code: "CLIP_NOT_FOUND" as const, message: "Clip not found" },
+          error: {
+            code: "CLIP_NOT_FOUND" as const,
+            message: i18n.t("messages:errors.clipNotFound", "Clip not found"),
+          },
         };
       }
 
@@ -122,7 +132,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
           success: false,
           error: {
             code: "MEDIA_NOT_FOUND" as const,
-            message: "Media has no audio to separate",
+            message: i18n.t(
+              "messages:clip.noAudioToSeparate",
+              "Media has no audio to separate",
+            ),
           },
         };
       }
@@ -165,7 +178,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
             success: false,
             error: {
               code: "TRACK_NOT_FOUND" as const,
-              message: "Failed to create audio track",
+              message: i18n.t(
+                "messages:clip.createAudioTrackFailed",
+                "Failed to create audio track",
+              ),
             },
           };
         }
@@ -179,7 +195,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
           success: false,
           error: {
             code: "TRACK_NOT_FOUND" as const,
-            message: "Could not find or create audio track",
+            message: i18n.t(
+              "messages:clip.audioTrackNotFound",
+              "Could not find or create audio track",
+            ),
           },
         };
       }
@@ -271,7 +290,9 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
       }
       const { actionExecutor } = get();
       const history = actionExecutor.getHistory();
-      history.beginGroup("Move clips");
+      history.beginGroup(
+        i18n.t("messages:clip.moveClipsGroup", "Move clips"),
+      );
       try {
         let lastResult: ActionResult = { success: true };
         for (const move of moves) {
@@ -354,7 +375,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
       if (!clip) {
         return {
           success: false,
-          error: { code: "INVALID_PARAMS" as const, message: "Clip not found" },
+          error: {
+            code: "INVALID_PARAMS" as const,
+            message: i18n.t("messages:errors.clipNotFound", "Clip not found"),
+          },
         };
       }
       const track = project.timeline.tracks.find((t) =>
@@ -363,7 +387,10 @@ export function createClipSlice(set: Set, get: Get): ClipSlice {
       if (!track) {
         return {
           success: false,
-          error: { code: "INVALID_PARAMS" as const, message: "Track not found" },
+          error: {
+            code: "INVALID_PARAMS" as const,
+            message: i18n.t("messages:errors.trackNotFound", "Track not found"),
+          },
         };
       }
       const sortedClips = [...track.clips].sort(

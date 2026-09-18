@@ -1,0 +1,163 @@
+{
+  "graphEditor": {
+    "panelTitle": "Graph Editor",
+    "empty": {
+      "title": "Select an object",
+      "description": "Choose a layer, camera, or light to edit timing curves and keyframes."
+    },
+    "sections": {
+      "animatedProperty": "Animated Property",
+      "expression": "Expression",
+      "camera": "Camera",
+      "keyframes": "Keyframes"
+    },
+    "fields": {
+      "preset": "Preset",
+      "enabled": "Enabled",
+      "enabledDescription": "Procedural value is added at render time",
+      "expression": "Expression",
+      "expressionCode": "Expression code",
+      "referenceLayer": "Reference layer",
+      "referenceProperty": "Reference property",
+      "amplitude": "Amplitude",
+      "samplesPerSec": "Samples/sec",
+      "frequency": "Frequency",
+      "phase": "Phase",
+      "seed": "Seed",
+      "decay": "Decay",
+      "valueAtPlayhead": "Value at playhead",
+      "layerBase": "Layer base",
+      "base": "Base",
+      "rove": "Rove",
+      "roveDescription": "Auto-derive time for constant speed",
+      "setEasing": "Set easing for property keys",
+      "chooseEasing": "Choose easing..."
+    },
+    "actions": {
+      "clearExpression": "Clear expression",
+      "addKeyframe": "Add keyframe",
+      "updateKeyframe": "Update keyframe",
+      "clearPropertyKeyframes": "Clear property keyframes",
+      "deleteKeyframe": "Delete keyframe",
+      "copyKeyframes": "Copy property keyframes",
+      "pasteKeyframes": "Paste keyframes at playhead"
+    },
+    "options": {
+      "none": "None"
+    },
+    "modes": {
+      "value": "Value",
+      "speed": "Speed"
+    },
+    "graph": {
+      "ariaLabel": "{{property}} {{type}} graph",
+      "typeSpeed": "speed",
+      "typeKeyframe": "keyframe",
+      "addTwoKeyframes": "Add two keyframes to see speed",
+      "addKeyframes": "Add keyframes to draw a curve",
+      "flatSegment": "Flat segment — handles have no effect"
+    },
+    "expression": {
+      "error": "Error",
+      "insertReference": "Insert reference",
+      "empty": "Add a safe expression preset to generate procedural motion for this property.",
+      "summary": {
+        "loop": "Loop repeats this property's keyframes after the last key.",
+        "pingPong": "Ping-pong repeats keyframes forward and backward.",
+        "posterize": "Posterize samples this property's value at a lower rate.",
+        "expressionCode": "Write a JavaScript expression: value, time, wiggle(), loopOut(), linear(), ease(), clamp(), random(), Math.",
+        "parameters": "Adjust expression parameters above."
+      }
+    },
+    "reference": {
+      "thisLayer": "{{name}} (this layer)"
+    },
+    "keyframes": {
+      "emptyLayer": "No keyframes on this property yet. Add one at the current playhead to start shaping motion.",
+      "emptyCamera": "No keyframes on this camera property yet. Add one at the current playhead to shape the scene move.",
+      "emptyLight": "No keyframes on this light property yet. Add one at the current playhead to animate the scene lighting."
+    },
+    "keyframe": {
+      "rovingTitle": "{{time}}s · roving",
+      "roveHint": "Rove: derive this keyframe's time for constant speed between neighbors",
+      "roveDisabled": "The first and last keyframe of a property cannot rove"
+    },
+    "camera": {
+      "title": "Camera Graph"
+    },
+    "light": {
+      "title": "Light Graph"
+    },
+    "timing": {
+      "duplicate": "Duplicate keys forward by half a second",
+      "reverse": "Reverse",
+      "reverseTitle": "Reverse keys inside their current time span",
+      "compress": "Compress key timing to half speed span",
+      "stretch": "Stretch key timing to double speed span"
+    }
+  },
+  "shapeContents": {
+    "section": {
+      "title": "Contents"
+    },
+    "materialize": {
+      "description": "Convert this shape into a contents tree to build groups, merge paths, and stack per-group operators.",
+      "action": "Group contents"
+    },
+    "actions": {
+      "addGroup": "Add group",
+      "addShape": "Add shape",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "delete": "Delete",
+      "add": "Add"
+    },
+    "tree": {
+      "collapseGroup": "Collapse group",
+      "expandGroup": "Expand group",
+      "renameItem": "Rename item",
+      "toggleVisibility": "Toggle visibility"
+    },
+    "fields": {
+      "positionX": "Position X",
+      "positionY": "Position Y",
+      "scaleX": "Scale X",
+      "scaleY": "Scale Y",
+      "rotation": "Rotation",
+      "opacity": "Opacity",
+      "mergeMode": "Merge mode",
+      "shapeType": "Shape type",
+      "width": "Width",
+      "height": "Height",
+      "inheritStyle": "Inherit style",
+      "fillColor": "Fill color",
+      "strokeColor": "Stroke color"
+    },
+    "labels": {
+      "inheritGroupStyle": "Inherit group style"
+    },
+    "mergeMode": {
+      "none": "None",
+      "union": "Union",
+      "subtract": "Subtract",
+      "intersect": "Intersect",
+      "exclude": "Exclude"
+    },
+    "operators": {
+      "trimPaths": "Trim Paths",
+      "repeater": "Repeater",
+      "zigZag": "Zig Zag",
+      "roundCorners": "Round Corners",
+      "wigglePaths": "Wiggle Paths",
+      "offsetPaths": "Offset Paths",
+      "puckerBloat": "Pucker & Bloat",
+      "twist": "Twist",
+      "addOperator": "Add operator",
+      "addOperatorToGroup": "Add operator to group",
+      "moveUp": "Move operator up",
+      "moveDown": "Move operator down",
+      "remove": "Remove operator",
+      "enabled": "{{name}} enabled"
+    }
+  }
+}

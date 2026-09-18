@@ -1,0 +1,22 @@
+{
+  "loading": "Loading video...",
+  "loadFailed": "Failed to load share",
+  "notFoundTitle": "Video Not Found",
+  "notFoundDescription": "This video doesn't exist or the link is invalid.",
+  "expiredTitle": "Link Expired",
+  "expiredDescription": "This share link has expired. Share links are only valid for 24 hours.",
+  "expires": {
+    "expired": "Expired",
+    "hoursMinutes": "{{hours}}h {{minutes}}m remaining",
+    "minutes": "{{minutes}}m remaining"
+  },
+  "errorTitle": "Error",
+  "errorDescription": "Something went wrong",
+  "tryAgain": "Try Again",
+  "createYourOwnVideo": "Create Your Own Video",
+  "sharedVideo": "Shared Video",
+  "download": "Download",
+  "createYourOwn": "Create Your Own",
+  "videoUnsupported": "Your browser does not support the video tag.",
+  "madeWith": "Made with"
+}

@@ -13,6 +13,7 @@ import type {
   ToolResult,
   LoopMessage,
 } from "@openreel/agent";
+import i18n from "../i18n";
 import { isSessionUnlocked, getSecret } from "../services/secure-storage";
 import { getLiveEditorHost, runExclusive } from "../services/agent/host-singleton";
 import { makeBYOKClient } from "../services/agent/llm-transport";
@@ -151,7 +152,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
       return;
     }
     if (!useProjectStore.getState().hasOpenProject) {
-      set({ error: "Open or create a project before chatting." });
+      set({
+        error: i18n.t(
+          "messages:chat.noProject",
+          "Open or create a project before chatting.",
+        ),
+      });
       return;
     }
 
@@ -164,25 +170,48 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const settings = useSettingsStore.getState();
     const provider = settings.defaultLlmProvider;
     if (!provider) {
-      set({ error: "Choose an API format in AI settings." });
+      set({
+        error: i18n.t(
+          "messages:chat.chooseApiFormat",
+          "Choose an API format in AI settings.",
+        ),
+      });
       return;
     }
     const model = settings.llmModel.trim();
     if (!model) {
-      set({ error: "Enter or choose a model ID in AI settings." });
+      set({
+        error: i18n.t(
+          "messages:chat.enterModelId",
+          "Enter or choose a model ID in AI settings.",
+        ),
+      });
       return;
     }
     let baseUrl: string;
     try {
       baseUrl = normalizeCompatibleBaseUrl(settings.llmBaseUrl);
     } catch (error) {
-      set({ error: error instanceof Error ? error.message : "Enter a valid compatible endpoint URL." });
+      set({
+        error:
+          error instanceof Error
+            ? error.message
+            : i18n.t(
+                "messages:chat.invalidEndpoint",
+                "Enter a valid compatible endpoint URL.",
+              ),
+      });
       return;
     }
 
     const keyRequired = settings.configuredServices.includes(provider);
     if (!isDesktop() && keyRequired && !isSessionUnlocked()) {
-      set({ error: "Unlock secure storage to use your API key." });
+      set({
+        error: i18n.t(
+          "messages:chat.unlockSecureStorage",
+          "Unlock secure storage to use your API key.",
+        ),
+      });
       return;
     }
     let apiKey = "";
@@ -190,11 +219,21 @@ export const useChatStore = create<ChatState>((set, get) => ({
       try {
         apiKey = (await getSecret(provider)) ?? "";
       } catch {
-        set({ error: "Unlock secure storage to use your API key." });
+        set({
+          error: i18n.t(
+            "messages:chat.unlockSecureStorage",
+            "Unlock secure storage to use your API key.",
+          ),
+        });
         return;
       }
       if (!apiKey) {
-        set({ error: "The configured endpoint API key could not be loaded." });
+        set({
+          error: i18n.t(
+            "messages:chat.apiKeyNotLoaded",
+            "The configured endpoint API key could not be loaded.",
+          ),
+        });
         return;
       }
     }
@@ -340,7 +379,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           ? null
           : error instanceof Error
             ? error.message
-            : "The AI turn failed.",
+            : i18n.t("messages:chat.turnFailed", "The AI turn failed."),
         abortController: null,
         pendingConfirm: null,
       });
@@ -353,11 +392,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const wasAborted = controller.signal.aborted;
     const stopNotice =
       result.stoppedReason === "max_steps"
-        ? "I stopped after reaching this turn's step limit. Ask me to continue if more work is needed."
+        ? i18n.t(
+            "messages:chat.stoppedMaxSteps",
+            "I stopped after reaching this turn's step limit. Ask me to continue if more work is needed.",
+          )
         : result.stoppedReason === "max_tool_calls"
-          ? "I stopped after reaching this turn's tool-call limit. Ask me to continue if more work is needed."
+          ? i18n.t(
+              "messages:chat.stoppedMaxToolCalls",
+              "I stopped after reaching this turn's tool-call limit. Ask me to continue if more work is needed.",
+            )
           : result.stoppedReason === "budget"
-            ? "The model stopped at its response or token limit. Ask me to continue, or increase the model's output limit."
+            ? i18n.t(
+                "messages:chat.stoppedBudget",
+                "The model stopped at its response or token limit. Ask me to continue, or increase the model's output limit.",
+              )
             : undefined;
     set((state) => ({
       messages: state.messages.map((message) => {
@@ -366,8 +414,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const emptyNotice =
           !finalText && result.stoppedReason === "end_turn"
             ? message.toolCalls.length > 0
-              ? "The edits finished, but the model did not provide a written summary."
-              : "The model returned an empty response. Try again or choose another model."
+              ? i18n.t(
+                  "messages:chat.emptyWithTools",
+                  "The edits finished, but the model did not provide a written summary.",
+                )
+              : i18n.t(
+                  "messages:chat.emptyResponse",
+                  "The model returned an empty response. Try again or choose another model.",
+                )
             : undefined;
         return {
           ...message,
@@ -392,7 +446,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       error: wasAborted
         ? null
         : result.stoppedReason === "error"
-          ? (state.error ?? "The AI turn failed.")
+          ? (state.error ?? i18n.t("messages:chat.turnFailed", "The AI turn failed."))
           : state.error,
     }));
     saveConversationSnapshot(get());

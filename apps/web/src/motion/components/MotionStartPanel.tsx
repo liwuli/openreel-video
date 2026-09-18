@@ -20,6 +20,7 @@ import {
 import { ToolcraftClickableCard, ToolcraftText } from "@openreel/ui";
 import type { MotionComposition } from "@openreel/core";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 import {
   createMotionLayerOfType,
   type CreatableMotionLayerType,
@@ -36,7 +37,9 @@ interface MotionStartPanelProps {
 }
 
 interface StartAction {
+  readonly labelKey: string;
   readonly label: string;
+  readonly detailKey: string;
   readonly detail: string;
   readonly icon: LucideIcon;
   readonly run: () => void;
@@ -45,6 +48,7 @@ interface StartAction {
 export function MotionStartPanel({
   composition,
 }: MotionStartPanelProps): JSX.Element {
+  const { t } = useTranslation("motion");
   const upsertMotionComposition = useProjectStore(
     (state) => state.upsertMotionComposition,
   );
@@ -76,20 +80,26 @@ export function MotionStartPanel({
   };
 
   const workflowSections: Array<{
+    readonly titleKey: string;
     readonly title: string;
     readonly actions: StartAction[];
   }> = [
     {
+      titleKey: "motion:motionStartPanel.sections.open",
       title: "Open",
       actions: [
         {
+          labelKey: "motion:motionStartPanel.templates",
           label: "Templates",
+          detailKey: "motion:motionStartPanel.templatesDetail",
           detail: "Logo reveals, kinetic type, product shots",
           icon: Sparkles,
           run: () => openLeft("templates"),
         },
         {
+          labelKey: "motion:motionStartPanel.assets",
           label: "Assets",
+          detailKey: "motion:motionStartPanel.assetsDetail",
           detail: "Footage, images, SVG, Lottie",
           icon: Library,
           run: () => openLeft("assets"),
@@ -97,28 +107,37 @@ export function MotionStartPanel({
       ],
     },
     {
+      titleKey: "motion:motionStartPanel.sections.build",
       title: "Build",
       actions: [
         {
+          labelKey: "motion:motionStartPanel.text",
           label: "Text",
+          detailKey: "motion:motionStartPanel.textDetail",
           detail: "Type, glyph shaders, text animators",
           icon: Type,
           run: () => addLayer("text", "properties"),
         },
         {
+          labelKey: "motion:motionStartPanel.shape",
           label: "Shape",
+          detailKey: "motion:motionStartPanel.shapeDetail",
           detail: "Vectors, gradients, trim paths",
           icon: Shapes,
           run: () => addLayer("shape", "properties"),
         },
         {
+          labelKey: "motion:motionStartPanel.scene3d",
           label: "3D Scene",
+          detailKey: "motion:motionStartPanel.scene3dDetail",
           detail: "Objects, camera, lights, materials",
           icon: Box,
           run: () => addLayer("scene3d", "properties"),
         },
         {
+          labelKey: "motion:motionStartPanel.particles",
           label: "Particles",
+          detailKey: "motion:motionStartPanel.particlesDetail",
           detail: "Emitters, loops, sparkle systems",
           icon: Zap,
           run: () => addLayer("particle", "properties"),
@@ -126,28 +145,37 @@ export function MotionStartPanel({
       ],
     },
     {
+      titleKey: "motion:motionStartPanel.sections.animate",
       title: "Animate",
       actions: [
         {
+          labelKey: "motion:motionStartPanel.presets",
           label: "Presets",
+          detailKey: "motion:motionStartPanel.presetsDetail",
           detail: "Entrance, emphasis, exits, loops",
           icon: Diamond,
           run: () => openRight("presets"),
         },
         {
+          labelKey: "motion:motionStartPanel.graph",
           label: "Graph",
+          detailKey: "motion:motionStartPanel.graphDetail",
           detail: "Curves, easing, expressions",
           icon: LineChart,
           run: () => openRight("graph"),
         },
         {
+          labelKey: "motion:motionStartPanel.effects",
           label: "Effects",
+          detailKey: "motion:motionStartPanel.effectsDetail",
           detail: "Stacked FX and shader passes",
           icon: Wand2,
           run: () => openRight("effects"),
         },
         {
+          labelKey: "motion:motionStartPanel.masks",
           label: "Masks",
+          detailKey: "motion:motionStartPanel.masksDetail",
           detail: "Track mattes and alpha control",
           icon: Scissors,
           run: () => openRight("masks"),
@@ -155,28 +183,37 @@ export function MotionStartPanel({
       ],
     },
     {
+      titleKey: "motion:motionStartPanel.sections.finish",
       title: "Finish",
       actions: [
         {
+          labelKey: "motion:motionStartPanel.sync",
           label: "Sync",
+          detailKey: "motion:motionStartPanel.syncDetail",
           detail: "Audio, beat, text timing",
           icon: Waves,
           run: () => openRight("sync"),
         },
         {
+          labelKey: "motion:motionStartPanel.track",
           label: "Track",
+          detailKey: "motion:motionStartPanel.trackDetail",
           detail: "Pin motion to subjects or objects",
           icon: Radar,
           run: () => openRight("tracker"),
         },
         {
+          labelKey: "motion:motionStartPanel.variables",
           label: "Variables",
+          detailKey: "motion:motionStartPanel.variablesDetail",
           detail: "Template controls and overrides",
           icon: GitBranch,
           run: () => openRight("variables"),
         },
         {
+          labelKey: "motion:motionStartPanel.queue",
           label: "Queue",
+          detailKey: "motion:motionStartPanel.queueDetail",
           detail: "MP4, alpha, ProRes deliverables",
           icon: PackageCheck,
           run: () => openRight("queue"),
@@ -187,7 +224,10 @@ export function MotionStartPanel({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <PanelHeader title="Start" icon={ImagePlus} />
+      <PanelHeader
+        title={t("motion:motionStartPanel.title", "Start")}
+        icon={ImagePlus}
+      />
       <div className="min-h-0 flex-1 space-y-4 overflow-auto p-3">
         {workflowSections.map((section) => (
           <section key={section.title} className="space-y-2">
@@ -199,7 +239,7 @@ export function MotionStartPanel({
                 weight="semibold"
                 className="text-[12px]"
               >
-                {section.title}
+                {t(section.titleKey, section.title)}
               </ToolcraftText>
               <span className="h-px flex-1 bg-border ml-2" aria-hidden />
             </div>
@@ -209,7 +249,7 @@ export function MotionStartPanel({
                 return (
                   <ToolcraftClickableCard
                     key={action.label}
-                    label={action.label}
+                    label={t(action.labelKey, action.label)}
                     onClick={action.run}
                     variant="muted"
                     padding={2}
@@ -223,10 +263,10 @@ export function MotionStartPanel({
                       className="mb-1.5 flex items-center gap-1.5"
                     >
                       <Icon size={13} aria-hidden />
-                      {action.label}
+                      {t(action.labelKey, action.label)}
                     </ToolcraftText>
                     <ToolcraftText type="supporting" color="secondary" maxLines={2}>
-                      {action.detail}
+                      {t(action.detailKey, action.detail)}
                     </ToolcraftText>
                   </ToolcraftClickableCard>
                 );

@@ -2,6 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import type { Keyframe, Clip } from "@openreel/core";
 import { KeyframeMarker } from "./KeyframeMarker";
 import { EasingCurve } from "./EasingCurve";
+import { useTranslation } from "../../../i18n";
 
 const PROPERTY_COLORS: Record<string, string> = {
   "position.x": "#22d3ee",
@@ -22,6 +23,16 @@ const PROPERTY_LABELS: Record<string, string> = {
   rotation: "Rotation",
   opacity: "Opacity",
   borderRadius: "Border Radius",
+};
+
+const PROPERTY_KEYS: Record<string, string> = {
+  "position.x": "positionX",
+  "position.y": "positionY",
+  "scale.x": "scaleX",
+  "scale.y": "scaleY",
+  rotation: "rotation",
+  opacity: "opacity",
+  borderRadius: "borderRadius",
 };
 
 interface KeyframeTrackProps {
@@ -48,6 +59,7 @@ export const KeyframeTrack: React.FC<KeyframeTrackProps> = ({
   onKeyframeDelete,
   selectedKeyframeIds,
 }) => {
+  const { t } = useTranslation("timeline");
 
   const propertyGroups = useMemo((): PropertyGroup[] => {
     const groups = new Map<string, Keyframe[]>();
@@ -83,7 +95,7 @@ export const KeyframeTrack: React.FC<KeyframeTrackProps> = ({
   if (propertyGroups.length === 0) {
     return (
       <div className="h-8 flex items-center justify-center text-[9px] text-text-muted">
-        No keyframes
+        {t("timeline:keyframeTrack.noKeyframes", "No keyframes")}
       </div>
     );
   }
@@ -104,7 +116,12 @@ export const KeyframeTrack: React.FC<KeyframeTrackProps> = ({
               style={{ backgroundColor: group.color }}
             />
             <span className="text-[9px] text-text-muted truncate">
-              {group.label}
+              {PROPERTY_KEYS[group.property]
+                ? t(
+                    `timeline:keyframeTrack.properties.${PROPERTY_KEYS[group.property]}`,
+                    group.label,
+                  )
+                : group.label}
             </span>
           </div>
 

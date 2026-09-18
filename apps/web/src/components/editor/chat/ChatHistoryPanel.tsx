@@ -4,6 +4,7 @@ import { ToolcraftIconButton as IconButton } from "@openreel/ui";
 import { MessageSquareText, Plus, Trash2 } from "@/icons/lucide-compat";
 import { useChatHistoryStore } from "../../../stores/chat-history-store";
 import { useChatStore } from "../../../stores/chat-store";
+import { useTranslation } from "../../../i18n";
 
 function formatUpdatedAt(timestamp: number): string {
   const date = new Date(timestamp);
@@ -23,6 +24,7 @@ export function ChatHistoryPanel({
   readonly projectId: string | null;
   readonly onClose: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("chat");
   const conversations = useChatHistoryStore((state) => state.conversations);
   const activeConversationId = useChatStore(
     (state) => state.currentConversationId,
@@ -46,13 +48,15 @@ export function ChatHistoryPanel({
     <div className="absolute inset-x-2 top-11 z-30 overflow-hidden rounded-xl border border-border bg-bg-1 shadow-xl">
       <div className="flex items-center justify-between border-b border-border px-3 py-2.5">
         <div>
-          <div className="text-[12px] font-semibold text-fg">Conversations</div>
+          <div className="text-[12px] font-semibold text-fg">
+            {t("chat:history.conversations", "Conversations")}
+          </div>
           <div className="mt-0.5 text-[10px] text-fg-muted">
-            Saved on this device for this project
+            {t("chat:history.savedOnDevice", "Saved on this device for this project")}
           </div>
         </div>
         <Button
-          label="New chat"
+          label={t("chat:newChat", "New chat")}
           size="sm"
           variant="secondary"
           onClick={() => {
@@ -71,10 +75,13 @@ export function ChatHistoryPanel({
               <MessageSquareText size={15} aria-hidden />
             </div>
             <div className="mt-2 text-[11px] font-medium text-fg-2">
-              No saved conversations yet
+              {t("chat:history.emptyTitle", "No saved conversations yet")}
             </div>
             <div className="mt-1 max-w-48 text-[10px] leading-relaxed text-fg-muted">
-              Completed chats will appear here automatically.
+              {t(
+                "chat:history.emptyDescription",
+                "Completed chats will appear here automatically.",
+              )}
             </div>
           </div>
         ) : (
@@ -108,12 +115,21 @@ export function ChatHistoryPanel({
                         {conversation.title}
                       </span>
                       <span className="mt-0.5 block text-[9px] text-fg-muted">
-                        {conversation.messages.filter((message) => message.role === "user").length} requests · {formatUpdatedAt(conversation.updatedAt)}
+                        {t("chat:history.summary", "{{count}} requests · {{time}}", {
+                          count: conversation.messages.filter(
+                            (message) => message.role === "user",
+                          ).length,
+                          time: formatUpdatedAt(conversation.updatedAt),
+                        })}
                       </span>
                     </span>
                   </button>
                   <IconButton
-                    label={`Delete ${conversation.title}`}
+                    label={t(
+                      "chat:history.deleteConversation",
+                      "Delete {{title}}",
+                      { title: conversation.title },
+                    )}
                     icon={<Trash2 size={12} aria-hidden />}
                     size="sm"
                     variant="ghost"

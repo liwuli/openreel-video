@@ -96,7 +96,7 @@ export const EditorActionRail: React.FC = () => {
   return (
     <nav
       data-tour="toolbar"
-      aria-label="Editor tools"
+      aria-label={t("common:editorTools", "Editor tools")}
       className="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-border bg-bg-1 py-3"
     >
       <Tooltip content={t("rail:home")} placement="end">

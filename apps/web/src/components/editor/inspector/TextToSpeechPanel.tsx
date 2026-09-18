@@ -20,8 +20,10 @@ import { VoiceBrowser } from "./VoiceBrowser";
 import { ModelSelector } from "./ModelSelector";
 import { EnhancedTextPreview } from "./EnhancedTextPreview";
 import { AudioResult } from "./AudioResult";
+import { useTranslation } from "../../../i18n";
 
 export const TextToSpeechPanel: React.FC = () => {
+  const { t } = useTranslation("inspector");
   const {
     defaultLlmProvider,
     llmBaseUrl,
@@ -111,15 +113,15 @@ export const TextToSpeechPanel: React.FC = () => {
           <Mic size={16} className="text-primary" aria-hidden />
           <div className="flex flex-col gap-0.5 min-w-0">
             <Text type="body" color="primary" weight="bold" display="block" className="text-[11px]">
-              Text to Speech
+              {t("textToSpeech.title", "Text to Speech")}
             </Text>
             <Text type="supporting" color="secondary" display="block" className="text-[9px]">
-              User-keyed ElevenLabs voice generation
+              {t("textToSpeech.subtitle", "User-keyed ElevenLabs voice generation")}
             </Text>
           </div>
         </div>
         <IconButton
-          label="API Key Settings"
+          label={t("textToSpeech.apiKeySettings", "API Key Settings")}
           icon={<Settings size={14} aria-hidden />}
           variant="ghost"
           size="sm"
@@ -131,7 +133,10 @@ export const TextToSpeechPanel: React.FC = () => {
       {!hasElevenLabsKey && (
         <Card variant="yellow" padding={2} className="border border-amber-500/30">
           <Text type="supporting" className="text-[10px] text-amber-400">
-            Add your ElevenLabs API key to enable speech generation. OpenReel no longer hosts a speech server.
+            {t(
+              "textToSpeech.missingApiKey",
+              "Add your ElevenLabs API key to enable speech generation. OpenReel no longer hosts a speech server.",
+            )}
           </Text>
         </Card>
       )}
@@ -142,13 +147,16 @@ export const TextToSpeechPanel: React.FC = () => {
 
       <div className="space-y-2">
         <ToolcraftTextAreaControl
-          label="Text"
+          label={t("textToSpeech.text", "Text")}
           value={text}
           onChange={(value) => {
             setText(value);
             setEnhancedPreview(null);
           }}
-          placeholder="Enter the text you want to convert to speech..."
+          placeholder={t(
+            "textToSpeech.textPlaceholder",
+            "Enter the text you want to convert to speech...",
+          )}
           maxLength={maxChars}
           rows={4}
           width="100%"
@@ -156,7 +164,7 @@ export const TextToSpeechPanel: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <MockToggle
-              ariaLabel="Enhance for TTS"
+              ariaLabel={t("textToSpeech.enhanceForTts", "Enhance for TTS")}
               checked={enhanceText}
               onChange={setEnhanceText}
             />
@@ -167,7 +175,7 @@ export const TextToSpeechPanel: React.FC = () => {
               onClick={() => setEnhanceText(!enhanceText)}
             >
               <Sparkles size={10} className={enhanceText ? "text-amber-400" : ""} aria-hidden />
-              Enhance for TTS
+              {t("textToSpeech.enhanceForTts", "Enhance for TTS")}
             </Text>
           </div>
           <Text
@@ -205,7 +213,7 @@ export const TextToSpeechPanel: React.FC = () => {
           </Text>
           {(error.includes("API key") || error.includes("Session locked") || error.includes("Unlock")) && (
             <Button
-              label="Open Settings"
+              label={t("textToSpeech.openSettings", "Open Settings")}
               variant="secondary"
               size="sm"
               onClick={() => openSettings("api-keys")}
@@ -225,7 +233,11 @@ export const TextToSpeechPanel: React.FC = () => {
 
       {enhanceText && !enhancedPreview && (
         <Button
-          label={isEnhancing ? "Enhancing..." : "Enhance Text"}
+          label={
+            isEnhancing
+              ? t("textToSpeech.enhancing", "Enhancing...")
+              : t("textToSpeech.enhanceText", "Enhance Text")
+          }
           icon={
             isEnhancing ? (
               <Loader2 size={14} className="animate-spin" aria-hidden />
@@ -243,7 +255,11 @@ export const TextToSpeechPanel: React.FC = () => {
       )}
 
       <Button
-        label={isGenerating ? "Generating..." : "Generate Speech"}
+        label={
+          isGenerating
+            ? t("textToSpeech.generating", "Generating...")
+            : t("textToSpeech.generateSpeech", "Generate Speech")
+        }
         icon={
           isGenerating ? (
             <Loader2 size={14} className="animate-spin" aria-hidden />
@@ -267,7 +283,10 @@ export const TextToSpeechPanel: React.FC = () => {
         >
           <AlertTriangle size={12} className="text-amber-400 shrink-0" aria-hidden />
           <Text type="supporting" className="text-[9px] text-amber-400">
-            Unsaved audio — save to media, add to timeline, or download to keep it.
+            {t(
+              "textToSpeech.unsavedAudio",
+              "Unsaved audio — save to media, add to timeline, or download to keep it.",
+            )}
           </Text>
         </Card>
       )}
@@ -286,7 +305,9 @@ export const TextToSpeechPanel: React.FC = () => {
       )}
 
       <Text type="supporting" color="secondary" className="block text-[9px] text-center">
-        Powered by ElevenLabs · {getSelectedModelName()}
+        {t("textToSpeech.poweredBy", "Powered by ElevenLabs · {{model}}", {
+          model: getSelectedModelName(),
+        })}
       </Text>
     </div>
   );

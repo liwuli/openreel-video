@@ -27,6 +27,7 @@ import { ToolcraftLayout as Layout, ToolcraftLayoutContent as LayoutContent, Too
 import { ToolcraftSelectableCard as SelectableCard } from "@openreel/ui";
 import { ToolcraftSelectControl as Selector } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
+import { useTranslation } from "../../i18n";
 
 interface ScreenRecorderProps {
   isOpen: boolean;
@@ -36,13 +37,11 @@ interface ScreenRecorderProps {
 
 const RESOLUTION_OPTIONS: {
   value: VideoResolution;
-  label: string;
-  desc: string;
 }[] = [
-  { value: "720p", label: "720p HD", desc: "1280×720 - Smaller files" },
-  { value: "1080p", label: "1080p Full HD", desc: "1920×1080 - Recommended" },
-  { value: "1440p", label: "1440p QHD", desc: "2560×1440 - High quality" },
-  { value: "4k", label: "4K Ultra HD", desc: "3840×2160 - Maximum quality" },
+  { value: "720p" },
+  { value: "1080p" },
+  { value: "1440p" },
+  { value: "4k" },
 ];
 
 const FRAMERATE_OPTIONS: { value: FrameRate; label: string }[] = [
@@ -62,6 +61,7 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
   onClose,
   onRecordingComplete,
 }) => {
+  const { t } = useTranslation("common");
   const {
     status,
     options,
@@ -139,7 +139,7 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
       <Layout
         header={
           <DialogHeader
-            title="Screen Recording"
+            title={t("common:screenRecorder.dialogTitle", "Screen Recording")}
             onOpenChange={(open) => !open && handleCancel()}
             startContent={<Circle size={20} className="text-error fill-error animate-pulse" aria-hidden />}
           />
@@ -155,11 +155,13 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
               />
               <div>
                 <Text type="body" weight="bold" display="block" className="text-error">
-                  Screen recording not supported
+                  {t("common:screenRecorder.notSupported", "Screen recording not supported")}
                 </Text>
                 <Text type="supporting" color="secondary" display="block" className="mt-1">
-                  Your browser doesn't support screen recording. Please use
-                  Chrome, Edge, or Firefox.
+                  {t(
+                    "common:screenRecorder.notSupportedDesc",
+                    "Your browser doesn't support screen recording. Please use Chrome, Edge, or Firefox.",
+                  )}
                 </Text>
               </div>
             </Card>
@@ -174,7 +176,7 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
               />
               <div>
                 <Text type="body" weight="bold" display="block" className="text-error">
-                  Recording Error
+                  {t("common:screenRecorder.errorTitle", "Recording Error")}
                 </Text>
                 <Text type="supporting" color="secondary" display="block" className="mt-1">
                   {error}
@@ -187,36 +189,34 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
             <div className="flex items-center gap-2">
               <Monitor size={16} aria-hidden />
               <Text type="body" weight="bold">
-                Video Settings
+                {t("common:screenRecorder.videoSettings", "Video Settings")}
               </Text>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Selector
-                  label="Resolution"
+                  label={t("common:screenRecorder.resolution", "Resolution")}
                   value={options.video.resolution}
                   onChange={(value) => setVideoOption("resolution", value as VideoResolution)}
                   isDisabled={!isSupported}
                   options={RESOLUTION_OPTIONS.map((opt) => ({
                     value: opt.value,
-                    label: opt.label,
+                    label: t(`common:screenRecorder.resolutions.${opt.value}.label`),
                   }))}
                   size="sm"
                   width="100%"
                 />
                 <Text type="supporting" color="secondary" display="block" className="mt-1 text-[10px]">
-                  {
-                    RESOLUTION_OPTIONS.find(
-                      (o) => o.value === options.video.resolution,
-                    )?.desc
-                  }
+                  {t(
+                    `common:screenRecorder.resolutions.${options.video.resolution}.desc`,
+                  )}
                 </Text>
               </div>
 
               <div>
                 <Selector
-                  label="Frame Rate"
+                  label={t("common:screenRecorder.frameRate", "Frame Rate")}
                   value={String(options.video.frameRate)}
                   onChange={(value) => setVideoOption("frameRate", parseInt(value, 10) as FrameRate)}
                   isDisabled={!isSupported}
@@ -235,13 +235,13 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
             <div className="flex items-center gap-2">
               <Settings size={16} aria-hidden />
               <Text type="body" weight="bold">
-                Audio Settings
+                {t("common:screenRecorder.audioSettings", "Audio Settings")}
               </Text>
             </div>
 
             <div className="flex gap-4">
               <SelectableCard
-                label="System Audio"
+                label={t("common:screenRecorder.systemAudio", "System Audio")}
                 isSelected={options.audio.systemAudio}
                 onChange={() => setAudioOption("systemAudio", !options.audio.systemAudio)}
                 isDisabled={!isSupported || !features.systemAudio}
@@ -255,12 +255,12 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
                   <VolumeX size={18} aria-hidden />
                 )}
                 <Text type="body" className="ml-2 text-sm">
-                  System Audio
+                  {t("common:screenRecorder.systemAudio", "System Audio")}
                 </Text>
               </SelectableCard>
 
               <SelectableCard
-                label="Microphone"
+                label={t("common:screenRecorder.microphone", "Microphone")}
                 isSelected={options.audio.microphone}
                 onChange={() => setAudioOption("microphone", !options.audio.microphone)}
                 isDisabled={!isSupported}
@@ -274,15 +274,17 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
                   <MicOff size={18} aria-hidden />
                 )}
                 <Text type="body" className="ml-2 text-sm">
-                  Microphone
+                  {t("common:screenRecorder.microphone", "Microphone")}
                 </Text>
               </SelectableCard>
             </div>
 
             {!features.systemAudio && (
               <Text type="supporting" color="secondary" display="block" className="text-[10px]">
-                System audio capture is only available in Chrome and Edge
-                browsers.
+                {t(
+                  "common:screenRecorder.systemAudioHint",
+                  "System audio capture is only available in Chrome and Edge browsers.",
+                )}
               </Text>
             )}
           </div>
@@ -292,11 +294,11 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
               <div className="flex items-center gap-2">
                 <Camera size={16} aria-hidden />
                 <Text type="body" weight="bold">
-                  Webcam Recording
+                  {t("common:screenRecorder.webcamRecording", "Webcam Recording")}
                 </Text>
               </div>
               <ToolcraftSwitchControl
-                ariaLabel="Webcam recording"
+                ariaLabel={t("common:screenRecorder.webcamToggle", "Webcam recording")}
                 checked={options.webcam.enabled}
                 onCheckedChange={(enabled) => setWebcamOption("enabled", enabled)}
                 disabled={!isSupported || !features.webcam}
@@ -308,7 +310,7 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
               <div className="flex gap-4">
                 <div className="flex-1">
                   <Selector
-                    label="Webcam Resolution"
+                    label={t("common:screenRecorder.webcamResolution", "Webcam Resolution")}
                     value={options.webcam.resolution}
                     onChange={(value) => setWebcamOption("resolution", value as WebcamResolution)}
                     options={WEBCAM_RESOLUTION_OPTIONS.map((opt) => ({
@@ -335,8 +337,10 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
             )}
 
             <Text type="supporting" color="secondary" display="block" className="text-[10px]">
-              Webcam will be recorded as a separate file, giving you full
-              control in the editor.
+              {t(
+                "common:screenRecorder.webcamHint",
+                "Webcam will be recorded as a separate file, giving you full control in the editor.",
+              )}
             </Text>
           </div>
           </LayoutContent>
@@ -345,17 +349,24 @@ export const ScreenRecorder: React.FC<ScreenRecorderProps> = ({
           <LayoutFooter hasDivider>
             <div className="flex items-center justify-between gap-4">
               <Text type="supporting" color="secondary" className="text-xs">
-                Recording will start after a 3-second countdown
+                {t(
+                  "common:screenRecorder.countdownHint",
+                  "Recording will start after a 3-second countdown",
+                )}
               </Text>
 
               <div className="flex gap-3">
                 <Button
-                  label="Cancel"
+                  label={t("common:cancel", "Cancel")}
                   variant="ghost"
                   onClick={handleCancel}
                 />
                 <Button
-                  label={status === "requesting" ? "Requesting Access..." : "Start Recording"}
+                  label={
+                    status === "requesting"
+                      ? t("common:screenRecorder.requestingAccess", "Requesting Access...")
+                      : t("common:screenRecorder.startRecording", "Start Recording")
+                  }
                   variant="primary"
                   icon={
                     status === "requesting" ? (

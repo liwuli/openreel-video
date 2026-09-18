@@ -15,6 +15,7 @@ import { ToolcraftSelectableCard as SelectableCard } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { ToolcraftTextInputControl } from "@openreel/ui";
 import { useSettingsStore } from "../../../stores/settings-store";
+import { useTranslation } from "../../../i18n";
 import type { ElevenLabsVoice } from "./tts-types";
 
 interface VoiceBrowserProps {
@@ -30,6 +31,7 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
   allVoices,
   isLoadingVoices,
 }) => {
+  const { t } = useTranslation("inspector");
   const {
     favoriteVoices,
     addFavoriteVoice,
@@ -114,13 +116,14 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
   return (
     <div className="space-y-2">
       <Text type="label" color="secondary" weight="medium" className="text-[10px] text-fg-2">
-        Voice
+        {t("voiceBrowser.voice", "Voice")}
       </Text>
       <div className="space-y-2">
         {favoriteVoices.length > 0 && (
           <div className="space-y-1.5">
             <span className="text-[9px] text-fg-3 flex items-center gap-1">
-              <Star size={9} className="text-amber-400 fill-amber-400" /> Favorites
+              <Star size={9} className="text-amber-400 fill-amber-400" />{" "}
+              {t("voiceBrowser.favorites", "Favorites")}
             </span>
             <div className="flex flex-wrap gap-1.5">
               {favoriteVoices.map((fav) => (
@@ -142,7 +145,7 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
                   <span>{fav.name}</span>
                   {fav.previewUrl && (
                     <IconButton
-                      label="Preview voice"
+                      label={t("voiceBrowser.previewVoice", "Preview voice")}
                       icon={
                         previewingVoice === fav.voiceId ? (
                           <Pause size={8} />
@@ -166,13 +169,19 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
         )}
 
         <Button
-          label={showAllVoices ? "Hide voice browser" : "Browse and search voices"}
+          label={
+            showAllVoices
+              ? t("voiceBrowser.hideVoiceBrowser", "Hide voice browser")
+              : t("voiceBrowser.browseAndSearchVoices", "Browse and search voices")
+          }
           variant="ghost"
           onClick={() => setShowAllVoices(!showAllVoices)}
           className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-[10px] border border-dashed border-border text-fg-3 hover:text-fg hover:border-primary/50 transition-colors"
         >
           <Search size={10} />
-          {showAllVoices ? "Hide voice browser" : "Browse & search voices"}
+          {showAllVoices
+            ? t("voiceBrowser.hideVoiceBrowser", "Hide voice browser")
+            : t("voiceBrowser.browseAndSearchVoicesShort", "Browse & search voices")}
           <ChevronDown size={10} className={`transition-transform ${showAllVoices ? "rotate-180" : ""}`} />
         </Button>
 
@@ -181,11 +190,14 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
             <div className="flex items-center gap-2 px-2 py-1.5 border-b border-border bg-bg-1">
               <Search size={12} className="text-fg-3 shrink-0" />
               <ToolcraftTextInputControl
-                label="Search voices"
+                label={t("voiceBrowser.searchVoices", "Search voices")}
                 isLabelHidden
                 value={voiceSearch}
                 onChange={setVoiceSearch}
-                placeholder="Search by name, accent, gender..."
+                placeholder={t(
+                  "voiceBrowser.searchPlaceholder",
+                  "Search by name, accent, gender...",
+                )}
                 className="flex-1 bg-transparent text-[10px] text-fg placeholder:text-fg-3 focus:outline-none"
                 hasAutoFocus
               />
@@ -195,15 +207,22 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
             <div className="max-h-48 overflow-y-auto">
               {filteredVoices.length === 0 ? (
                 <div className="p-3 text-center text-[10px] text-fg-3">
-                  {isLoadingVoices ? "Loading voices..." : allVoices.length === 0 ? (
+                  {isLoadingVoices ? (
+                    t("voiceBrowser.loadingVoices", "Loading voices...")
+                  ) : allVoices.length === 0 ? (
                     <Button
-                      label="Unlock session to browse voices"
+                      label={t(
+                        "voiceBrowser.unlockToBrowse",
+                        "Unlock session to browse voices",
+                      )}
                       variant="ghost"
                       icon={<Settings size={12} />}
                       onClick={() => openSettings("api-keys")}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-400 hover:bg-amber-500/25 transition-colors font-medium"
                     />
-                  ) : "No voices match your search"}
+                  ) : (
+                    t("voiceBrowser.noVoicesMatch", "No voices match your search")
+                  )}
                 </div>
               ) : (
                 filteredVoices.map((voice) => {
@@ -229,7 +248,7 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
                           </span>
                           {voice.category === "cloned" && (
                             <span className="text-[8px] px-1 py-0.5 rounded bg-primary/20 text-primary">
-                              Cloned
+                              {t("voiceBrowser.cloned", "Cloned")}
                             </span>
                           )}
                         </div>
@@ -241,7 +260,7 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
                       <div className="flex items-center gap-1 shrink-0">
                         {voice.preview_url && (
                           <IconButton
-                            label="Preview"
+                            label={t("voiceBrowser.preview", "Preview")}
                             icon={
                               previewingVoice === voice.voice_id ? (
                                 <Pause size={10} />
@@ -259,7 +278,14 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
                           />
                         )}
                         <IconButton
-                          label={isFav ? "Remove from favorites" : "Add to favorites"}
+                          label={
+                            isFav
+                              ? t(
+                                  "voiceBrowser.removeFromFavorites",
+                                  "Remove from favorites",
+                                )
+                              : t("voiceBrowser.addToFavorites", "Add to favorites")
+                          }
                           icon={
                             isFav ? (
                               <Star size={10} className="fill-current" />
@@ -285,7 +311,10 @@ export const VoiceBrowser: React.FC<VoiceBrowserProps> = ({
             </div>
 
             <div className="px-2 py-1 border-t border-border bg-bg-1 text-[8px] text-fg-3 text-center">
-              {filteredVoices.length} of {allVoices.length} voices
+              {t("voiceBrowser.voiceCount", "{{shown}} of {{total}} voices", {
+                shown: filteredVoices.length,
+                total: allVoices.length,
+              })}
             </div>
           </div>
         )}

@@ -282,7 +282,7 @@ export const ScriptViewDialog: React.FC<ScriptViewDialogProps> = ({
                 <div className="flex items-center gap-2">
                   <FileCode size={16} className="text-text-secondary" />
                   <Text type="body" className="flex-1 text-sm">
-                    {t("scriptView.charsLoaded", "{{count}} characters loaded", { count: importJson.length.toLocaleString() })}
+                    {t("scriptView.charsLoaded", "{{count, number}} characters loaded", { count: importJson.length })}
                   </Text>
                   <Button
                     label={t("scriptView.clear", "Clear")}

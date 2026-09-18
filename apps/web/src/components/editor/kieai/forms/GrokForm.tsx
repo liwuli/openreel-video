@@ -3,6 +3,7 @@ import { ToolcraftCard as Card } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { ToolcraftTextAreaControl } from "@openreel/ui";
 import type { GrokInput } from "../../../../services/kieai/image-generation";
+import { useTranslation } from "../../../../i18n";
 
 interface Props {
   value: GrokInput;
@@ -12,27 +13,38 @@ interface Props {
 }
 
 export function GrokForm({ value, onChange, onSubmit, isLoading }: Props) {
+  const { t } = useTranslation("ai");
+
   return (
     <div className="space-y-4">
       <Card variant="blue" padding={2} className="border border-blue-500/30">
         <Text type="supporting" className="text-xs text-blue-400">
-          Grok Imagine uses the source image as a reference for style and
-          composition. An optional prompt can guide the transformation.
+          {t(
+            "kieai.form.grokNotice",
+            "Grok Imagine uses the source image as a reference for style and composition. An optional prompt can guide the transformation.",
+          )}
         </Text>
       </Card>
 
       <ToolcraftTextAreaControl
-        label="Prompt (optional)"
+        label={t("kieai.form.promptOptional", "Prompt (optional)")}
         value={value.prompt ?? ""}
         onChange={(prompt) => onChange({ ...value, prompt: prompt || undefined })}
-        placeholder="Optional: describe what you want to change or emphasize..."
+        placeholder={t(
+          "kieai.form.promptOptionalPlaceholder",
+          "Optional: describe what you want to change or emphasize...",
+        )}
         maxLength={1000}
         rows={3}
         width="100%"
       />
 
       <Button
-        label={isLoading ? "Generating..." : "Generate with Grok Imagine"}
+        label={
+          isLoading
+            ? t("kieai.form.generating", "Generating...")
+            : t("kieai.form.generateWithGrok", "Generate with Grok Imagine")
+        }
         onClick={onSubmit}
         isDisabled={isLoading}
         variant="primary"

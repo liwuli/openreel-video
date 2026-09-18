@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import i18n from "../i18n";
 import {
   screenRecorderService,
   DEFAULT_RECORDING_OPTIONS,
@@ -57,7 +58,9 @@ export const useRecorderStore = create<RecorderState>((set, get) => {
 
   screenRecorderService.on("error", (error) => {
     const errorMessage =
-      error instanceof Error ? error.message : "Recording error occurred";
+      error instanceof Error
+        ? error.message
+        : i18n.t("messages:recorder.errorOccurred", "Recording error occurred");
     set({ status: "error", error: errorMessage });
   });
 
@@ -125,7 +128,9 @@ export const useRecorderStore = create<RecorderState>((set, get) => {
         return true;
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : "Permission denied";
+          error instanceof Error
+            ? error.message
+            : i18n.t("messages:recorder.permissionDenied", "Permission denied");
         set({ status: "error", error: message });
         return false;
       }
@@ -135,7 +140,10 @@ export const useRecorderStore = create<RecorderState>((set, get) => {
       const { options, screenStream } = get();
 
       if (!screenStream) {
-        set({ status: "error", error: "No screen stream available" });
+        set({
+          status: "error",
+          error: i18n.t("messages:recorder.noScreenStream", "No screen stream available"),
+        });
         return;
       }
 
@@ -148,7 +156,9 @@ export const useRecorderStore = create<RecorderState>((set, get) => {
         set({ status: "recording", duration: 0 });
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : "Failed to start recording";
+          error instanceof Error
+            ? error.message
+            : i18n.t("messages:recorder.startFailed", "Failed to start recording");
         set({ status: "error", error: message });
       }
     },
@@ -172,7 +182,9 @@ export const useRecorderStore = create<RecorderState>((set, get) => {
         return result;
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : "Failed to stop recording";
+          error instanceof Error
+            ? error.message
+            : i18n.t("messages:recorder.stopFailed", "Failed to stop recording");
         set({ status: "error", error: message });
         return null;
       }

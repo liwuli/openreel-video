@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftIconButton as IconButton } from "@openreel/ui";
 import { CircleAlert, X } from "@/icons/lucide-compat";
+import i18n, { useTranslation } from "../../../i18n";
 
 export type ChatErrorAction = "general" | "api-keys" | "new-chat" | null;
 
@@ -35,7 +36,8 @@ function extractUpstreamMessage(raw: string): string | null {
 }
 
 export function formatChatError(rawError: string): ChatErrorPresentation {
-  const raw = rawError.trim() || "The AI request failed.";
+  const raw =
+    rawError.trim() || i18n.t("chat:error.fallback", "The AI request failed.");
   const upstream = extractUpstreamMessage(raw);
   const status = Number(raw.match(/\b([45]\d{2})\b/)?.[1] ?? 0);
   const searchable = `${raw} ${upstream ?? ""}`.toLowerCase();
@@ -49,22 +51,28 @@ export function formatChatError(rawError: string): ChatErrorPresentation {
     )
   ) {
     return {
-      title: "Authentication failed",
+      title: i18n.t("chat:error.authTitle", "Authentication failed"),
       message:
         upstream ??
-        "The endpoint rejected the API key. Check the saved key and try again.",
+        i18n.t(
+          "chat:error.authMessage",
+          "The endpoint rejected the API key. Check the saved key and try again.",
+        ),
       action: "api-keys",
-      actionLabel: "Check API key",
+      actionLabel: i18n.t("chat:error.authAction", "Check API key"),
       details,
     };
   }
 
   if (status === 429 || /rate limit|too many requests|quota/.test(searchable)) {
     return {
-      title: "Rate limit reached",
+      title: i18n.t("chat:error.rateLimitTitle", "Rate limit reached"),
       message:
         upstream ??
-        "The endpoint is receiving too many requests. Wait a moment and try again.",
+        i18n.t(
+          "chat:error.rateLimitMessage",
+          "The endpoint is receiving too many requests. Wait a moment and try again.",
+        ),
       action: null,
       details,
     };
@@ -76,11 +84,13 @@ export function formatChatError(rawError: string): ChatErrorPresentation {
     )
   ) {
     return {
-      title: "Couldn’t reach the endpoint",
-      message:
+      title: i18n.t("chat:error.networkTitle", "Couldn’t reach the endpoint"),
+      message: i18n.t(
+        "chat:error.networkMessage",
         "Check the host URL and confirm the endpoint is online. In a browser, the host must also allow CORS requests from OpenReel.",
+      ),
       action: "general",
-      actionLabel: "Check endpoint",
+      actionLabel: i18n.t("chat:error.checkEndpoint", "Check endpoint"),
       details: raw,
     };
   }
@@ -91,24 +101,30 @@ export function formatChatError(rawError: string): ChatErrorPresentation {
     )
   ) {
     return {
-      title: "Conversation is too long",
+      title: i18n.t("chat:error.contextTitle", "Conversation is too long"),
       message:
         upstream ??
-        "This model cannot fit the full conversation. Start a new chat and continue there.",
+        i18n.t(
+          "chat:error.contextMessage",
+          "This model cannot fit the full conversation. Start a new chat and continue there.",
+        ),
       action: "new-chat",
-      actionLabel: "Start new chat",
+      actionLabel: i18n.t("chat:error.newChat", "Start new chat"),
       details,
     };
   }
 
   if (status === 404 || /model.+not found|unknown model|does not exist/.test(searchable)) {
     return {
-      title: "Model or route not found",
+      title: i18n.t("chat:error.modelTitle", "Model or route not found"),
       message:
         upstream ??
-        "Check that the base URL and model ID match what the endpoint exposes.",
+        i18n.t(
+          "chat:error.modelMessage",
+          "Check that the base URL and model ID match what the endpoint exposes.",
+        ),
       action: "general",
-      actionLabel: "Check endpoint",
+      actionLabel: i18n.t("chat:error.checkEndpoint", "Check endpoint"),
       details,
     };
   }
@@ -120,16 +136,18 @@ export function formatChatError(rawError: string): ChatErrorPresentation {
   ) {
     const keyIssue = /secure storage|unlock|api key/.test(searchable);
     return {
-      title: "AI setup needed",
+      title: i18n.t("chat:error.setupTitle", "AI setup needed"),
       message: upstream ?? raw,
       action: keyIssue ? "api-keys" : "general",
-      actionLabel: keyIssue ? "Open API keys" : "Open AI settings",
+      actionLabel: keyIssue
+        ? i18n.t("chat:error.openApiKeys", "Open API keys")
+        : i18n.t("chat:error.openAiSettings", "Open AI settings"),
       details,
     };
   }
 
   return {
-    title: "AI request failed",
+    title: i18n.t("chat:error.genericTitle", "AI request failed"),
     message: upstream ?? raw,
     action: null,
     details,
@@ -147,6 +165,7 @@ export function ChatErrorCard({
   readonly onOpenSettings: (tab: "general" | "api-keys") => void;
   readonly onNewChat: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("chat");
   const presentation = formatChatError(error);
 
   return (
@@ -167,7 +186,7 @@ export function ChatErrorCard({
           </div>
         </div>
         <IconButton
-          label="Dismiss error"
+          label={t("chat:error.dismiss", "Dismiss error")}
           icon={<X size={13} aria-hidden />}
           size="sm"
           variant="ghost"
@@ -179,7 +198,7 @@ export function ChatErrorCard({
       {presentation.details && (
         <details className="group mt-2 rounded-lg bg-bg-2/70 px-2.5 py-2">
           <summary className="cursor-pointer select-none text-[10px] font-medium text-fg-muted hover:text-fg-2">
-            Technical details
+            {t("chat:error.technicalDetails", "Technical details")}
           </summary>
           <pre className="mt-2 max-h-28 overflow-auto whitespace-pre-wrap break-words font-mono text-[10px] leading-relaxed text-fg-muted">
             {presentation.details}
@@ -189,7 +208,9 @@ export function ChatErrorCard({
 
       {presentation.action && (
         <Button
-          label={presentation.actionLabel ?? "Fix issue"}
+          label={
+            presentation.actionLabel ?? t("chat:error.fixIssue", "Fix issue")
+          }
           variant="secondary"
           size="sm"
           onClick={() => {

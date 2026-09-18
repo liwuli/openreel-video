@@ -20,6 +20,7 @@ import {
   type LucideIcon,
 } from "@/icons/lucide-compat";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 import {
   createMotionLayerOfType,
   type CreatableMotionLayerType,
@@ -30,45 +31,144 @@ import { Button, IconButton } from "./primitives";
 interface ToolDef {
   id: MotionToolId;
   icon: LucideIcon;
+  labelKey: string;
   label: string;
   shortcut?: string;
 }
 
 const TOOL_GROUPS: ReadonlyArray<ReadonlyArray<ToolDef>> = [
   [
-    { id: "select", icon: MousePointer2, label: "Selection", shortcut: "V" },
-    { id: "hand", icon: Hand, label: "Hand", shortcut: "H" },
-    { id: "zoom", icon: ZoomIn, label: "Zoom", shortcut: "Z" },
+    {
+      id: "select",
+      icon: MousePointer2,
+      labelKey: "motion:motionToolRail.selection",
+      label: "Selection",
+      shortcut: "V",
+    },
+    {
+      id: "hand",
+      icon: Hand,
+      labelKey: "motion:motionToolRail.hand",
+      label: "Hand",
+      shortcut: "H",
+    },
+    {
+      id: "zoom",
+      icon: ZoomIn,
+      labelKey: "motion:motionToolRail.zoom",
+      label: "Zoom",
+      shortcut: "Z",
+    },
   ],
   [
-    { id: "move", icon: Move, label: "Move" },
-    { id: "rotate", icon: RotateCw, label: "Rotate" },
-    { id: "anchor", icon: Crosshair, label: "Anchor Point" },
+    {
+      id: "move",
+      icon: Move,
+      labelKey: "motion:motionToolRail.move",
+      label: "Move",
+    },
+    {
+      id: "rotate",
+      icon: RotateCw,
+      labelKey: "motion:motionToolRail.rotate",
+      label: "Rotate",
+    },
+    {
+      id: "anchor",
+      icon: Crosshair,
+      labelKey: "motion:motionToolRail.anchorPoint",
+      label: "Anchor Point",
+    },
   ],
   [
-    { id: "rectangle", icon: Square, label: "Rectangle", shortcut: "Q" },
-    { id: "ellipse", icon: Circle, label: "Ellipse" },
-    { id: "pen", icon: PenTool, label: "Pen", shortcut: "G" },
-    { id: "text", icon: Type, label: "Type", shortcut: "⌘T" },
-    { id: "character", icon: Baseline, label: "Character" },
+    {
+      id: "rectangle",
+      icon: Square,
+      labelKey: "motion:motionToolRail.rectangle",
+      label: "Rectangle",
+      shortcut: "Q",
+    },
+    {
+      id: "ellipse",
+      icon: Circle,
+      labelKey: "motion:motionToolRail.ellipse",
+      label: "Ellipse",
+    },
+    {
+      id: "pen",
+      icon: PenTool,
+      labelKey: "motion:motionToolRail.pen",
+      label: "Pen",
+      shortcut: "G",
+    },
+    {
+      id: "text",
+      icon: Type,
+      labelKey: "motion:motionToolRail.type",
+      label: "Type",
+      shortcut: "⌘T",
+    },
+    {
+      id: "character",
+      icon: Baseline,
+      labelKey: "motion:motionToolRail.character",
+      label: "Character",
+    },
   ],
 ];
 
 const ADD_MENU: ReadonlyArray<{
   type: CreatableMotionLayerType;
   icon: LucideIcon;
+  labelKey: string;
   label: string;
 }> = [
-  { type: "text", icon: Type, label: "Text layer" },
-  { type: "shape", icon: Square, label: "Shape layer" },
-  { type: "scene3d", icon: Box, label: "3D scene" },
-  { type: "particle", icon: Sparkles, label: "Particle layer" },
-  { type: "adjustment", icon: SlidersHorizontal, label: "Adjustment layer" },
-  { type: "group", icon: Layers, label: "Group layer" },
-  { type: "null", icon: Crosshair, label: "Null controller" },
+  {
+    type: "text",
+    icon: Type,
+    labelKey: "motion:motionToolRail.textLayer",
+    label: "Text layer",
+  },
+  {
+    type: "shape",
+    icon: Square,
+    labelKey: "motion:motionToolRail.shapeLayer",
+    label: "Shape layer",
+  },
+  {
+    type: "scene3d",
+    icon: Box,
+    labelKey: "motion:motionToolRail.scene3d",
+    label: "3D scene",
+  },
+  {
+    type: "particle",
+    icon: Sparkles,
+    labelKey: "motion:motionToolRail.particleLayer",
+    label: "Particle layer",
+  },
+  {
+    type: "adjustment",
+    icon: SlidersHorizontal,
+    labelKey: "motion:motionToolRail.adjustmentLayer",
+    label: "Adjustment layer",
+  },
+  {
+    type: "group",
+    icon: Layers,
+    labelKey: "motion:motionToolRail.groupLayer",
+    label: "Group layer",
+  },
+  {
+    type: "null",
+    icon: Crosshair,
+    labelKey: "motion:motionToolRail.nullController",
+    label: "Null controller",
+  },
 ];
 
 export function MotionToolRail(): JSX.Element {
+  const { t } = useTranslation("motion");
   const activeTool = useMotionStore((state) => state.activeTool);
   const setActiveTool = useMotionStore((state) => state.setActiveTool);
   const activeCompositionId = useMotionStore((state) => state.activeCompositionId);
@@ -99,7 +199,7 @@ export function MotionToolRail(): JSX.Element {
 
   return (
     <nav
-      aria-label="Motion tools"
+      aria-label={t("motion:motionToolRail.ariaLabel", "Motion tools")}
       className="flex w-14 shrink-0 flex-col items-center gap-1.5 border-r border-border bg-bg-1 py-3.5"
     >
       {TOOL_GROUPS.map((group, groupIndex) => (
@@ -123,7 +223,7 @@ export function MotionToolRail(): JSX.Element {
       <div className="relative mt-auto flex flex-col items-center gap-1">
         <span className="mb-1 h-px w-6 bg-border" />
         <IconButton
-          label="Add layer"
+          label={t("motion:motionToolRail.addLayer", "Add layer")}
           icon={SquarePlus}
           iconSize={17}
           size="md"
@@ -146,7 +246,7 @@ export function MotionToolRail(): JSX.Element {
                 return (
                   <Button
                     key={item.type}
-                    label={item.label}
+                    label={t(item.labelKey, item.label)}
                     variant="ghost"
                     size="sm"
                     icon={Icon}
@@ -172,8 +272,10 @@ function ToolButton({
   active: boolean;
   onClick: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const Icon = tool.icon;
-  const tip = tool.shortcut ? `${tool.label} (${tool.shortcut})` : tool.label;
+  const label = t(tool.labelKey, tool.label);
+  const tip = tool.shortcut ? `${label} (${tool.shortcut})` : label;
   return (
     <IconButton
       label={tip}

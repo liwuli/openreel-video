@@ -48,6 +48,7 @@ import {
   type MotionShaderParamDef,
 } from "@openreel/core";
 import { ToolcraftClickableCard, ToolcraftText } from "@openreel/ui";
+import { useTranslation } from "../../i18n";
 import { useProjectStore } from "../../stores/project-store";
 import { useMotionStore } from "../stores/motion-store";
 import { GenerateShaderBox } from "./GenerateShaderBox";
@@ -75,12 +76,24 @@ let effectStackClipboard: Pick<MotionLayer, "effects" | "keyframes" | "expressio
 
 type MotionEffectCategory = "all" | "color" | "blur" | "stylize" | "distort";
 
-const EFFECT_CATEGORIES: readonly { id: MotionEffectCategory; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "color", label: "Color" },
-  { id: "blur", label: "Blur" },
-  { id: "stylize", label: "Stylize" },
-  { id: "distort", label: "Distort" },
+const EFFECT_CATEGORIES: readonly {
+  id: MotionEffectCategory;
+  labelKey: string;
+  label: string;
+}[] = [
+  { id: "all", labelKey: "motion:effectsPanel.categories.all", label: "All" },
+  { id: "color", labelKey: "motion:effectsPanel.categories.color", label: "Color" },
+  { id: "blur", labelKey: "motion:effectsPanel.categories.blur", label: "Blur" },
+  {
+    id: "stylize",
+    labelKey: "motion:effectsPanel.categories.stylize",
+    label: "Stylize",
+  },
+  {
+    id: "distort",
+    labelKey: "motion:effectsPanel.categories.distort",
+    label: "Distort",
+  },
 ];
 
 const EFFECT_CATEGORY_BY_TYPE: Partial<Record<MotionEffectType, Exclude<MotionEffectCategory, "all">>> = {
@@ -319,6 +332,7 @@ const EFFECT_ICON: Record<MotionEffectType, typeof Sparkles> = {
 };
 
 export function EffectsPanel({ composition, embedded = false }: EffectsPanelProps): JSX.Element | null {
+  const { t } = useTranslation("motion");
   const [effectSearch, setEffectSearch] = useState("");
   const [effectCategory, setEffectCategory] = useState<MotionEffectCategory>("all");
   const [hasEffectStackClipboard, setHasEffectStackClipboard] = useState(
@@ -463,12 +477,18 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
     if (embedded) return null;
     return (
       <div className="flex h-full min-h-0 flex-col">
-        <PanelHeader title="Effects" icon={Sparkles} />
+        <PanelHeader
+          title={t("motion:effectsPanel.title", "Effects")}
+          icon={Sparkles}
+        />
         <div className="flex flex-1 items-center justify-center p-4">
           <EmptyState
             icon={Sparkles}
-            title="Select a layer"
-            description="Layer effects can be stacked, reordered, and rendered into editor preview and export."
+            title={t("motion:effectsPanel.selectLayer", "Select a layer")}
+            description={t(
+              "motion:effectsPanel.selectLayerDescription",
+              "Layer effects can be stacked, reordered, and rendered into editor preview and export.",
+            )}
           />
         </div>
       </div>
@@ -496,30 +516,44 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
 
   return (
     <div className={embedded ? "" : "flex h-full min-h-0 flex-col"}>
-      {embedded ? null : <PanelHeader title="Effects" icon={Sparkles} />}
+      {embedded ? null : (
+        <PanelHeader
+          title={t("motion:effectsPanel.title", "Effects")}
+          icon={Sparkles}
+        />
+      )}
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
-        <Section title="Add Effect" icon={Plus}>
+        <Section title={t("motion:effectsPanel.addEffect", "Add Effect")} icon={Plus}>
           <div className="mb-2.5 space-y-2">
             {effectTargetLayerIds.length > 1 ? (
               <div className="rounded-md border border-accent/25 bg-accent-soft px-2.5 py-2">
                 <ToolcraftText type="supporting" color="secondary">
-                  New effects will be added to all {effectTargetLayerIds.length}{" "}
-                  selected layers.
+                  {t(
+                    "motion:effectsPanel.multiLayerNotice",
+                    "New effects will be added to all {{count}} selected layers.",
+                    { count: effectTargetLayerIds.length },
+                  )}
                 </ToolcraftText>
               </div>
             ) : null}
             <label className="relative block">
-              <span className="sr-only">Search standard effects</span>
+              <span className="sr-only">
+                {t("motion:effectsPanel.searchStandardEffects", "Search standard effects")}
+              </span>
               <Search className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-fg-muted" size={13} />
               <input
                 type="search"
                 value={effectSearch}
                 onChange={(event) => setEffectSearch(event.target.value)}
-                placeholder="Search effects"
+                placeholder={t("motion:effectsPanel.searchPlaceholder", "Search effects")}
                 className="h-8 w-full rounded-md border border-border bg-bg-2 pl-8 pr-2.5 text-[11px] text-fg outline-none placeholder:text-fg-muted focus:border-accent"
               />
             </label>
-            <div className="flex flex-wrap gap-1" role="group" aria-label="Effect categories">
+            <div
+              className="flex flex-wrap gap-1"
+              role="group"
+              aria-label={t("motion:effectsPanel.categoriesLabel", "Effect categories")}
+            >
               {EFFECT_CATEGORIES.map((category) => (
                 <button
                   key={category.id}
@@ -532,14 +566,16 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
                       : "border-border bg-bg-2 text-fg-3 hover:border-accent hover:text-accent"
                   }`}
                 >
-                  {category.label}
+                  {t(category.labelKey, category.label)}
                 </button>
               ))}
             </div>
           </div>
           {visibleEffectPresets.length === 0 ? (
             <div className="rounded-md border border-dashed border-border bg-bg-2 px-3 py-4 text-center text-[11px] text-fg-muted">
-              No standard effects match “{effectSearch.trim()}”.
+              {t("motion:effectsPanel.noMatches", "No standard effects match “{{query}}”.", {
+                query: effectSearch.trim(),
+              })}
             </div>
           ) : (
           <div className="grid grid-cols-2 gap-2">
@@ -549,7 +585,9 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
               return (
                 <ToolcraftClickableCard
                   key={preset.id}
-                  label={`Add ${preset.name}`}
+                  label={t("motion:effectsPanel.addNamed", "Add {{name}}", {
+                    name: preset.name,
+                  })}
                   onClick={() => addEffectPreset(preset)}
                   variant="muted"
                   padding={2}
@@ -576,12 +614,12 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
           )}
         </Section>
 
-        <Section title="Shaders" icon={Wand2}>
+        <Section title={t("motion:effectsPanel.shaders", "Shaders")} icon={Wand2}>
           <ShaderPreviewBrowser
             defs={getMotionShaderEffectDefs()}
             onSelect={addShaderEffect}
             sample="effect"
-            label="Effect previews"
+            label={t("motion:effectsPanel.effectPreviews", "Effect previews")}
           />
           <div className="mt-2">
             <GenerateShaderBox
@@ -591,7 +629,10 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
           </div>
         </Section>
 
-        <Section title="Expression controls" icon={SlidersHorizontal}>
+        <Section
+          title={t("motion:effectsPanel.expressionControls", "Expression controls")}
+          icon={SlidersHorizontal}
+        >
           <div className="grid grid-cols-3 gap-2">
             {MOTION_EFFECT_PRESETS.filter((preset) =>
               isExpressionControlPreset(preset.type),
@@ -600,7 +641,9 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
               return (
                 <ToolcraftClickableCard
                   key={preset.type}
-                  label={`Add ${preset.name}`}
+                  label={t("motion:effectsPanel.addNamed", "Add {{name}}", {
+                    name: preset.name,
+                  })}
                   onClick={() => addControl(preset.type, preset.name)}
                   variant="muted"
                   padding={2}
@@ -625,10 +668,15 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
           </div>
         </Section>
 
-        <Section title={`Stack (${effects.length})`} icon={Sparkles}>
+        <Section
+          title={t("motion:effectsPanel.stackTitle", "Stack ({{count}})", {
+            count: effects.length,
+          })}
+          icon={Sparkles}
+        >
           <div className="mb-2 grid grid-cols-2 gap-1.5">
             <Button
-              label="Copy stack"
+              label={t("motion:effectsPanel.copyStack", "Copy stack")}
               icon={Copy}
               variant="outline"
               size="sm"
@@ -636,7 +684,7 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
               onClick={copyEffectStack}
             />
             <Button
-              label="Paste append"
+              label={t("motion:effectsPanel.pasteAppend", "Paste append")}
               icon={ClipboardPaste}
               variant="outline"
               size="sm"
@@ -644,14 +692,14 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
               onClick={() => pasteEffectStack("append")}
             />
             <Button
-              label="Paste replace"
+              label={t("motion:effectsPanel.pasteReplace", "Paste replace")}
               variant="outline"
               size="sm"
               disabled={!hasEffectStackClipboard}
               onClick={() => pasteEffectStack("replace")}
             />
             <Button
-              label="Clear stack"
+              label={t("motion:effectsPanel.clearStack", "Clear stack")}
               variant="outline"
               size="sm"
               disabled={
@@ -666,8 +714,10 @@ export function EffectsPanel({ composition, embedded = false }: EffectsPanelProp
           </div>
           {effects.length === 0 ? (
             <ToolcraftText type="supporting" color="secondary" className="rounded-md border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-              Add blur, glow, shadow, or color adjustment effects to build a
-              reusable motion look for this layer.
+              {t(
+                "motion:effectsPanel.emptyStack",
+                "Add blur, glow, shadow, or color adjustment effects to build a reusable motion look for this layer.",
+              )}
             </ToolcraftText>
           ) : (
             <div className="space-y-2">
@@ -740,6 +790,7 @@ function EffectCard({
   replaceLayer: (nextLayer: MotionLayer) => void;
   setSelectedProperty: (property: string | null) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const Icon = EFFECT_ICON[effect.type];
   return (
     <div className={`rounded-lg border border-border bg-bg-2 ${effect.enabled ? "" : "opacity-55"}`}>
@@ -758,34 +809,38 @@ function EffectCard({
         <div className="flex items-center gap-0.5">
           <IconButton
             icon={ArrowUp}
-            label="Move effect up"
+            label={t("motion:effectsPanel.moveUp", "Move effect up")}
             size="sm"
             disabled={isFirst}
             onClick={() => onMove(-1)}
           />
           <IconButton
             icon={ArrowDown}
-            label="Move effect down"
+            label={t("motion:effectsPanel.moveDown", "Move effect down")}
             size="sm"
             disabled={isLast}
             onClick={() => onMove(1)}
           />
           <IconButton
             icon={effect.enabled ? Eye : EyeOff}
-            label={effect.enabled ? "Disable effect" : "Enable effect"}
+            label={
+              effect.enabled
+                ? t("motion:effectsPanel.disableEffect", "Disable effect")
+                : t("motion:effectsPanel.enableEffect", "Enable effect")
+            }
             size="sm"
             active={effect.enabled}
             onClick={() => onToggle(!effect.enabled)}
           />
           <IconButton
             icon={Copy}
-            label="Duplicate effect"
+            label={t("motion:effectsPanel.duplicateEffect", "Duplicate effect")}
             size="sm"
             onClick={onDuplicate}
           />
           <IconButton
             icon={Trash2}
-            label="Remove effect"
+            label={t("motion:effectsPanel.removeEffect", "Remove effect")}
             size="sm"
             variant="danger"
             onClick={onRemove}
@@ -824,6 +879,7 @@ function EffectControls({
   replaceLayer: (nextLayer: MotionLayer) => void;
   setSelectedProperty: (property: string | null) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const renderParam = (param: MotionEffectParameterName): JSX.Element => (
     <EffectParameterControl
       key={param}
@@ -845,7 +901,7 @@ function EffectControls({
   if (effect.type === "drop-shadow") {
     return (
       <>
-        <Field label="Color">
+        <Field label={t("motion:effectsPanel.color", "Color")}>
           <ColorInput
             value={effect.color}
             onChange={(color) =>
@@ -868,7 +924,7 @@ function EffectControls({
   if (effect.type === "glow") {
     return (
       <>
-        <Field label="Color">
+        <Field label={t("motion:effectsPanel.color", "Color")}>
           <ColorInput
             value={effect.color}
             onChange={(color) =>
@@ -908,7 +964,7 @@ function EffectControls({
     if (!def) {
       return (
         <ToolcraftText type="supporting" color="secondary">
-          Unknown shader.
+          {t("motion:effectsPanel.unknownShader", "Unknown shader.")}
         </ToolcraftText>
       );
     }
@@ -974,6 +1030,7 @@ function ExpressionControlBody({
   setSelectedProperty: (property: string | null) => void;
   renderParam: (param: MotionEffectParameterName) => JSX.Element;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const usageHint = `effect("${effect.name}")("value")`;
   return (
     <>
@@ -982,7 +1039,7 @@ function ExpressionControlBody({
           {effect.name}
         </ToolcraftText>
         <ToolcraftText type="supporting" color="secondary" className="mt-0.5 block text-[11px]">
-          use:{" "}
+          {t("motion:effectsPanel.useHint", "use:")}{" "}
           <span className="font-mono text-fg-2">{usageHint}</span>
         </ToolcraftText>
       </div>
@@ -1020,6 +1077,7 @@ function CheckboxControlValue({
   replaceLayer: (nextLayer: MotionLayer) => void;
   setSelectedProperty: (property: string | null) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const descriptor = getMotionEffectParameterDescriptor(effect, "value");
   const property = getMotionEffectKeyframeProperty(effect.id, "value");
   const value = getMotionEffectParameterValueAtTime(
@@ -1035,7 +1093,7 @@ function CheckboxControlValue({
     property,
     localTime,
   );
-  const label = descriptor?.label ?? "Checkbox";
+  const label = descriptor?.label ?? t("motion:effectsPanel.checkbox", "Checkbox");
 
   const writeValue = (nextValue: number) => {
     setSelectedProperty(property);
@@ -1083,6 +1141,7 @@ function EffectParameterControl({
   replaceLayer: (nextLayer: MotionLayer) => void;
   setSelectedProperty: (property: string | null) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const descriptor = getMotionEffectParameterDescriptor(effect, param);
   const property = getMotionEffectKeyframeProperty(effect.id, param);
   const value = getMotionEffectParameterValueAtTime(
@@ -1165,8 +1224,12 @@ function EffectParameterControl({
           icon={Diamond}
           label={
             keyframeAtPlayhead
-              ? `Remove ${label} keyframe`
-              : `Add ${label} keyframe`
+              ? t("motion:effectsPanel.removeKeyframe", "Remove {{name}} keyframe", {
+                  name: label,
+                })
+              : t("motion:effectsPanel.addKeyframe", "Add {{name}} keyframe", {
+                  name: label,
+                })
           }
           size="sm"
           variant={keyframeAtPlayhead ? "solid" : "ghost"}
@@ -1196,6 +1259,7 @@ function ShaderParameterControl({
   replaceLayer: (nextLayer: MotionLayer) => void;
   setSelectedProperty: (property: string | null) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const param = paramDef.name;
   const property = getMotionEffectKeyframeProperty(effect.id, param);
   const value = getMotionEffectParameterValueAtTime(
@@ -1270,8 +1334,12 @@ function ShaderParameterControl({
           icon={Diamond}
           label={
             keyframeAtPlayhead
-              ? `Remove ${label} keyframe`
-              : `Add ${label} keyframe`
+              ? t("motion:effectsPanel.removeKeyframe", "Remove {{name}} keyframe", {
+                  name: label,
+                })
+              : t("motion:effectsPanel.addKeyframe", "Add {{name}} keyframe", {
+                  name: label,
+                })
           }
           size="sm"
           variant={keyframeAtPlayhead ? "solid" : "ghost"}

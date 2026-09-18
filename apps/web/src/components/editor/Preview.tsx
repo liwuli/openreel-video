@@ -24,7 +24,7 @@ import {
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftIconButton as IconButton } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
-import { useTranslation } from "../../i18n";
+import i18n, { useTranslation } from "../../i18n";
 import { useProjectStore } from "../../stores/project-store";
 import { useTimelineStore } from "../../stores/timeline-store";
 import { useUIStore } from "../../stores/ui-store";
@@ -366,7 +366,9 @@ const aspectLabelFor = (width: number, height: number): string => {
       closest = preset;
     }
   }
-  return smallestDelta < 0.01 ? closest.label : "Custom";
+  return smallestDelta < 0.01
+    ? closest.label
+    : i18n.t("preview:custom", "Custom");
 };
 
 // Draws `source` cover-fit and Gaussian-blurred across the whole canvas — the
@@ -3296,14 +3298,17 @@ export const Preview: React.FC = () => {
                 ctx.font = "bold 20px Inter, sans-serif";
                 ctx.textAlign = "center";
                 ctx.fillText(
-                  "Drop media here",
+                  t("preview:dropMediaHere", "Drop media here"),
                   canvas.width / 2,
                   canvas.height / 2,
                 );
                 ctx.font = "14px Inter, sans-serif";
                 ctx.fillStyle = emptyText;
                 ctx.fillText(
-                  "Replace this placeholder with your content",
+                  t(
+                    "preview:replacePlaceholder",
+                    "Replace this placeholder with your content",
+                  ),
                   canvas.width / 2,
                   canvas.height / 2 + 28,
                 );
@@ -3373,7 +3378,7 @@ export const Preview: React.FC = () => {
         ctx.font = "24px Inter, sans-serif";
         ctx.textAlign = "center";
         ctx.fillText(
-          "Import media to get started",
+          t("preview:importMediaToStart", "Import media to get started"),
           canvas.width / 2,
           canvas.height / 2,
         );
@@ -3392,6 +3397,7 @@ export const Preview: React.FC = () => {
       isPlaying,
       mediaClipHasAudio,
       mediaClipHasVisual,
+      t,
     ],
   );
 
@@ -7555,7 +7561,7 @@ export const Preview: React.FC = () => {
       ref={containerRef}
       data-tour="preview"
       tabIndex={0}
-      aria-label="Preview canvas"
+      aria-label={t("preview:canvasLabel", "Preview canvas")}
       onKeyDown={handlePreviewKeyDown}
       onPointerDownCapture={(event) => {
         const target = event.target as HTMLElement;
@@ -7568,9 +7574,9 @@ export const Preview: React.FC = () => {
       {/* ── Panel bar header (mockup: 'Player') ───────────────── */}
       {!isMaximized && !isFullscreen && (
         <div className="flex items-center px-3.5 py-2 border-b border-border bg-bg-1 gap-2.5 min-h-[38px] shrink-0">
-          <Text type="label" color="primary" weight="semibold" className="text-[13px] tracking-tight text-fg m-0">Player</Text>
+          <Text type="label" color="primary" weight="semibold" className="text-[13px] tracking-tight text-fg m-0">{t("preview:player", "Player")}</Text>
           <div className="ml-auto flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent" title="Live preview" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" title={t("preview:livePreview", "Live preview")} />
           </div>
         </div>
       )}
@@ -7638,7 +7644,7 @@ export const Preview: React.FC = () => {
 
           {showCompositionGrid && !cropMode ? (
             <div
-              aria-label="Composition grid"
+              aria-label={t("preview:compositionGrid", "Composition grid")}
               className="pointer-events-none absolute inset-0 z-20"
             >
               {[1, 2].map((line) => (
@@ -7658,13 +7664,13 @@ export const Preview: React.FC = () => {
 
           {showSafeMargins && !cropMode ? (
             <div
-              aria-label="Title and action safe margins"
+              aria-label={t("preview:safeMargins", "Title and action safe margins")}
               className="pointer-events-none absolute inset-0 z-20"
             >
               <span className="absolute inset-[5%] border border-dashed border-white/60 shadow-[0_0_1px_rgba(0,0,0,0.9)]" />
               <span className="absolute inset-[10%] border border-white/75 shadow-[0_0_1px_rgba(0,0,0,0.9)]" />
               <span className="absolute left-[10%] top-[10%] rounded-br bg-black/55 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white/80">
-                Title safe
+                {t("preview:titleSafe", "Title safe")}
               </span>
             </div>
           ) : null}
@@ -7737,7 +7743,7 @@ export const Preview: React.FC = () => {
                       display="block"
                       className="text-sm leading-5 text-white"
                     >
-                      Exporting Video
+                      {t("preview:exportingVideo", "Exporting Video")}
                     </Text>
                     <Text
                       type="supporting"
@@ -7745,7 +7751,7 @@ export const Preview: React.FC = () => {
                       maxLines={2}
                       className="mt-1 text-xs leading-4 text-white/75"
                     >
-                      {exportState.phase || "Preparing..."}
+                      {exportState.phase || t("preview:preparing", "Preparing...")}
                     </Text>
                   </div>
                 </div>
@@ -7753,7 +7759,7 @@ export const Preview: React.FC = () => {
                 <div className="mb-4 min-w-0">
                   <div className="mb-2 flex items-center justify-between gap-3">
                     <span className="text-[11px] font-medium text-white/80">
-                      Export Progress
+                      {t("preview:exportProgress", "Export Progress")}
                     </span>
                     <span className="shrink-0 font-mono text-[11px] font-semibold text-white">
                       {Math.round(exportState.progress)}%
@@ -7774,7 +7780,10 @@ export const Preview: React.FC = () => {
                   display="block"
                   className="text-center text-[11px] leading-4 text-white/70"
                 >
-                  You can keep editing once the export finishes.
+                  {t(
+                    "preview:exportKeepEditing",
+                    "You can keep editing once the export finishes.",
+                  )}
                 </Text>
               </div>
             </div>
@@ -7798,14 +7807,18 @@ export const Preview: React.FC = () => {
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-primary/80 rounded-full flex items-center justify-center cursor-move pointer-events-auto hover:bg-primary transition-colors"
                 onMouseDown={handleClipMouseDown}
-                title="Drag to move"
+                title={t("preview:dragToMove", "Drag to move")}
               >
                 <Move size={14} className="text-white" />
               </div>
 
               {/* Aspect ratio lock toggle */}
               <Button
-                label={lockAspectRatio ? "Unlock aspect ratio" : "Lock aspect ratio"}
+                label={
+                  lockAspectRatio
+                    ? t("preview:unlockAspectRatio", "Unlock aspect ratio")
+                    : t("preview:lockAspectRatio", "Lock aspect ratio")
+                }
                 variant="ghost"
                 className={`absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-[10px] rounded pointer-events-auto transition-colors ${
                   lockAspectRatio
@@ -7814,7 +7827,9 @@ export const Preview: React.FC = () => {
                 }`}
                 onClick={() => setLockAspectRatio(!lockAspectRatio)}
               >
-                {lockAspectRatio ? "🔒 Locked" : "🔓 Free"}
+                {lockAspectRatio
+                  ? t("preview:locked", "🔒 Locked")
+                  : t("preview:free", "🔓 Free")}
               </Button>
 
               {/* Corner resize handles */}
@@ -7873,14 +7888,18 @@ export const Preview: React.FC = () => {
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-cyan-500/80 rounded-full flex items-center justify-center cursor-move pointer-events-auto hover:bg-cyan-500 transition-colors"
                 onMouseDown={handleTextClipMouseDown}
-                title="Drag to move text"
+                title={t("preview:dragToMoveText", "Drag to move text")}
               >
                 <Move size={14} className="text-white" />
               </div>
 
               {/* Aspect ratio lock toggle */}
               <Button
-                label={lockAspectRatio ? "Unlock aspect ratio" : "Lock aspect ratio"}
+                label={
+                  lockAspectRatio
+                    ? t("preview:unlockAspectRatio", "Unlock aspect ratio")
+                    : t("preview:lockAspectRatio", "Lock aspect ratio")
+                }
                 variant="ghost"
                 className={`absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-[10px] rounded pointer-events-auto transition-colors ${
                   lockAspectRatio
@@ -7889,7 +7908,9 @@ export const Preview: React.FC = () => {
                 }`}
                 onClick={() => setLockAspectRatio(!lockAspectRatio)}
               >
-                {lockAspectRatio ? "🔒 Locked" : "🔓 Free"}
+                {lockAspectRatio
+                  ? t("preview:locked", "🔒 Locked")
+                  : t("preview:free", "🔓 Free")}
               </Button>
 
               {/* Corner resize handles */}
@@ -7949,14 +7970,18 @@ export const Preview: React.FC = () => {
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-green-500/80 rounded-full flex items-center justify-center cursor-move pointer-events-auto hover:bg-green-500 transition-colors"
                 onMouseDown={handleShapeClipMouseDown}
-                title="Drag to move shape"
+                title={t("preview:dragToMoveShape", "Drag to move shape")}
               >
                 <Move size={14} className="text-white" />
               </div>
 
               {/* Aspect ratio lock toggle */}
               <Button
-                label={lockAspectRatio ? "Unlock aspect ratio" : "Lock aspect ratio"}
+                label={
+                  lockAspectRatio
+                    ? t("preview:unlockAspectRatio", "Unlock aspect ratio")
+                    : t("preview:lockAspectRatio", "Lock aspect ratio")
+                }
                 variant="ghost"
                 className={`absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 text-[10px] rounded pointer-events-auto transition-colors ${
                   lockAspectRatio
@@ -7965,7 +7990,9 @@ export const Preview: React.FC = () => {
                 }`}
                 onClick={() => setLockAspectRatio(!lockAspectRatio)}
               >
-                {lockAspectRatio ? "🔒 Locked" : "🔓 Free"}
+                {lockAspectRatio
+                  ? t("preview:locked", "🔒 Locked")
+                  : t("preview:free", "🔓 Free")}
               </Button>
 
               {/* Corner resize handles */}
@@ -8020,7 +8047,10 @@ export const Preview: React.FC = () => {
               {/* Selection border - yellow/orange for subtitles */}
               <div className="absolute inset-0 border-2 border-yellow-500 rounded-lg pointer-events-none animate-pulse" />
               <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-yellow-500 rounded text-[10px] font-medium text-black whitespace-nowrap">
-                Subtitle Selected - Edit in Inspector
+                {t(
+                  "preview:subtitleSelected",
+                  "Subtitle Selected - Edit in Inspector",
+                )}
               </div>
             </div>
           )}
@@ -8049,7 +8079,7 @@ export const Preview: React.FC = () => {
                     aria-hidden="true"
                     className="absolute -top-6 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black/70 rounded text-[10px] text-white whitespace-nowrap"
                   >
-                    Click to select
+                    {t("preview:clickToSelect", "Click to select")}
                   </div>
                 </div>
               );
@@ -8171,7 +8201,15 @@ export const Preview: React.FC = () => {
                     return (
                       <Button
                         key={opt.label}
-                        label={`${opt.label} ${opt.width} by ${opt.height}`}
+                        label={t(
+                          "preview:aspectPresetLabel",
+                          "{{label}} {{width}} by {{height}}",
+                          {
+                            label: opt.label,
+                            width: opt.width,
+                            height: opt.height,
+                          },
+                        )}
                         variant="ghost"
                         onClick={() => {
                           void updateSettings({

@@ -23,7 +23,8 @@
     "horizontalDesc": "YouTube、B站、网页视频",
     "square": "正方形视频",
     "squareDesc": "小红书、朋友圈、社交媒体",
-    "startCreating": "开始创作"
+    "startCreating": "开始创作",
+    "createProjectLabel": "创建{{name}}项目"
   },
   "actions": {
     "browseTemplates": "浏览模板",

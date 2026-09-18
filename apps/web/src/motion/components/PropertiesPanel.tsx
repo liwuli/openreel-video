@@ -170,6 +170,7 @@ import {
   type MotionTextShaderRef,
   type BlendMode,
 } from "@openreel/core";
+import i18n, { useTranslation } from "../../i18n";
 import { useProjectStore } from "../../stores/project-store";
 import { useMotionStore } from "../stores/motion-store";
 import {
@@ -290,6 +291,8 @@ function AxisPill({
   step?: number;
   unit?: string;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
+
   return (
     <label className="flex min-w-0 flex-1 items-center gap-1.5 rounded-[7px] border border-border bg-bg-1 px-[9px] py-[6px] transition-colors focus-within:border-accent">
       <span className="shrink-0 text-[12px] font-medium text-fg-muted" aria-hidden>
@@ -298,7 +301,7 @@ function AxisPill({
       <input
         type="number"
         inputMode="decimal"
-        aria-label={`${axis} value`}
+        aria-label={t("motion:propertiesPanel.axisValue", "{{axis}} value", { axis })}
         value={Number.isFinite(value) ? value : 0}
         min={min}
         max={max}
@@ -323,7 +326,7 @@ function SelectControl<T extends string>({
   options,
   groups,
   onChange,
-  label = "Select option",
+  label,
 }: {
   value: T;
   options: Array<{ value: T; label: string }>;
@@ -331,10 +334,14 @@ function SelectControl<T extends string>({
   onChange: (value: T) => void;
   label?: string;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
+  const selectLabel =
+    label ?? t("motion:propertiesPanel.select.defaultLabel", "Select option");
+
   return (
     <div className="relative flex items-center rounded-[7px] border border-border bg-bg-1">
       <select
-        aria-label={label}
+        aria-label={selectLabel}
         value={value}
         onChange={(event) => onChange(event.target.value as T)}
         className="w-full cursor-pointer appearance-none truncate bg-transparent py-2 pl-[10px] pr-[26px] text-[13px] font-medium text-fg-2 outline-none"
@@ -413,6 +420,7 @@ function ToggleControl({
 }
 
 export function PropertiesPanel({ composition, embedded = false }: PropertiesPanelProps): JSX.Element {
+  const { t } = useTranslation("motion");
   const selectedLayerId = useMotionStore((state) => state.selectedLayerId);
   const selectedLayerIds = useMotionStore((state) => state.selectedLayerIds);
   const selectedLightId = useMotionStore((state) => state.selectedLightId);
@@ -819,17 +827,27 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
           <span className="min-w-0">
             <span className="block truncate text-[13px] font-semibold leading-tight text-fg">
               {hasMultiLayerSelection
-                ? `${selectedLayers.length} layers selected`
+                ? t(
+                    "motion:propertiesPanel.header.layersSelected",
+                    "{{count}} layers selected",
+                    { count: selectedLayers.length },
+                  )
                 : selectedLayer
                   ? selectedLayer.name
-                  : "Composition"}
+                  : t("motion:propertiesPanel.header.composition", "Composition")}
             </span>
             <span className="block text-[11px] font-medium leading-tight text-fg-muted">
               {hasMultiLayerSelection
-                ? "Multi-selection inspector"
+                ? t(
+                    "motion:propertiesPanel.header.multiSelectionInspector",
+                    "Multi-selection inspector",
+                  )
                 : selectedLayer
-                  ? TYPE_META[selectedLayer.type].label
-                  : "Scene settings"}
+                  ? t(
+                      `motion:propertiesPanel.layerType.${selectedLayer.type}`,
+                      TYPE_META[selectedLayer.type].label,
+                    )
+                  : t("motion:propertiesPanel.header.sceneSettings", "Scene settings")}
             </span>
           </span>
         </div>
@@ -838,57 +856,76 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
       <div className={embedded ? "" : "min-h-0 flex-1 overflow-auto"}>
         {hasMultiLayerSelection ? (
           <>
-            <Section title="Align & Distribute" icon={AlignCenter} keepOpenInAccordion>
+            <Section
+              title={t("motion:propertiesPanel.alignDistribute.title", "Align & Distribute")}
+              icon={AlignCenter}
+              keepOpenInAccordion
+            >
               <div
                 className="grid grid-cols-8 gap-1 rounded-lg border border-border bg-bg-1 p-1"
                 role="group"
-                aria-label="Align selected layers"
+                aria-label={t(
+                  "motion:propertiesPanel.alignDistribute.groupLabel",
+                  "Align selected layers",
+                )}
               >
                 <IconButton
-                  label="Align left"
+                  label={t("motion:propertiesPanel.alignDistribute.alignLeft", "Align left")}
                   icon={AlignHorizontalJustifyStart}
                   variant="outline"
                   onClick={() => alignSelection("left")}
                 />
                 <IconButton
-                  label="Align horizontal center"
+                  label={t(
+                    "motion:propertiesPanel.alignDistribute.alignHorizontalCenter",
+                    "Align horizontal center",
+                  )}
                   icon={AlignHorizontalJustifyCenter}
                   variant="outline"
                   onClick={() => alignSelection("center-x")}
                 />
                 <IconButton
-                  label="Align right"
+                  label={t("motion:propertiesPanel.alignDistribute.alignRight", "Align right")}
                   icon={AlignHorizontalJustifyEnd}
                   variant="outline"
                   onClick={() => alignSelection("right")}
                 />
                 <IconButton
-                  label="Align top"
+                  label={t("motion:propertiesPanel.alignDistribute.alignTop", "Align top")}
                   icon={AlignVerticalJustifyStart}
                   variant="outline"
                   onClick={() => alignSelection("top")}
                 />
                 <IconButton
-                  label="Align vertical center"
+                  label={t(
+                    "motion:propertiesPanel.alignDistribute.alignVerticalCenter",
+                    "Align vertical center",
+                  )}
                   icon={AlignVerticalJustifyCenter}
                   variant="outline"
                   onClick={() => alignSelection("center-y")}
                 />
                 <IconButton
-                  label="Align bottom"
+                  label={t("motion:propertiesPanel.alignDistribute.alignBottom", "Align bottom")}
                   icon={AlignVerticalJustifyEnd}
                   variant="outline"
                   onClick={() => alignSelection("bottom")}
                 />
                 <IconButton
-                  label="Distribute horizontally"
+                  label={t(
+                    "motion:propertiesPanel.alignDistribute.distributeHorizontally",
+                    "Distribute horizontally",
+                  )}
                   icon={AlignHorizontalDistributeCenter}
                   variant="outline"
                   disabled={selectedLayers.length < 3}
                   onClick={() => distributeSelection("horizontal")}
                 />
                 <IconButton
-                  label="Distribute vertically"
+                  label={t(
+                    "motion:propertiesPanel.alignDistribute.distributeVertically",
+                    "Distribute vertically",
+                  )}
                   icon={AlignVerticalDistributeCenter}
                   variant="outline"
                   disabled={selectedLayers.length < 3}
@@ -897,8 +934,17 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               </div>
             </Section>
 
-            <Section title="Shared Appearance" icon={SlidersHorizontal} keepOpenInAccordion>
-              <FlatRow label="Opacity (average)">
+            <Section
+              title={t("motion:propertiesPanel.sharedAppearance.title", "Shared Appearance")}
+              icon={SlidersHorizontal}
+              keepOpenInAccordion
+            >
+              <FlatRow
+                label={t(
+                  "motion:propertiesPanel.sharedAppearance.opacityAverage",
+                  "Opacity (average)",
+                )}
+              >
                 <Slider
                   value={selectionOpacity}
                   onChange={(opacity) =>
@@ -908,41 +954,63 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               </FlatRow>
               <div className="grid grid-cols-2 gap-1.5">
                 <Button
-                  label={allSelectionVisible ? "Hide all" : "Show all"}
+                  label={
+                    allSelectionVisible
+                      ? t("motion:propertiesPanel.sharedAppearance.hideAll", "Hide all")
+                      : t("motion:propertiesPanel.sharedAppearance.showAll", "Show all")
+                  }
                   icon={allSelectionVisible ? EyeOff : Eye}
                   onClick={() => setSelectionVisible(!allSelectionVisible)}
                 />
                 <Button
-                  label={allSelectionLocked ? "Unlock all" : "Lock all"}
+                  label={
+                    allSelectionLocked
+                      ? t("motion:propertiesPanel.sharedAppearance.unlockAll", "Unlock all")
+                      : t("motion:propertiesPanel.sharedAppearance.lockAll", "Lock all")
+                  }
                   icon={allSelectionLocked ? Unlock : Lock}
                   onClick={() => setSelectionLocked(!allSelectionLocked)}
                 />
               </div>
             </Section>
 
-            <Section title="Selection Actions" icon={Layers} keepOpenInAccordion>
+            <Section
+              title={t("motion:propertiesPanel.selectionActions.title", "Selection Actions")}
+              icon={Layers}
+              keepOpenInAccordion
+            >
               <div className="grid grid-cols-2 gap-1.5">
                 <Button
-                  label="Duplicate selection"
+                  label={t(
+                    "motion:propertiesPanel.selectionActions.duplicate",
+                    "Duplicate selection",
+                  )}
                   icon={Copy}
                   onClick={duplicateSelection}
                 />
                 <Button
-                  label="Delete selection"
+                  label={t("motion:propertiesPanel.selectionActions.delete", "Delete selection")}
                   icon={Trash2}
                   variant="danger"
                   onClick={deleteSelection}
                 />
               </div>
               <p className="mt-2 text-[10.5px] leading-relaxed text-fg-muted">
-                Changes apply to all selected, unlocked layers. Animated opacity writes a keyframe at the playhead.
+                {t(
+                  "motion:propertiesPanel.selectionActions.note",
+                  "Changes apply to all selected, unlocked layers. Animated opacity writes a keyframe at the playhead.",
+                )}
               </p>
             </Section>
           </>
         ) : selectedLayer ? (
           <>
-            <Section title="Transform" icon={Move} keepOpenInAccordion>
-              <FlatRow label="Position">
+            <Section
+              title={t("motion:propertiesPanel.transform.title", "Transform")}
+              icon={Move}
+              keepOpenInAccordion
+            >
+              <FlatRow label={t("motion:propertiesPanel.transform.position", "Position")}>
                 <AxisPill
                   axis="X"
                   value={getLayerPropertyInspectorValue("transform.position.x")}
@@ -966,7 +1034,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 />
               </FlatRow>
               <FlatRow
-                label="Scale"
+                label={t("motion:propertiesPanel.transform.scale", "Scale")}
                 leading={
                   <svg
                     width="13"
@@ -999,7 +1067,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   }
                 />
               </FlatRow>
-              <FlatRow label="Rotation">
+              <FlatRow label={t("motion:propertiesPanel.transform.rotation", "Rotation")}>
                 <AxisPill
                   axis="X"
                   value={getLayerPropertyInspectorValue("transform.rotation.x")}
@@ -1025,7 +1093,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   }
                 />
               </FlatRow>
-              <FlatRow label="Anchor">
+              <FlatRow label={t("motion:propertiesPanel.transform.anchor", "Anchor")}>
                 <AxisPill
                   axis="X"
                   value={getLayerPropertyInspectorValue("transform.anchor.x")}
@@ -1043,7 +1111,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   }
                 />
               </FlatRow>
-              <FlatRow label="Opacity">
+              <FlatRow label={t("motion:propertiesPanel.transform.opacity", "Opacity")}>
                 <Slider
                   value={getLayerPropertyInspectorValue("transform.opacity")}
                   onChange={(opacity) =>
@@ -1051,7 +1119,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   }
                 />
               </FlatRow>
-              <FlatRow label="Perspective">
+              <FlatRow
+                label={t("motion:propertiesPanel.transform.perspective", "Perspective")}
+              >
                 <AxisPill
                   axis="px"
                   value={getLayerPropertyInspectorValue("transform.perspective")}
@@ -1063,7 +1133,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 />
               </FlatRow>
               <ToggleControl
-                label="Preserve 3D"
+                label={t("motion:propertiesPanel.transform.preserve3d", "Preserve 3D")}
                 checked={selectedLayer.transform.transformStyle === "preserve-3d"}
                 onChange={(checked) =>
                   patchLayer({
@@ -1076,19 +1146,22 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               />
             </Section>
 
-            <Section title="Layer Options" defaultOpen={false}>
-              <Field label="Name">
+            <Section
+              title={t("motion:propertiesPanel.layerOptions.title", "Layer Options")}
+              defaultOpen={false}
+            >
+              <Field label={t("motion:propertiesPanel.layerOptions.name", "Name")}>
                 <TextInput
                   value={selectedLayer.name}
                   onChange={(name) => patchLayer({ name } as Partial<MotionLayer>)}
                 />
               </Field>
-              <Field label="Parent">
+              <Field label={t("motion:propertiesPanel.layerOptions.parent", "Parent")}>
                 <SelectControl
-                  label="Parent"
+                  label={t("motion:propertiesPanel.layerOptions.parent", "Parent")}
                   value={selectedLayer.parentId ?? ""}
                   options={[
-                    { value: "", label: "None" },
+                    { value: "", label: t("motion:propertiesPanel.common.none", "None") },
                     ...composition.layers
                       .filter((layer) =>
                         canParentMotionLayer(
@@ -1105,9 +1178,12 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   onChange={(parentId) => reparentLayer(parentId || null)}
                 />
               </Field>
-              <FlatRow label="Blending" labelWidth={90}>
+              <FlatRow
+                label={t("motion:propertiesPanel.layerOptions.blending", "Blending")}
+                labelWidth={90}
+              >
                 <SelectControl
-                  label="Blend mode"
+                  label={t("motion:propertiesPanel.layerOptions.blendMode", "Blend mode")}
                   value={selectedLayer.blendMode ?? "normal"}
                   options={MOTION_BLEND_MODE_OPTIONS.map((mode) => ({
                     value: mode.id,
@@ -1122,10 +1198,13 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               </FlatRow>
               <div className="flex items-center justify-between">
                 <span className="text-[13px] font-medium text-fg-3">
-                  Motion Blur
+                  {t("motion:propertiesPanel.layerOptions.motionBlur", "Motion Blur")}
                 </span>
                 <ToolcraftSwitchControl
-                  ariaLabel="Motion blur"
+                  ariaLabel={t(
+                    "motion:propertiesPanel.layerOptions.motionBlurAria",
+                    "Motion blur",
+                  )}
                   checked={selectedLayer.motionBlur ?? false}
                   onCheckedChange={(checked) =>
                     patchLayer({
@@ -1137,7 +1216,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               </div>
               <div className="grid grid-cols-2 gap-2.5">
                 <ToggleControl
-                  label="Solo"
+                  label={t("motion:propertiesPanel.layerOptions.solo", "Solo")}
                   icon={Star}
                   checked={selectedLayer.solo ?? false}
                   onChange={(checked) =>
@@ -1147,7 +1226,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   }
                 />
                 <ToggleControl
-                  label="Guide"
+                  label={t("motion:propertiesPanel.layerOptions.guideLayer", "Guide")}
                   icon={Ruler}
                   checked={selectedLayer.guideLayer ?? false}
                   onChange={(checked) =>
@@ -1158,7 +1237,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 />
               </div>
               <ToggleControl
-                label="Orient along path"
+                label={t(
+                  "motion:propertiesPanel.layerOptions.orientAlongPath",
+                  "Orient along path",
+                )}
                 checked={selectedLayer.autoOrient ?? false}
                 onChange={(checked) =>
                   patchLayer({
@@ -1168,7 +1250,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               />
             </Section>
 
-            <Section title="Animation" icon={Diamond}>
+            <Section
+              title={t("motion:propertiesPanel.animation.title", "Animation")}
+              icon={Diamond}
+            >
               <div className="space-y-1.5">
                 {getLayerAnimationProperties(selectedLayer).map((property) => {
                   const keyframes = getMotionLayerPropertyKeyframes(
@@ -1197,7 +1282,11 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       }`}
                     >
                       <Button
-                        label={`${property.label}, ${keyframes.length} keys`}
+                        label={t(
+                          "motion:propertiesPanel.animation.propertyKeys",
+                          "{{label}}, {{count}} keys",
+                          { label: property.label, count: keyframes.length },
+                        )}
                         variant="ghost"
                         size="sm"
                         className="min-w-0 flex-1 justify-start"
@@ -1208,7 +1297,11 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       />
                       <IconButton
                         icon={Diamond}
-                        label={activeAtPlayhead ? "Remove keyframe" : "Add keyframe"}
+                        label={
+                          activeAtPlayhead
+                            ? t("motion:propertiesPanel.animation.removeKeyframe", "Remove keyframe")
+                            : t("motion:propertiesPanel.animation.addKeyframe", "Add keyframe")
+                        }
                         active={activeAtPlayhead}
                         variant={activeAtPlayhead ? "solid" : "ghost"}
                         iconSize={13}
@@ -1217,7 +1310,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       {keyframes.length > 0 ? (
                         <IconButton
                           icon={Trash2}
-                          label="Disable animation"
+                          label={t(
+                            "motion:propertiesPanel.animation.disableAnimation",
+                            "Disable animation",
+                          )}
                           variant="danger"
                           iconSize={13}
                           onClick={() =>
@@ -1231,9 +1327,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               </div>
             </Section>
 
-            <Section title="Timing" icon={Clock}>
+            <Section title={t("motion:propertiesPanel.timing.title", "Timing")} icon={Clock}>
               <div className="grid grid-cols-2 gap-2.5">
-                <Field label="Start">
+                <Field label={t("motion:propertiesPanel.timing.start", "Start")}>
                   <NumberInput
                     value={selectedLayer.startTime}
                     min={0}
@@ -1246,7 +1342,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     }
                   />
                 </Field>
-                <Field label="Duration">
+                <Field label={t("motion:propertiesPanel.timing.duration", "Duration")}>
                   <NumberInput
                     value={selectedLayer.duration}
                     min={0.1}
@@ -1262,15 +1358,15 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
 
             {selectedLayer.type === "text" ? (
               <>
-                <Section title="Text" icon={Type}>
-                  <Field label="Content">
+                <Section title={t("motion:propertiesPanel.text.title", "Text")} icon={Type}>
+                  <Field label={t("motion:propertiesPanel.text.content", "Content")}>
                     <TextArea
                       value={selectedLayer.text}
                       onChange={(text) => patchLayer({ text } as Partial<MotionLayer>)}
                     />
                   </Field>
                   <SelectControl
-                    label="Font family"
+                    label={t("motion:propertiesPanel.text.fontFamily", "Font family")}
                     value={selectedLayer.style.fontFamily}
                     options={FONT_FAMILY_OPTIONS.some(
                       (option) => option.value === selectedLayer.style.fontFamily,
@@ -1292,9 +1388,15 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   <div className="flex items-center gap-2">
                     <div className="min-w-0 flex-1">
                       <SelectControl
-                        label="Font weight"
+                        label={t("motion:propertiesPanel.text.fontWeight", "Font weight")}
                         value={String(selectedLayer.style.fontWeight ?? 700)}
-                        options={FONT_WEIGHT_OPTIONS}
+                        options={FONT_WEIGHT_OPTIONS.map((option) => ({
+                          ...option,
+                          label: t(
+                            `motion:propertiesPanel.fontWeight.${option.value}`,
+                            option.label,
+                          ),
+                        }))}
                         onChange={(weight) =>
                           patchLayer({
                             style: {
@@ -1331,12 +1433,12 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       } as Partial<MotionLayer>)
                     }
                   />
-                  <Field label="Fill type">
+                  <Field label={t("motion:propertiesPanel.text.fillType", "Fill type")}>
                     <SegmentedControl
                       value={selectedLayer.style.fillShader ? "shader" : "solid"}
                       options={[
-                        { value: "solid", label: "Solid" },
-                        { value: "shader", label: "Shader" },
+                        { value: "solid", label: t("motion:propertiesPanel.text.solid", "Solid") },
+                        { value: "shader", label: t("motion:propertiesPanel.text.shader", "Shader") },
                       ]}
                       onChange={(type) => {
                         const style = selectedLayer.style;
@@ -1374,7 +1476,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       }
                     />
                   ) : (
-                    <FlatRow label="Fill" labelWidth={56}>
+                    <FlatRow label={t("motion:propertiesPanel.text.fill", "Fill")} labelWidth={56}>
                       <ColorInput
                         value={selectedLayer.style.color}
                         onChange={(color) =>
@@ -1386,7 +1488,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     </FlatRow>
                   )}
                   <div className="grid grid-cols-2 gap-2.5">
-                    <Field label="Tracking">
+                    <Field label={t("motion:propertiesPanel.text.tracking", "Tracking")}>
                       <NumberInput
                         value={selectedLayer.style.letterSpacing ?? 0}
                         step={0.5}
@@ -1398,7 +1500,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Leading">
+                    <Field label={t("motion:propertiesPanel.text.leading", "Leading")}>
                       <NumberInput
                         value={selectedLayer.style.lineHeight ?? 1.1}
                         min={0.5}
@@ -1411,7 +1513,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       />
                     </Field>
                   </div>
-                  <Field label="Box width" hint="0 disables word wrap">
+                  <Field
+                    label={t("motion:propertiesPanel.text.boxWidth", "Box width")}
+                    hint={t("motion:propertiesPanel.text.boxWidthHint", "0 disables word wrap")}
+                  >
                     <NumberInput
                       value={selectedLayer.style.maxWidth ?? 0}
                       min={0}
@@ -1433,7 +1538,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     />
                   </Field>
                   <div className="grid grid-cols-2 gap-2.5">
-                    <Field label="Stroke">
+                    <Field label={t("motion:propertiesPanel.text.stroke", "Stroke")}>
                       <ColorInput
                         value={selectedLayer.style.stroke?.color ?? "#000000"}
                         onChange={(color) =>
@@ -1452,7 +1557,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Stroke width" hint="0 removes stroke">
+                    <Field
+                      label={t("motion:propertiesPanel.text.strokeWidth", "Stroke width")}
+                      hint={t("motion:propertiesPanel.text.strokeWidthHint", "0 removes stroke")}
+                    >
                       <NumberInput
                         value={selectedLayer.style.stroke?.width ?? 0}
                         min={0}
@@ -1487,7 +1595,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   layer={selectedLayer}
                   replaceLayer={replaceLayer}
                 />
-                <Section title="Shader animator" icon={Zap}>
+                <Section
+                  title={t("motion:propertiesPanel.shaderAnimator.title", "Shader animator")}
+                  icon={Zap}
+                >
                   <TextShaderAnimatorControls
                     layer={selectedLayer}
                     replaceLayer={replaceLayer}
@@ -1504,10 +1615,19 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
             ) : null}
 
             {selectedLayer.type === "scene3d" ? (
-              <Section title="Lighting & Environment" icon={Lightbulb}>
-                <Field label="Environment" hint="image-based lighting">
+              <Section
+                title={t("motion:propertiesPanel.lighting.title", "Lighting & Environment")}
+                icon={Lightbulb}
+              >
+                <Field
+                  label={t("motion:propertiesPanel.lighting.environment", "Environment")}
+                  hint={t(
+                    "motion:propertiesPanel.lighting.environmentHint",
+                    "image-based lighting",
+                  )}
+                >
                   <SelectControl
-                    label="Environment"
+                    label={t("motion:propertiesPanel.lighting.environment", "Environment")}
                     value={selectedLayer.lighting?.environment ?? "studio"}
                     options={[
                       "studio",
@@ -1519,7 +1639,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       "none",
                     ].map((option) => ({
                       value: option,
-                      label: capitalizeLabel(option),
+                      label: t(
+                        `motion:propertiesPanel.environment.${option}`,
+                        capitalizeLabel(option),
+                      ),
                     }))}
                     onChange={(environment) =>
                       patchLayer({
@@ -1533,7 +1656,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     }
                   />
                 </Field>
-                <Field label="HDRI map URL" hint=".hdr / .exr / .jpg / .png">
+                <Field
+                  label={t("motion:propertiesPanel.lighting.hdriMapUrl", "HDRI map URL")}
+                  hint=".hdr / .exr / .jpg / .png"
+                >
                   <TextInput
                     value={selectedLayer.lighting?.environmentUrl ?? ""}
                     placeholder="https://…/studio_2k.hdr"
@@ -1548,7 +1674,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   />
                 </Field>
                 <ToggleControl
-                  label="Show environment as backdrop"
+                  label={t(
+                    "motion:propertiesPanel.lighting.environmentBackdrop",
+                    "Show environment as backdrop",
+                  )}
                   checked={selectedLayer.lighting?.environmentBackground ?? false}
                   onChange={(environmentBackground) =>
                     patchLayer({
@@ -1560,7 +1689,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   }
                 />
                 <ToggleControl
-                  label="Ground shadow"
+                  label={t("motion:propertiesPanel.lighting.groundShadow", "Ground shadow")}
                   checked={selectedLayer.lighting?.groundShadow ?? false}
                   onChange={(groundShadow) =>
                     patchLayer({
@@ -1572,7 +1701,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   }
                 />
                 <div className="grid grid-cols-2 gap-2.5">
-                  <Field label="Ambient">
+                  <Field label={t("motion:propertiesPanel.lighting.ambient", "Ambient")}>
                     <NumberInput
                       value={selectedLayer.lighting?.ambient ?? 0.55}
                       min={0}
@@ -1585,7 +1714,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       }
                     />
                   </Field>
-                  <Field label="Key intensity">
+                  <Field label={t("motion:propertiesPanel.lighting.keyIntensity", "Key intensity")}>
                     <NumberInput
                       value={selectedLayer.lighting?.keyIntensity ?? 2.1}
                       min={0}
@@ -1598,7 +1727,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       }
                     />
                   </Field>
-                  <Field label="Rim intensity">
+                  <Field label={t("motion:propertiesPanel.lighting.rimIntensity", "Rim intensity")}>
                     <NumberInput
                       value={selectedLayer.lighting?.rimIntensity ?? 1.1}
                       min={0}
@@ -1611,7 +1740,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       }
                     />
                   </Field>
-                  <Field label="Key color">
+                  <Field label={t("motion:propertiesPanel.lighting.keyColor", "Key color")}>
                     <ColorInput
                       value={selectedLayer.lighting?.keyColor ?? "#fff2e6"}
                       onChange={(keyColor) =>
@@ -1627,14 +1756,17 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
 
             {selectedLayer.type === "shape" ? (
               <>
-                <Section title="Shape" icon={Square}>
-                  <Field label="Type">
+                <Section title={t("motion:propertiesPanel.shape.title", "Shape")} icon={Square}>
+                  <Field label={t("motion:propertiesPanel.common.type", "Type")}>
                     <SelectControl
-                      label="Shape type"
+                      label={t("motion:propertiesPanel.shape.typeAria", "Shape type")}
                       value={selectedLayer.shapeType}
                       options={SHAPE_OPTIONS.map((shape) => ({
                         value: shape,
-                        label: capitalizeLabel(shape),
+                        label: t(
+                          `motion:propertiesPanel.shapeType.${shape}`,
+                          capitalizeLabel(shape),
+                        ),
                       }))}
                       onChange={(shapeType) => {
                         patchLayer({
@@ -1654,7 +1786,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   </Field>
                   {selectedLayer.shapeType === "path" ? (
                     <>
-                      <Field label="Path data">
+                      <Field label={t("motion:propertiesPanel.shape.pathData", "Path data")}>
                         <TextArea
                           value={selectedLayer.pathData ?? ""}
                           placeholder="M -50 -50 L 50 -50 L 50 50 L -50 50 Z"
@@ -1666,7 +1798,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         />
                       </Field>
                       <ToggleControl
-                        label="Closed path"
+                        label={t("motion:propertiesPanel.shape.closedPath", "Closed path")}
                         checked={selectedLayer.pathClosed ?? true}
                         onChange={(pathClosed) =>
                           patchLayer({
@@ -1690,18 +1822,28 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                           <div className="rounded-lg border border-border bg-bg-2 p-2.5">
                             <div className="mb-2 flex items-center justify-between gap-2">
                               <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-fg-3">
-                                Path morph
+                                {t("motion:propertiesPanel.shape.pathMorph", "Path morph")}
                               </span>
                               <span className="text-[10.5px] tabular-nums text-fg-muted">
-                                {keyframes.length} keys
+                                {t(
+                                  "motion:propertiesPanel.common.keyCount",
+                                  "{{count}} keys",
+                                  { count: keyframes.length },
+                                )}
                               </span>
                             </div>
                             <div className="grid grid-cols-2 gap-1.5">
                               <Button
                                 label={
                                   activeAtPlayhead
-                                    ? "Update path keyframe"
-                                    : "Add path keyframe"
+                                    ? t(
+                                        "motion:propertiesPanel.shape.updatePathKeyframe",
+                                        "Update path keyframe",
+                                      )
+                                    : t(
+                                        "motion:propertiesPanel.shape.addPathKeyframe",
+                                        "Add path keyframe",
+                                      )
                                 }
                                 size="sm"
                                 variant={activeAtPlayhead ? "primary" : "secondary"}
@@ -1715,7 +1857,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                                 onClick={() => addShapePathKeyframe(selectedLayer)}
                               />
                               <Button
-                                label="Clear path keyframes"
+                                label={t(
+                                  "motion:propertiesPanel.shape.clearPathKeyframes",
+                                  "Clear path keyframes",
+                                )}
                                 size="sm"
                                 variant="destructive"
                                 icon={<Trash2 size={13} aria-hidden />}
@@ -1729,7 +1874,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     </>
                   ) : null}
                   <div className="grid grid-cols-2 gap-2.5">
-                    <Field label="Width">
+                    <Field label={t("motion:propertiesPanel.common.width", "Width")}>
                       <NumberInput
                         value={getLayerPropertyInspectorValue("shape.width")}
                         min={1}
@@ -1739,7 +1884,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Height">
+                    <Field label={t("motion:propertiesPanel.common.height", "Height")}>
                       <NumberInput
                         value={getLayerPropertyInspectorValue("shape.height")}
                         min={1}
@@ -1753,7 +1898,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   {selectedLayer.shapeType === "star" ||
                   selectedLayer.shapeType === "polygon" ? (
                     <div className="grid grid-cols-2 gap-2.5">
-                      <Field label="Points">
+                      <Field label={t("motion:propertiesPanel.shape.points", "Points")}>
                         <NumberInput
                           value={selectedLayer.style.points ?? 5}
                           min={3}
@@ -1773,7 +1918,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         />
                       </Field>
                       {selectedLayer.shapeType === "star" ? (
-                        <Field label="Inner radius">
+                        <Field
+                          label={t("motion:propertiesPanel.shape.innerRadius", "Inner radius")}
+                        >
                           <NumberInput
                             value={selectedLayer.style.innerRadius ?? 0.45}
                             min={0.05}
@@ -1796,14 +1943,26 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       ) : null}
                     </div>
                   ) : null}
-                  <Field label="Fill mode">
+                  <Field label={t("motion:propertiesPanel.shape.fillMode", "Fill mode")}>
                     <SegmentedControl
                       value={selectedLayer.style.fill.type}
                       options={[
-                        { value: "solid", label: "Solid" },
-                        { value: "gradient", label: "Grad" },
-                        { value: "shader", label: "Shader" },
-                        { value: "none", label: "None" },
+                        {
+                          value: "solid",
+                          label: t("motion:propertiesPanel.shape.fillModeSolid", "Solid"),
+                        },
+                        {
+                          value: "gradient",
+                          label: t("motion:propertiesPanel.shape.fillModeGradient", "Grad"),
+                        },
+                        {
+                          value: "shader",
+                          label: t("motion:propertiesPanel.shape.fillModeShader", "Shader"),
+                        },
+                        {
+                          value: "none",
+                          label: t("motion:propertiesPanel.shape.fillModeNone", "None"),
+                        },
                       ]}
                       onChange={(type) =>
                         patchLayer({
@@ -1831,7 +1990,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                   </Field>
                   {selectedLayer.style.fill.type === "solid" ? (
                     <div className="grid grid-cols-2 gap-2.5">
-                      <Field label="Fill color">
+                      <Field
+                        label={t("motion:propertiesPanel.shape.fillColor", "Fill color")}
+                      >
                         <ColorInput
                           value={selectedLayer.style.fill.color ?? "#14b8a6"}
                           onChange={(color) =>
@@ -1847,7 +2008,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                           }
                         />
                       </Field>
-                      <Field label="Fill opacity">
+                      <Field
+                        label={t("motion:propertiesPanel.shape.fillOpacity", "Fill opacity")}
+                      >
                         <Slider
                           value={getLayerPropertyInspectorValue(
                             "shape.fill.opacity",
@@ -1888,7 +2051,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     />
                   ) : null}
                   <div className="grid grid-cols-2 gap-2.5">
-                    <Field label="Corner radius">
+                    <Field
+                      label={t("motion:propertiesPanel.shape.cornerRadius", "Corner radius")}
+                    >
                       <NumberInput
                         value={getLayerPropertyInspectorValue(
                           "shape.cornerRadius",
@@ -1903,7 +2068,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Stroke width">
+                    <Field
+                      label={t("motion:propertiesPanel.shape.strokeWidth", "Stroke width")}
+                    >
                       <NumberInput
                         value={getLayerPropertyInspectorValue(
                           "shape.stroke.width",
@@ -1915,7 +2082,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Stroke color">
+                    <Field
+                      label={t("motion:propertiesPanel.shape.strokeColor", "Stroke color")}
+                    >
                       <ColorInput
                         value={selectedLayer.style.stroke.color}
                         onChange={(color) =>
@@ -1928,7 +2097,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Stroke opacity">
+                    <Field
+                      label={t("motion:propertiesPanel.shape.strokeOpacity", "Stroke opacity")}
+                    >
                       <Slider
                         value={getLayerPropertyInspectorValue(
                           "shape.stroke.opacity",
@@ -1938,14 +2109,23 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Line cap">
+                    <Field label={t("motion:propertiesPanel.shape.lineCap", "Line cap")}>
                       <SelectControl
-                        label="Line cap"
+                        label={t("motion:propertiesPanel.shape.lineCap", "Line cap")}
                         value={selectedLayer.style.stroke.lineCap ?? "butt"}
                         options={[
-                          { value: "butt", label: "Butt" },
-                          { value: "round", label: "Round" },
-                          { value: "square", label: "Square" },
+                          {
+                            value: "butt",
+                            label: t("motion:propertiesPanel.shape.lineCapButt", "Butt"),
+                          },
+                          {
+                            value: "round",
+                            label: t("motion:propertiesPanel.shape.lineCapRound", "Round"),
+                          },
+                          {
+                            value: "square",
+                            label: t("motion:propertiesPanel.shape.lineCapSquare", "Square"),
+                          },
                         ]}
                         onChange={(lineCap) =>
                           patchLayer({
@@ -1960,14 +2140,23 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Line join">
+                    <Field label={t("motion:propertiesPanel.shape.lineJoin", "Line join")}>
                       <SelectControl
-                        label="Line join"
+                        label={t("motion:propertiesPanel.shape.lineJoin", "Line join")}
                         value={selectedLayer.style.stroke.lineJoin ?? "miter"}
                         options={[
-                          { value: "miter", label: "Miter" },
-                          { value: "round", label: "Round" },
-                          { value: "bevel", label: "Bevel" },
+                          {
+                            value: "miter",
+                            label: t("motion:propertiesPanel.shape.lineJoinMiter", "Miter"),
+                          },
+                          {
+                            value: "round",
+                            label: t("motion:propertiesPanel.shape.lineJoinRound", "Round"),
+                          },
+                          {
+                            value: "bevel",
+                            label: t("motion:propertiesPanel.shape.lineJoinBevel", "Bevel"),
+                          },
                         ]}
                         onChange={(lineJoin) =>
                           patchLayer({
@@ -1982,7 +2171,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Dash pattern">
+                    <Field
+                      label={t("motion:propertiesPanel.shape.dashPattern", "Dash pattern")}
+                    >
                       <TextInput
                         value={formatDashArray(selectedLayer.style.stroke.dashArray)}
                         placeholder="8 4"
@@ -1999,7 +2190,9 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                         }
                       />
                     </Field>
-                    <Field label="Dash offset">
+                    <Field
+                      label={t("motion:propertiesPanel.shape.dashOffset", "Dash offset")}
+                    >
                       <NumberInput
                         value={getLayerPropertyInspectorValue(
                           "shape.stroke.dashOffset",
@@ -2084,19 +2277,19 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
         ) : null}
 
         <Section
-          title="Composition"
+          title={t("motion:propertiesPanel.composition.title", "Composition")}
           icon={Settings2}
           defaultOpen={!selectedLayer}
           keepOpenInAccordion={!selectedLayer}
         >
-          <Field label="Scene name">
+          <Field label={t("motion:propertiesPanel.composition.sceneName", "Scene name")}>
             <TextInput
               value={composition.name}
               onChange={(name) => updateComposition({ name })}
             />
           </Field>
           <div className="grid grid-cols-2 gap-2.5">
-            <Field label="Duration">
+            <Field label={t("motion:propertiesPanel.composition.duration", "Duration")}>
               <NumberInput
                 value={composition.duration}
                 min={0.1}
@@ -2105,7 +2298,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 onChange={(duration) => updateComposition({ duration })}
               />
             </Field>
-            <Field label="Frame rate">
+            <Field label={t("motion:propertiesPanel.composition.frameRate", "Frame rate")}>
               <NumberInput
                 value={composition.frameRate}
                 min={1}
@@ -2115,7 +2308,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
-            <Field label="Width">
+            <Field label={t("motion:propertiesPanel.common.width", "Width")}>
               <NumberInput
                 value={composition.width}
                 min={1}
@@ -2123,7 +2316,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 onChange={(width) => updateComposition({ width })}
               />
             </Field>
-            <Field label="Height">
+            <Field label={t("motion:propertiesPanel.common.height", "Height")}>
               <NumberInput
                 value={composition.height}
                 min={1}
@@ -2132,7 +2325,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               />
             </Field>
           </div>
-          <Field label="Background">
+          <Field label={t("motion:propertiesPanel.composition.background", "Background")}>
             <ColorInput
               value={composition.backgroundColor}
               onChange={(backgroundColor) => updateComposition({ backgroundColor })}
@@ -2140,16 +2333,23 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
           </Field>
         </Section>
 
-        <Section title="Camera" icon={Camera} defaultOpen={camera.enabled}>
+        <Section
+          title={t("motion:propertiesPanel.camera.title", "Camera")}
+          icon={Camera}
+          defaultOpen={camera.enabled}
+        >
           <ToggleControl
-            label="Active camera"
+            label={t("motion:propertiesPanel.camera.active", "Active camera")}
             checked={camera.enabled}
             onChange={enableCamera}
-            description="Pan, zoom, rotate, and push the whole scene in 3D space"
+            description={t(
+              "motion:propertiesPanel.camera.activeDescription",
+              "Pan, zoom, rotate, and push the whole scene in 3D space",
+            )}
           />
           <div className="grid grid-cols-2 gap-2.5">
             <CameraPropertyControl
-              label="Position X"
+              label={t("motion:propertiesPanel.camera.positionX", "Position X")}
               property="camera.position.x"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2159,7 +2359,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               onToggleKeyframe={toggleCameraKeyframe}
             />
             <CameraPropertyControl
-              label="Position Y"
+              label={t("motion:propertiesPanel.camera.positionY", "Position Y")}
               property="camera.position.y"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2169,7 +2369,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               onToggleKeyframe={toggleCameraKeyframe}
             />
             <CameraPropertyControl
-              label="Depth"
+              label={t("motion:propertiesPanel.camera.depth", "Depth")}
               property="camera.position.z"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2179,7 +2379,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               onToggleKeyframe={toggleCameraKeyframe}
             />
             <CameraPropertyControl
-              label="Zoom"
+              label={t("motion:propertiesPanel.camera.zoom", "Zoom")}
               property="camera.zoom"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2190,7 +2390,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               onToggleKeyframe={toggleCameraKeyframe}
             />
             <CameraPropertyControl
-              label="Roll"
+              label={t("motion:propertiesPanel.camera.roll", "Roll")}
               property="camera.rotation"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2200,7 +2400,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               onToggleKeyframe={toggleCameraKeyframe}
             />
             <CameraPropertyControl
-              label="Perspective"
+              label={t("motion:propertiesPanel.camera.perspective", "Perspective")}
               property="camera.perspective"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2213,14 +2413,17 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
             />
           </div>
           <ToggleControl
-            label="Depth of field"
+            label={t("motion:propertiesPanel.camera.depthOfField", "Depth of field")}
             checked={camera.depthOfField?.enabled ?? false}
             onChange={setCameraDepthOfFieldEnabled}
-            description="Blur layers away from the camera focus plane"
+            description={t(
+              "motion:propertiesPanel.camera.depthOfFieldDescription",
+              "Blur layers away from the camera focus plane",
+            )}
           />
           <div className="grid grid-cols-2 gap-2.5">
             <CameraPropertyControl
-              label="Focus"
+              label={t("motion:propertiesPanel.camera.focus", "Focus")}
               property="camera.focusDistance"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2231,7 +2434,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               onToggleKeyframe={toggleCameraKeyframe}
             />
             <CameraPropertyControl
-              label="Aperture"
+              label={t("motion:propertiesPanel.camera.aperture", "Aperture")}
               property="camera.aperture"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2242,7 +2445,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               onToggleKeyframe={toggleCameraKeyframe}
             />
             <CameraPropertyControl
-              label="Max blur"
+              label={t("motion:propertiesPanel.camera.maxBlur", "Max blur")}
               property="camera.maxBlur"
               camera={baseCamera}
               localTime={cameraLocalTime}
@@ -2255,7 +2458,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
             />
           </div>
           <Button
-            label="Reset camera"
+            label={t("motion:propertiesPanel.camera.reset", "Reset camera")}
             size="sm"
             variant="secondary"
             icon={<Camera size={13} aria-hidden />}
@@ -2281,17 +2484,21 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
           toggleLightKeyframe={toggleLightKeyframe}
         />
 
-        <Section title="Guides" icon={Ruler} defaultOpen={guides.length > 0}>
+        <Section
+          title={t("motion:propertiesPanel.guides.title", "Guides")}
+          icon={Ruler}
+          defaultOpen={guides.length > 0}
+        >
           <div className="grid grid-cols-2 gap-2.5">
             <Button
-              label="Vertical"
+              label={t("motion:propertiesPanel.guides.vertical", "Vertical")}
               size="sm"
               variant="secondary"
               icon={<Plus size={13} aria-hidden />}
               onClick={() => addGuide("vertical")}
             />
             <Button
-              label="Horizontal"
+              label={t("motion:propertiesPanel.guides.horizontal", "Horizontal")}
               size="sm"
               variant="secondary"
               icon={<Plus size={13} aria-hidden />}
@@ -2307,11 +2514,17 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 >
                   <div className="grid grid-cols-[minmax(0,1fr)_96px_28px] gap-2">
                     <SelectControl
-                      label="Guide orientation"
+                      label={t("motion:propertiesPanel.guides.orientationAria", "Guide orientation")}
                       value={guide.orientation}
                       options={[
-                        { value: "vertical", label: "Vertical" },
-                        { value: "horizontal", label: "Horizontal" },
+                        {
+                          value: "vertical",
+                          label: t("motion:propertiesPanel.guides.vertical", "Vertical"),
+                        },
+                        {
+                          value: "horizontal",
+                          label: t("motion:propertiesPanel.guides.horizontal", "Horizontal"),
+                        },
                       ]}
                       onChange={(orientation) =>
                         replaceComposition(
@@ -2347,7 +2560,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     />
                     <IconButton
                       icon={Trash2}
-                      label="Remove guide"
+                      label={t("motion:propertiesPanel.guides.remove", "Remove guide")}
                       size="sm"
                       variant="danger"
                       onClick={() =>
@@ -2358,7 +2571,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                     />
                   </div>
                   <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2">
-                    <Field label="Color">
+                    <Field label={t("motion:propertiesPanel.common.color", "Color")}>
                       <ColorInput
                         value={guide.color ?? "#14b8a6"}
                         onChange={(color) =>
@@ -2373,7 +2586,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                       />
                     </Field>
                     <ToggleControl
-                      label="Lock"
+                      label={t("motion:propertiesPanel.common.lock", "Lock")}
                       checked={guide.locked ?? false}
                       onChange={(locked) =>
                         replaceComposition(
@@ -2392,7 +2605,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 </div>
               ))}
               <Button
-                label="Clear guides"
+                label={t("motion:propertiesPanel.guides.clear", "Clear guides")}
                 size="sm"
                 variant="destructive"
                 icon={<Trash2 size={13} aria-hidden />}
@@ -2403,23 +2616,26 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
             </div>
           ) : (
             <ToolcraftText type="supporting" color="secondary" className="block rounded-lg border border-dashed border-border px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-              No guides
+              {t("motion:propertiesPanel.guides.empty", "No guides")}
             </ToolcraftText>
           )}
         </Section>
 
         <Section
-          title="Motion Blur"
+          title={t("motion:propertiesPanel.motionBlur.title", "Motion Blur")}
           icon={Zap}
           defaultOpen={motionBlurSettings.enabled}
         >
           <ToggleControl
-            label="Enable shutter blur"
+            label={t("motion:propertiesPanel.motionBlur.enable", "Enable shutter blur")}
             checked={motionBlurSettings.enabled}
             onChange={(enabled) => patchMotionBlurSettings({ enabled })}
           />
           <div className="grid grid-cols-2 gap-2.5">
-            <Field label="Shutter angle" hint="deg">
+            <Field
+              label={t("motion:propertiesPanel.motionBlur.shutterAngle", "Shutter angle")}
+              hint="deg"
+            >
               <NumberInput
                 value={motionBlurSettings.shutterAngle}
                 min={0}
@@ -2429,7 +2645,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
                 }
               />
             </Field>
-            <Field label="Phase" hint="deg">
+            <Field label={t("motion:propertiesPanel.motionBlur.phase", "Phase")} hint="deg">
               <NumberInput
                 value={motionBlurSettings.shutterPhase}
                 min={-360}
@@ -2440,7 +2656,7 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
               />
             </Field>
           </div>
-          <Field label="Samples">
+          <Field label={t("motion:propertiesPanel.motionBlur.samples", "Samples")}>
             <NumberInput
               value={motionBlurSettings.samples}
               min={2}
@@ -2452,8 +2668,10 @@ export function PropertiesPanel({ composition, embedded = false }: PropertiesPan
 
         {!selectedLayer ? (
           <ToolcraftText type="supporting" color="secondary" className="block px-3.5 pb-5 pt-1 text-[12px] leading-relaxed text-fg-muted">
-            Select a layer on the stage or in the layers panel to edit its
-            transform, timing, and style.
+            {t(
+              "motion:propertiesPanel.emptyState.selectLayer",
+              "Select a layer on the stage or in the layers panel to edit its transform, timing, and style.",
+            )}
           </ToolcraftText>
         ) : null}
       </div>
@@ -2485,7 +2703,10 @@ function shaderOptionLabel(def: MotionShaderDef): string {
 }
 
 function shaderCollectionLabel(def: MotionShaderDef): string {
-  return def.collection ?? "Built-in";
+  return (
+    def.collection ??
+    i18n.t("motion:propertiesPanel.shader.builtInCollection", "Built-in")
+  );
 }
 
 function groupShaderDefsByCollection(
@@ -2510,7 +2731,13 @@ function groupShaderDefsByCollection(
     options: buckets.get(collection) ?? [],
   }));
   if (leading.length > 0) {
-    return [{ label: "General", options: leading }, ...groups];
+    return [
+      {
+        label: i18n.t("motion:propertiesPanel.shader.generalCollection", "General"),
+        options: leading,
+      },
+      ...groups,
+    ];
   }
   return groups;
 }
@@ -2531,6 +2758,7 @@ function ShaderFillControls({
   onChange: (shader: MotionShaderFill) => void;
   previewSample?: "text" | "shape";
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const fillDefs = getMotionShaderFillDefs();
   const def = getMotionShaderDef(shader.shaderId);
 
@@ -2556,9 +2784,9 @@ function ShaderFillControls({
 
   return (
     <div className="space-y-2.5 rounded-lg border border-border bg-bg-2 p-3">
-      <Field label="Shader">
+      <Field label={t("motion:propertiesPanel.shaderFill.title", "Shader")}>
         <SelectControl
-          label="Shader fill"
+          label={t("motion:propertiesPanel.shaderFill.aria", "Shader fill")}
           value={shader.shaderId}
           options={[]}
           groups={groupShaderDefsByCollection(fillDefs)}
@@ -2570,7 +2798,7 @@ function ShaderFillControls({
         selectedId={shader.shaderId}
         onSelect={selectShader}
         sample={previewSample}
-        label="Fill previews"
+        label={t("motion:propertiesPanel.shaderFill.previews", "Fill previews")}
       />
       {def
         ? def.params.map((paramDef) => (
@@ -2670,6 +2898,7 @@ function TextShaderAnimatorControls({
   layer: Extract<MotionLayer, { type: "text" }>;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const textDefs = getMotionShaderTextDefs();
   const shaderAnimator = getMotionTextShaderAnimator(layer);
   const shader = shaderAnimator?.shader;
@@ -2747,12 +2976,17 @@ function TextShaderAnimatorControls({
 
   return (
     <div className="space-y-2.5 rounded-lg border border-border bg-bg-2 p-3">
-      <Field label="Shader animator">
+      <Field label={t("motion:propertiesPanel.shaderAnimator.title", "Shader animator")}>
         <SelectControl
-          label="Text shader animator"
+          label={t("motion:propertiesPanel.shaderAnimator.aria", "Text shader animator")}
           value={shader?.shaderId ?? ""}
           options={[]}
-          groups={groupShaderDefsByCollection(textDefs, [{ value: "", label: "None" }])}
+          groups={groupShaderDefsByCollection(textDefs, [
+            {
+              value: "",
+              label: t("motion:propertiesPanel.common.none", "None"),
+            },
+          ])}
           onChange={selectShader}
         />
       </Field>
@@ -2789,6 +3023,7 @@ function GradientFillControls({
   setLayerProperty: (property: MotionAnimatableProperty, value: number) => void;
   localTime: number;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const fallbackFill = createDefaultMotionGradientFill(
     layer.style.fill.color ?? "#14b8a6",
     layer.style.stroke.color ?? "#ffffff",
@@ -2832,18 +3067,18 @@ function GradientFillControls({
 
   return (
     <div className="space-y-2.5 rounded-lg border border-border bg-bg-2 p-3">
-      <Field label="Gradient type">
+      <Field label={t("motion:propertiesPanel.gradient.type", "Gradient type")}>
         <SegmentedControl
           value={gradient.type}
           options={[
-            { value: "linear", label: "Linear" },
-            { value: "radial", label: "Radial" },
+            { value: "linear", label: t("motion:propertiesPanel.gradient.linear", "Linear") },
+            { value: "radial", label: t("motion:propertiesPanel.gradient.radial", "Radial") },
           ]}
           onChange={(type) => updateGradient({ type })}
         />
       </Field>
       {gradient.type === "linear" ? (
-        <Field label="Angle">
+        <Field label={t("motion:propertiesPanel.gradient.angle", "Angle")}>
           <NumberInput
             value={gradientAngle}
             unit="°"
@@ -2857,7 +3092,7 @@ function GradientFillControls({
         stops={stops}
         onChange={(nextStops) => updateGradient({ stops: nextStops })}
       />
-      <Field label="Fill opacity">
+      <Field label={t("motion:propertiesPanel.gradient.fillOpacity", "Fill opacity")}>
         <Slider
           value={fillOpacity}
           onChange={(opacity) =>
@@ -2920,6 +3155,7 @@ function GradientStopEditor({
   stops: readonly GradientStop[];
   onChange: (stops: GradientStop[]) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const sorted = normalizeMotionGradientStops(stops);
 
   const commit = (nextStops: GradientStop[]): void => {
@@ -2974,7 +3210,11 @@ function GradientStopEditor({
             {canRemove ? (
               <IconButton
                 icon={Trash2}
-                label={`Remove stop ${index + 1}`}
+                label={t(
+                  "motion:propertiesPanel.gradientStop.remove",
+                  "Remove stop {{index}}",
+                  { index: index + 1 },
+                )}
                 size="sm"
                 iconSize={13}
                 onClick={() => removeStop(index)}
@@ -2986,7 +3226,7 @@ function GradientStopEditor({
         ))}
       </div>
       <Button
-        label="Add stop"
+        label={t("motion:propertiesPanel.gradientStop.add", "Add stop")}
         variant="ghost"
         size="sm"
         icon={<Plus size={13} aria-hidden />}
@@ -3014,6 +3254,7 @@ function StrokeGradientControls({
   layer: Extract<MotionLayer, { type: "shape" }>;
   patchLayer: (updates: Partial<MotionLayer>) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const stroke = layer.style.stroke;
   const mode: "solid" | "gradient" = stroke.gradient ? "gradient" : "solid";
 
@@ -3059,24 +3300,30 @@ function StrokeGradientControls({
 
   return (
     <div className="mt-2.5 space-y-2.5">
-      <Field label="Stroke fill">
+      <Field label={t("motion:propertiesPanel.strokeGradient.mode", "Stroke fill")}>
         <SegmentedControl
           value={mode}
           options={[
-            { value: "solid", label: "Solid stroke" },
-            { value: "gradient", label: "Gradient stroke" },
+            {
+              value: "solid",
+              label: t("motion:propertiesPanel.strokeGradient.solid", "Solid stroke"),
+            },
+            {
+              value: "gradient",
+              label: t("motion:propertiesPanel.strokeGradient.gradient", "Gradient stroke"),
+            },
           ]}
           onChange={setMode}
         />
       </Field>
       {stroke.gradient ? (
         <div className="space-y-2.5 rounded-lg border border-border bg-bg-2 p-3">
-          <Field label="Gradient type">
+          <Field label={t("motion:propertiesPanel.gradient.type", "Gradient type")}>
             <SegmentedControl
               value={stroke.gradient.type === "radial" ? "radial" : "linear"}
               options={[
-                { value: "linear", label: "Linear" },
-                { value: "radial", label: "Radial" },
+                { value: "linear", label: t("motion:propertiesPanel.gradient.linear", "Linear") },
+                { value: "radial", label: t("motion:propertiesPanel.gradient.radial", "Radial") },
               ]}
               onChange={setGradientType}
             />
@@ -3144,13 +3391,23 @@ function CameraPropertyControl({
   onChange: (property: MotionCameraProperty, value: number) => void;
   onToggleKeyframe: (property: MotionCameraProperty) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const activeKeyframe = Boolean(
     findMotionCameraKeyframeAtTime(camera, property, localTime),
   );
   const keyframeCount = getMotionCameraPropertyKeyframes(camera, property).length;
 
   return (
-    <Field label={label} hint={keyframeCount > 0 ? `${keyframeCount} keys` : unit}>
+    <Field
+      label={label}
+      hint={
+        keyframeCount > 0
+          ? t("motion:propertiesPanel.common.keyCount", "{{count}} keys", {
+              count: keyframeCount,
+            })
+          : unit
+      }
+    >
       <div className="grid grid-cols-[minmax(0,1fr)_32px] gap-1.5">
         <NumberInput
           value={value}
@@ -3161,7 +3418,11 @@ function CameraPropertyControl({
         />
         <IconButton
           icon={Diamond}
-          label={activeKeyframe ? "Remove camera keyframe" : "Add camera keyframe"}
+          label={
+            activeKeyframe
+              ? t("motion:propertiesPanel.camera.removeKeyframe", "Remove camera keyframe")
+              : t("motion:propertiesPanel.camera.addKeyframe", "Add camera keyframe")
+          }
           active={activeKeyframe}
           variant={activeKeyframe ? "solid" : "outline"}
           iconSize={13}
@@ -3207,13 +3468,19 @@ function LightsSection({
     property: MotionLightProperty,
   ) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
+
   return (
-    <Section title="Lights" icon={Lightbulb} defaultOpen={lights.length > 0}>
+    <Section
+      title={t("motion:propertiesPanel.lights.title", "Lights")}
+      icon={Lightbulb}
+      defaultOpen={lights.length > 0}
+    >
       <div className="grid grid-cols-3 gap-1.5">
         {LIGHT_TYPE_OPTIONS.map((type) => (
           <Button
             key={type}
-            label={LIGHT_TYPE_LABELS[type]}
+            label={t(`motion:propertiesPanel.lightType.${type}`, LIGHT_TYPE_LABELS[type])}
             size="sm"
             variant="secondary"
             icon={<Plus size={12} aria-hidden />}
@@ -3250,14 +3517,18 @@ function LightsSection({
                   />
                   <IconButton
                     icon={light.enabled ? Eye : EyeOff}
-                    label={light.enabled ? "Disable light" : "Enable light"}
+                    label={
+                      light.enabled
+                        ? t("motion:propertiesPanel.lights.disable", "Disable light")
+                        : t("motion:propertiesPanel.lights.enable", "Enable light")
+                    }
                     active={light.enabled}
                     size="sm"
                     onClick={() => toggleLight(light.id, !light.enabled)}
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove light"
+                    label={t("motion:propertiesPanel.lights.remove", "Remove light")}
                     size="sm"
                     variant="danger"
                     onClick={() => removeLight(light.id)}
@@ -3265,13 +3536,16 @@ function LightsSection({
                 </div>
 
                 <div className="grid grid-cols-[108px_minmax(0,1fr)] gap-2">
-                  <Field label="Type">
+                  <Field label={t("motion:propertiesPanel.common.type", "Type")}>
                     <SelectControl
-                      label="Light type"
+                      label={t("motion:propertiesPanel.lights.typeAria", "Light type")}
                       value={light.type}
                       options={LIGHT_TYPE_OPTIONS.map((type) => ({
                         value: type,
-                        label: LIGHT_TYPE_LABELS[type],
+                        label: t(
+                          `motion:propertiesPanel.lightType.${type}`,
+                          LIGHT_TYPE_LABELS[type],
+                        ),
                       }))}
                       onChange={(type) =>
                         updateLight(light.id, (current) =>
@@ -3284,7 +3558,7 @@ function LightsSection({
                       }
                     />
                   </Field>
-                  <Field label="Color">
+                  <Field label={t("motion:propertiesPanel.common.color", "Color")}>
                     <ColorInput
                       value={light.color}
                       onChange={(color) => patchLight({ color })}
@@ -3366,7 +3640,7 @@ function LightsSection({
                 {light.type !== "ambient" ? (
                   <div className="space-y-2">
                     <ToggleControl
-                      label="Cast shadow"
+                      label={t("motion:propertiesPanel.lights.castShadow", "Cast shadow")}
                       checked={light.castsShadow}
                       onChange={(castsShadow) => patchLight({ castsShadow })}
                     />
@@ -3396,7 +3670,7 @@ function LightsSection({
         </div>
       ) : (
         <ToolcraftText type="supporting" color="secondary" className="block rounded-lg border border-dashed border-border px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-          No lights
+          {t("motion:propertiesPanel.lights.empty", "No lights")}
         </ToolcraftText>
       )}
     </Section>
@@ -3456,7 +3730,13 @@ function LightPropertyControl({
   return (
     <Field
       label={descriptor.label}
-      hint={keyframeCount > 0 ? `${keyframeCount} keys` : descriptor.unit}
+      hint={
+        keyframeCount > 0
+          ? i18n.t("motion:propertiesPanel.common.keyCount", "{{count}} keys", {
+              count: keyframeCount,
+            })
+          : descriptor.unit
+      }
     >
       <div className="grid grid-cols-[minmax(0,1fr)_32px] gap-1.5">
         <NumberInput
@@ -3469,7 +3749,11 @@ function LightPropertyControl({
         />
         <IconButton
           icon={Diamond}
-          label={activeKeyframe ? "Remove light keyframe" : "Add light keyframe"}
+          label={
+            activeKeyframe
+              ? i18n.t("motion:propertiesPanel.lights.removeKeyframe", "Remove light keyframe")
+              : i18n.t("motion:propertiesPanel.lights.addKeyframe", "Add light keyframe")
+          }
           active={activeKeyframe}
           variant={activeKeyframe ? "solid" : "outline"}
           iconSize={13}
@@ -3489,10 +3773,15 @@ function AdjustmentLayerSection({
   layer: Extract<MotionLayer, { type: "adjustment" }>;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
+
   return (
-    <Section title="Adjustment" icon={SlidersHorizontal}>
+    <Section
+      title={t("motion:propertiesPanel.adjustment.title", "Adjustment")}
+      icon={SlidersHorizontal}
+    >
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Width">
+        <Field label={t("motion:propertiesPanel.common.width", "Width")}>
           <NumberInput
             value={layer.width}
             min={1}
@@ -3500,7 +3789,7 @@ function AdjustmentLayerSection({
             onChange={(width) => replaceLayer({ ...layer, width })}
           />
         </Field>
-        <Field label="Height">
+        <Field label={t("motion:propertiesPanel.common.height", "Height")}>
           <NumberInput
             value={layer.height}
             min={1}
@@ -3520,15 +3809,17 @@ function NullLayerSection({
   layer: Extract<MotionLayer, { type: "null" }>;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
+
   return (
-    <Section title="Controller" icon={Crosshair}>
-      <Field label="Guide color">
+    <Section title={t("motion:propertiesPanel.controller.title", "Controller")} icon={Crosshair}>
+      <Field label={t("motion:propertiesPanel.controller.guideColor", "Guide color")}>
         <ColorInput
           value={layer.guideColor ?? "#14b8a6"}
           onChange={(guideColor) => replaceLayer({ ...layer, guideColor })}
         />
       </Field>
-      <Field label="Guide size">
+      <Field label={t("motion:propertiesPanel.controller.guideSize", "Guide size")}>
         <NumberInput
           value={layer.guideSize ?? 48}
           min={12}
@@ -3551,19 +3842,23 @@ function ImageLayerSection({
   layer: Extract<MotionLayer, { type: "image" }>;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const imageAssets = composition.assets.filter((asset) => asset.type === "image");
   const selectedAsset = imageAssets.find((asset) => asset.id === layer.assetId);
 
   return (
-    <Section title="Image" icon={ImageIcon}>
+    <Section title={t("motion:propertiesPanel.image.title", "Image")} icon={ImageIcon}>
       {imageAssets.length === 0 ? (
         <ToolcraftText type="supporting" color="secondary" className="block rounded-lg border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-          Add an image from the Assets panel to bind this layer to real media.
+          {t(
+            "motion:propertiesPanel.image.empty",
+            "Add an image from the Assets panel to bind this layer to real media.",
+          )}
         </ToolcraftText>
       ) : (
-        <Field label="Source">
+        <Field label={t("motion:propertiesPanel.common.source", "Source")}>
           <SelectControl
-            label="Image source"
+            label={t("motion:propertiesPanel.image.sourceAria", "Image source")}
             value={layer.assetId}
             options={imageAssets.map((asset) => ({
               value: asset.id,
@@ -3587,7 +3882,7 @@ function ImageLayerSection({
       )}
 
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Width">
+        <Field label={t("motion:propertiesPanel.common.width", "Width")}>
           <NumberInput
             value={layer.width ?? selectedAsset?.width ?? 320}
             min={1}
@@ -3595,7 +3890,7 @@ function ImageLayerSection({
             onChange={(width) => replaceLayer({ ...layer, width })}
           />
         </Field>
-        <Field label="Height">
+        <Field label={t("motion:propertiesPanel.common.height", "Height")}>
           <NumberInput
             value={layer.height ?? selectedAsset?.height ?? 180}
             min={1}
@@ -3605,14 +3900,14 @@ function ImageLayerSection({
         </Field>
       </div>
 
-      <Field label="Fit">
+      <Field label={t("motion:propertiesPanel.common.fit", "Fit")}>
         <SelectControl
-          label="Image fit"
+          label={t("motion:propertiesPanel.image.fitAria", "Image fit")}
           value={layer.fit ?? "contain"}
           options={[
-            { value: "contain", label: "Contain" },
-            { value: "cover", label: "Cover" },
-            { value: "fill", label: "Fill" },
+            { value: "contain", label: t("motion:propertiesPanel.fit.contain", "Contain") },
+            { value: "cover", label: t("motion:propertiesPanel.fit.cover", "Cover") },
+            { value: "fill", label: t("motion:propertiesPanel.fit.fill", "Fill") },
           ]}
           onChange={(fit) =>
             replaceLayer({
@@ -3635,6 +3930,7 @@ function VideoLayerSection({
   layer: Extract<MotionLayer, { type: "video" }>;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const playhead = useMotionStore((state) => state.playhead);
   const videoAssets = composition.assets.filter((asset) => asset.type === "video");
   const selectedAsset = videoAssets.find((asset) => asset.id === layer.assetId);
@@ -3645,15 +3941,18 @@ function VideoLayerSection({
   );
 
   return (
-    <Section title="Video" icon={Film}>
+    <Section title={t("motion:propertiesPanel.video.title", "Video")} icon={Film}>
       {videoAssets.length === 0 ? (
         <ToolcraftText type="supporting" color="secondary" className="block rounded-lg border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-          Add a video from the Assets panel to bind this layer to real footage.
+          {t(
+            "motion:propertiesPanel.video.empty",
+            "Add a video from the Assets panel to bind this layer to real footage.",
+          )}
         </ToolcraftText>
       ) : (
-        <Field label="Source">
+        <Field label={t("motion:propertiesPanel.common.source", "Source")}>
           <SelectControl
-            label="Video source"
+            label={t("motion:propertiesPanel.video.sourceAria", "Video source")}
             value={layer.assetId}
             options={videoAssets.map((asset) => ({
               value: asset.id,
@@ -3677,7 +3976,7 @@ function VideoLayerSection({
       )}
 
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Width">
+        <Field label={t("motion:propertiesPanel.common.width", "Width")}>
           <NumberInput
             value={layer.width ?? selectedAsset?.width ?? 1920}
             min={1}
@@ -3685,7 +3984,7 @@ function VideoLayerSection({
             onChange={(width) => replaceLayer({ ...layer, width })}
           />
         </Field>
-        <Field label="Height">
+        <Field label={t("motion:propertiesPanel.common.height", "Height")}>
           <NumberInput
             value={layer.height ?? selectedAsset?.height ?? 1080}
             min={1}
@@ -3695,14 +3994,14 @@ function VideoLayerSection({
         </Field>
       </div>
 
-      <Field label="Fit">
+      <Field label={t("motion:propertiesPanel.common.fit", "Fit")}>
         <SelectControl
-          label="Video fit"
+          label={t("motion:propertiesPanel.video.fitAria", "Video fit")}
           value={layer.fit ?? "contain"}
           options={[
-            { value: "contain", label: "Contain" },
-            { value: "cover", label: "Cover" },
-            { value: "fill", label: "Fill" },
+            { value: "contain", label: t("motion:propertiesPanel.fit.contain", "Contain") },
+            { value: "cover", label: t("motion:propertiesPanel.fit.cover", "Cover") },
+            { value: "fill", label: t("motion:propertiesPanel.fit.fill", "Fill") },
           ]}
           onChange={(fit) =>
             replaceLayer({
@@ -3714,7 +4013,7 @@ function VideoLayerSection({
       </Field>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Speed" hint="×">
+        <Field label={t("motion:propertiesPanel.video.speed", "Speed")} hint="×">
           <NumberInput
             value={layer.playbackRate ?? 1}
             min={0.1}
@@ -3723,7 +4022,7 @@ function VideoLayerSection({
             onChange={(playbackRate) => replaceLayer({ ...layer, playbackRate })}
           />
         </Field>
-        <Field label="Trim Start" hint="s">
+        <Field label={t("motion:propertiesPanel.video.trimStart", "Trim Start")} hint="s">
           <NumberInput
             value={layer.trimStart ?? 0}
             min={0}
@@ -3735,19 +4034,19 @@ function VideoLayerSection({
 
       <div className="grid grid-cols-2 gap-2.5">
         <ToggleControl
-          label="Loop source"
+          label={t("motion:propertiesPanel.common.loopSource", "Loop source")}
           checked={Boolean(layer.loop)}
           onChange={(loop) => replaceLayer({ ...layer, loop })}
         />
         <ToggleControl
-          label="Reverse"
+          label={t("motion:propertiesPanel.common.reverse", "Reverse")}
           checked={Boolean(layer.reverse)}
           onChange={(reverse) => replaceLayer({ ...layer, reverse })}
         />
       </div>
 
       <ToggleControl
-        label="Freeze frame"
+        label={t("motion:propertiesPanel.video.freezeFrame", "Freeze frame")}
         checked={Number.isFinite(layer.freezeFrame)}
         onChange={(freeze) =>
           replaceLayer({
@@ -3757,7 +4056,10 @@ function VideoLayerSection({
         }
       />
       {Number.isFinite(layer.freezeFrame) ? (
-        <Field label="Frozen source time" hint="s">
+        <Field
+          label={t("motion:propertiesPanel.video.frozenSourceTime", "Frozen source time")}
+          hint="s"
+        >
           <NumberInput
             value={layer.freezeFrame ?? 0}
             min={0}
@@ -3769,7 +4071,7 @@ function VideoLayerSection({
       ) : null}
 
       <ToggleControl
-        label="Mute audio"
+        label={t("motion:propertiesPanel.video.muteAudio", "Mute audio")}
         checked={layer.muted ?? false}
         onChange={(muted) => replaceLayer({ ...layer, muted })}
       />
@@ -3784,6 +4086,7 @@ function ParticleLayerSection({
   layer: Extract<MotionLayer, { type: "particle" }>;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const emitter = normalizeMotionParticleEmitter(layer.emitter);
   const patchEmitter = (updates: Partial<MotionParticleEmitter>) => {
     replaceLayer({
@@ -3796,12 +4099,16 @@ function ParticleLayerSection({
   };
 
   return (
-    <Section title="Particles" icon={Sparkles}>
+    <Section title={t("motion:propertiesPanel.particles.title", "Particles")} icon={Sparkles}>
       <div className="grid grid-cols-2 gap-1.5">
         {MOTION_PARTICLE_PRESETS.map((preset) => (
           <Button
             key={preset.id}
-            label={`${preset.name} ${preset.emitter.emissionRate}/s`}
+            label={t(
+              "motion:propertiesPanel.particles.preset",
+              "{{name}} {{rate}}/s",
+              { name: preset.name, rate: preset.emitter.emissionRate },
+            )}
             size="sm"
             variant="secondary"
             onClick={() => replaceLayer(applyMotionParticlePreset(layer, preset.id))}
@@ -3809,7 +4116,7 @@ function ParticleLayerSection({
         ))}
       </div>
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Rate" hint="/s">
+        <Field label={t("motion:propertiesPanel.particles.rate", "Rate")} hint="/s">
           <NumberInput
             value={emitter.emissionRate}
             min={0}
@@ -3818,7 +4125,7 @@ function ParticleLayerSection({
             onChange={(emissionRate) => patchEmitter({ emissionRate })}
           />
         </Field>
-        <Field label="Max">
+        <Field label={t("motion:propertiesPanel.particles.max", "Max")}>
           <NumberInput
             value={emitter.maxParticles}
             min={0}
@@ -3827,7 +4134,7 @@ function ParticleLayerSection({
             onChange={(maxParticles) => patchEmitter({ maxParticles })}
           />
         </Field>
-        <Field label="Lifetime" hint="s">
+        <Field label={t("motion:propertiesPanel.particles.lifetime", "Lifetime")} hint="s">
           <NumberInput
             value={emitter.lifetime}
             min={0.01}
@@ -3836,7 +4143,7 @@ function ParticleLayerSection({
             onChange={(lifetime) => patchEmitter({ lifetime })}
           />
         </Field>
-        <Field label="Speed">
+        <Field label={t("motion:propertiesPanel.particles.speed", "Speed")}>
           <NumberInput
             value={emitter.speed}
             min={0}
@@ -3845,7 +4152,7 @@ function ParticleLayerSection({
             onChange={(speed) => patchEmitter({ speed })}
           />
         </Field>
-        <Field label="Spread" hint="deg">
+        <Field label={t("motion:propertiesPanel.particles.spread", "Spread")} hint="deg">
           <NumberInput
             value={emitter.spread}
             min={0}
@@ -3854,7 +4161,7 @@ function ParticleLayerSection({
             onChange={(spread) => patchEmitter({ spread })}
           />
         </Field>
-        <Field label="Gravity">
+        <Field label={t("motion:propertiesPanel.particles.gravity", "Gravity")}>
           <NumberInput
             value={emitter.gravity}
             min={-5000}
@@ -3863,7 +4170,7 @@ function ParticleLayerSection({
             onChange={(gravity) => patchEmitter({ gravity })}
           />
         </Field>
-        <Field label="Size">
+        <Field label={t("motion:propertiesPanel.particles.size", "Size")}>
           <NumberInput
             value={emitter.size}
             min={0.1}
@@ -3872,7 +4179,7 @@ function ParticleLayerSection({
             onChange={(size) => patchEmitter({ size })}
           />
         </Field>
-        <Field label="Random" hint="%">
+        <Field label={t("motion:propertiesPanel.particles.random", "Random")} hint="%">
           <NumberInput
             value={Math.round(emitter.sizeRandomness * 100)}
             min={0}
@@ -3883,7 +4190,10 @@ function ParticleLayerSection({
             }
           />
         </Field>
-        <Field label="Start opacity" hint="%">
+        <Field
+          label={t("motion:propertiesPanel.particles.startOpacity", "Start opacity")}
+          hint="%"
+        >
           <NumberInput
             value={Math.round(emitter.opacityStart * 100)}
             min={0}
@@ -3894,7 +4204,10 @@ function ParticleLayerSection({
             }
           />
         </Field>
-        <Field label="End opacity" hint="%">
+        <Field
+          label={t("motion:propertiesPanel.particles.endOpacity", "End opacity")}
+          hint="%"
+        >
           <NumberInput
             value={Math.round(emitter.opacityEnd * 100)}
             min={0}
@@ -3905,7 +4218,7 @@ function ParticleLayerSection({
             }
           />
         </Field>
-        <Field label="Seed">
+        <Field label={t("motion:propertiesPanel.common.seed", "Seed")}>
           <NumberInput
             value={emitter.seed}
             min={-1_000_000}
@@ -3914,13 +4227,13 @@ function ParticleLayerSection({
             onChange={(seed) => patchEmitter({ seed })}
           />
         </Field>
-        <Field label="Shape">
+        <Field label={t("motion:propertiesPanel.particles.shape", "Shape")}>
           <SelectControl
-            label="Particle shape"
+            label={t("motion:propertiesPanel.particles.shapeAria", "Particle shape")}
             value={emitter.shape}
             options={[
-              { value: "circle", label: "Circle" },
-              { value: "square", label: "Square" },
+              { value: "circle", label: t("motion:propertiesPanel.particles.circle", "Circle") },
+              { value: "square", label: t("motion:propertiesPanel.particles.square", "Square") },
             ]}
             onChange={(shape) =>
               patchEmitter({ shape: shape as MotionParticleShape })
@@ -3929,13 +4242,13 @@ function ParticleLayerSection({
         </Field>
       </div>
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Start color">
+        <Field label={t("motion:propertiesPanel.particles.startColor", "Start color")}>
           <ColorInput
             value={emitter.colorStart}
             onChange={(colorStart) => patchEmitter({ colorStart })}
           />
         </Field>
-        <Field label="End color">
+        <Field label={t("motion:propertiesPanel.particles.endColor", "End color")}>
           <ColorInput
             value={emitter.colorEnd}
             onChange={(colorEnd) => patchEmitter({ colorEnd })}
@@ -3963,6 +4276,7 @@ function PrecompSection({
   const playhead = useMotionStore((state) => state.playhead);
   const setSelectedProperty = useMotionStore((state) => state.setSelectedProperty);
   const setRightTab = useMotionStore((state) => state.setRightTab);
+  const { t } = useTranslation("motion");
   const source = motionCompositions.find(
     (composition) => composition.id === layer.compositionId,
   );
@@ -4119,12 +4433,12 @@ function PrecompSection({
 
   return (
     <Section
-      title="Precomp"
+      title={t("motion:propertiesPanel.precomp.title", "Precomp")}
       icon={Clapperboard}
       action={
         <IconButton
           icon={Clapperboard}
-          label="Open source composition"
+          label={t("motion:propertiesPanel.precomp.openSource", "Open source composition")}
           size="sm"
           variant="outline"
           disabled={!source}
@@ -4134,14 +4448,13 @@ function PrecompSection({
     >
       {!source ? (
         <ToolcraftText type="supporting" color="secondary" className="block rounded-lg border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-          This precomp layer references a composition that is no longer in the
-          project.
+          {t("motion:propertiesPanel.precomp.missingSource", "This precomp layer references a composition that is no longer in the project.")}
         </ToolcraftText>
       ) : null}
 
-      <Field label="Source">
+      <Field label={t("motion:propertiesPanel.common.source", "Source")}>
         <SelectControl
-          label="Source composition"
+          label={t("motion:propertiesPanel.precomp.sourceComposition", "Source composition")}
           value={layer.compositionId}
           options={sourceOptions.map((candidate) => ({
             value: candidate.id,
@@ -4165,7 +4478,7 @@ function PrecompSection({
       </Field>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Width">
+        <Field label={t("motion:propertiesPanel.common.width", "Width")}>
           <NumberInput
             value={layer.width}
             min={1}
@@ -4173,7 +4486,7 @@ function PrecompSection({
             onChange={(width) => replaceLayer({ ...layer, width })}
           />
         </Field>
-        <Field label="Height">
+        <Field label={t("motion:propertiesPanel.common.height", "Height")}>
           <NumberInput
             value={layer.height}
             min={1}
@@ -4184,7 +4497,7 @@ function PrecompSection({
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <Field label="Time offset" hint="s">
+        <Field label={t("motion:propertiesPanel.precomp.timeOffset", "Time offset")} hint="s">
           <NumberInput
             value={layer.timeOffset}
             min={0}
@@ -4192,7 +4505,7 @@ function PrecompSection({
             onChange={(timeOffset) => replaceLayer({ ...layer, timeOffset })}
           />
         </Field>
-        <Field label="Playback">
+        <Field label={t("motion:propertiesPanel.precomp.playback", "Playback")}>
           <NumberInput
             value={layer.playbackRate}
             min={0.01}
@@ -4205,45 +4518,58 @@ function PrecompSection({
       </div>
 
       <ToggleControl
-        label="Loop source"
+        label={t("motion:propertiesPanel.common.loopSource", "Loop source")}
         checked={Boolean(layer.loop)}
         onChange={(loop) => replaceLayer({ ...layer, loop })}
       />
 
       <div className="rounded-lg border border-border bg-bg-2 p-2.5">
         <div className="mb-2 flex items-center justify-between gap-2">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-fg-3">Time remap</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-fg-3">
+            {t("motion:propertiesPanel.precomp.timeRemap", "Time remap")}
+          </span>
           <span className="rounded-md bg-bg-1 px-1.5 py-0.5 text-[10.5px] tabular-nums text-fg-muted">
             {sourceTime.toFixed(2)}s
           </span>
         </div>
         <div className="mb-2 grid grid-cols-2 gap-1.5">
           <Button
-            label={remapped ? "Clear remap" : "Enable remap"}
+            label={
+              remapped
+                ? t("motion:propertiesPanel.precomp.clearRemap", "Clear remap")
+                : t("motion:propertiesPanel.precomp.enableRemap", "Enable remap")
+            }
             size="sm"
             variant="secondary"
             onClick={remapped ? clearTimeRemap : enableTimeRemap}
           />
           <Button
-            label={remapKeyAtPlayhead ? "Update key" : "Key time"}
+            label={
+              remapKeyAtPlayhead
+                ? t("motion:propertiesPanel.precomp.updateKey", "Update key")
+                : t("motion:propertiesPanel.precomp.keyTime", "Key time")
+            }
             size="sm"
             variant={remapKeyAtPlayhead ? "primary" : "secondary"}
             onClick={() => keySourceTime()}
           />
           <Button
-            label="Freeze"
+            label={t("motion:propertiesPanel.precomp.freeze", "Freeze")}
             size="sm"
             variant="secondary"
             onClick={freezeFrameAtPlayhead}
           />
           <Button
-            label="Reverse"
+            label={t("motion:propertiesPanel.common.reverse", "Reverse")}
             size="sm"
             variant="secondary"
             onClick={reverseTimeRemap}
           />
         </div>
-        <Field label="Source time at playhead" hint="s">
+        <Field
+          label={t("motion:propertiesPanel.precomp.sourceTimeAtPlayhead", "Source time at playhead")}
+          hint="s"
+        >
           <NumberInput
             value={sourceTime}
             min={0}
@@ -4254,14 +4580,14 @@ function PrecompSection({
         </Field>
       </div>
 
-      <Field label="Fit">
+      <Field label={t("motion:propertiesPanel.common.fit", "Fit")}>
         <SelectControl
-          label="Precomp fit"
+          label={t("motion:propertiesPanel.precomp.fitAria", "Precomp fit")}
           value={layer.fit ?? "contain"}
           options={[
-            { value: "contain", label: "Contain" },
-            { value: "cover", label: "Cover" },
-            { value: "fill", label: "Fill" },
+            { value: "contain", label: t("motion:propertiesPanel.fit.contain", "Contain") },
+            { value: "cover", label: t("motion:propertiesPanel.fit.cover", "Cover") },
+            { value: "fill", label: t("motion:propertiesPanel.fit.fill", "Fill") },
           ]}
           onChange={(fit) =>
             replaceLayer({
@@ -4276,11 +4602,11 @@ function PrecompSection({
         <div className="rounded-lg border border-border bg-bg-2 p-2.5">
           <div className="mb-2 flex items-center justify-between gap-2">
             <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-fg-3">
-              Instance overrides
+              {t("motion:propertiesPanel.precomp.instanceOverrides", "Instance overrides")}
             </span>
             {hasOverrides ? (
               <Button
-                label="Reset all"
+                label={t("motion:propertiesPanel.precomp.resetAll", "Reset all")}
                 size="sm"
                 variant="ghost"
                 onClick={() => replaceLayer({ ...layer, overrides: undefined })}
@@ -4301,7 +4627,7 @@ function PrecompSection({
                     </span>
                     {override ? (
                       <Button
-                        label="Reset"
+                        label={t("motion:propertiesPanel.precomp.reset", "Reset")}
                         size="sm"
                         variant="ghost"
                         onClick={() => clearChildOverride(child.id)}
@@ -4309,14 +4635,14 @@ function PrecompSection({
                     ) : null}
                   </div>
                   {child.type === "text" ? (
-                    <Field label="Text">
+                    <Field label={t("motion:propertiesPanel.precomp.text", "Text")}>
                       <TextArea
                         value={override?.text ?? child.text}
                         onChange={(text) => setChildOverride(child.id, { text })}
                       />
                     </Field>
                   ) : null}
-                  <Field label="Color">
+                  <Field label={t("motion:propertiesPanel.common.color", "Color")}>
                     <ColorInput
                       value={override?.color ?? masterColorOf(child)}
                       onChange={(color) => setChildOverride(child.id, { color })}
@@ -4339,6 +4665,7 @@ function TextAnimatorsSection({
   layer: Extract<MotionLayer, { type: "text" }>;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const animators = layer.textAnimators ?? [];
 
   const updateAnimator = (
@@ -4350,12 +4677,12 @@ function TextAnimatorsSection({
 
   return (
     <Section
-      title="Text Animators"
+      title={t("motion:propertiesPanel.textAnimators.title", "Text Animators")}
       icon={Type}
       action={
         <div className="relative flex w-[150px] items-center rounded-[7px] border border-border bg-bg-1">
           <select
-            aria-label="Add text animator preset"
+            aria-label={t("motion:propertiesPanel.textAnimators.addPresetAria", "Add text animator preset")}
             value=""
             onChange={(event) => {
               const presetId = event.target.value;
@@ -4366,7 +4693,9 @@ function TextAnimatorsSection({
             }}
             className="w-full cursor-pointer appearance-none truncate bg-transparent py-1.5 pl-[10px] pr-[24px] text-[12px] font-medium text-fg-2 outline-none"
           >
-            <option value="">+ Add animator</option>
+            <option value="">
+              {t("motion:propertiesPanel.textAnimators.addAnimator", "+ Add animator")}
+            </option>
             {MOTION_TEXT_ANIMATOR_PRESETS.map((preset) => (
               <option key={preset.id} value={preset.id}>
                 {preset.name}
@@ -4390,8 +4719,7 @@ function TextAnimatorsSection({
     >
       {animators.length === 0 ? (
         <ToolcraftText type="supporting" color="secondary" className="block rounded-lg border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-          Add a text animator for character reveals, type-on effects, kinetic
-          headlines, and staggered title sequences.
+          {t("motion:propertiesPanel.textAnimators.empty", "Add a text animator for character reveals, type-on effects, kinetic headlines, and staggered title sequences.")}
         </ToolcraftText>
       ) : (
         <div className="space-y-3">
@@ -4417,8 +4745,8 @@ function TextAnimatorsSection({
                     icon={animator.enabled ? Eye : EyeOff}
                     label={
                       animator.enabled
-                        ? "Disable Text Animator"
-                        : "Enable Text Animator"
+                        ? t("motion:propertiesPanel.textAnimators.disable", "Disable Text Animator")
+                        : t("motion:propertiesPanel.textAnimators.enable", "Enable Text Animator")
                     }
                     size="sm"
                     active={animator.enabled}
@@ -4434,7 +4762,7 @@ function TextAnimatorsSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Text Animator"
+                    label={t("motion:propertiesPanel.textAnimators.remove", "Remove Text Animator")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -4445,7 +4773,7 @@ function TextAnimatorsSection({
               </div>
 
               <div className="space-y-3 p-3">
-                <Field label="Name">
+                <Field label={t("motion:propertiesPanel.textAnimators.name", "Name")}>
                   <TextInput
                     value={animator.name}
                     onChange={(name) =>
@@ -4458,13 +4786,13 @@ function TextAnimatorsSection({
                 </Field>
 
                 <div className="grid grid-cols-2 gap-2.5">
-                  <Field label="Based on">
+                  <Field label={t("motion:propertiesPanel.textAnimators.basedOn", "Based on")}>
                     <SelectControl
-                      label="Based on"
+                      label={t("motion:propertiesPanel.textAnimators.basedOn", "Based on")}
                       value={animator.selector.basedOn}
                       options={[
-                        { value: "characters", label: "Characters" },
-                        { value: "words", label: "Words" },
+                        { value: "characters", label: t("motion:propertiesPanel.textAnimators.characters", "Characters") },
+                        { value: "words", label: t("motion:propertiesPanel.textAnimators.words", "Words") },
                       ]}
                       onChange={(basedOn) =>
                         updateAnimator(animator, (current) => ({
@@ -4477,14 +4805,14 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Direction">
+                  <Field label={t("motion:propertiesPanel.textAnimators.direction", "Direction")}>
                     <SelectControl
-                      label="Direction"
+                      label={t("motion:propertiesPanel.textAnimators.direction", "Direction")}
                       value={animator.timing.direction}
                       options={[
-                        { value: "forward", label: "Forward" },
-                        { value: "reverse", label: "Reverse" },
-                        { value: "center", label: "From center" },
+                        { value: "forward", label: t("motion:propertiesPanel.textAnimators.forward", "Forward") },
+                        { value: "reverse", label: t("motion:propertiesPanel.textAnimators.reverse", "Reverse") },
+                        { value: "center", label: t("motion:propertiesPanel.textAnimators.fromCenter", "From center") },
                       ]}
                       onChange={(direction) =>
                         updateAnimator(animator, (current) => ({
@@ -4500,7 +4828,7 @@ function TextAnimatorsSection({
                 </div>
 
                 <div className="grid grid-cols-3 gap-2.5">
-                  <Field label="Start" hint="%">
+                  <Field label={t("motion:propertiesPanel.common.start", "Start")} hint="%">
                     <NumberInput
                       value={animator.selector.start}
                       min={0}
@@ -4513,7 +4841,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="End" hint="%">
+                  <Field label={t("motion:propertiesPanel.common.end", "End")} hint="%">
                     <NumberInput
                       value={animator.selector.end}
                       min={0}
@@ -4526,7 +4854,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Offset" hint="%">
+                  <Field label={t("motion:propertiesPanel.common.offset", "Offset")} hint="%">
                     <NumberInput
                       value={animator.selector.offset}
                       onChange={(offset) =>
@@ -4540,7 +4868,7 @@ function TextAnimatorsSection({
                 </div>
 
                 <div className="grid grid-cols-2 gap-2.5">
-                  <Field label="Start time" hint="s">
+                  <Field label={t("motion:propertiesPanel.textAnimators.startTime", "Start time")} hint="s">
                     <NumberInput
                       value={animator.timing.startTime}
                       min={0}
@@ -4553,7 +4881,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Duration" hint="s">
+                  <Field label={t("motion:propertiesPanel.common.duration", "Duration")} hint="s">
                     <NumberInput
                       value={animator.timing.duration}
                       min={0.001}
@@ -4566,7 +4894,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Stagger" hint="s">
+                  <Field label={t("motion:propertiesPanel.textAnimators.stagger", "Stagger")} hint="s">
                     <NumberInput
                       value={animator.timing.stagger}
                       min={0}
@@ -4579,15 +4907,15 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Ease">
+                  <Field label={t("motion:propertiesPanel.textAnimators.ease", "Ease")}>
                     <SelectControl
-                      label="Ease"
+                      label={t("motion:propertiesPanel.textAnimators.ease", "Ease")}
                       value={animator.timing.easing}
                       options={[
-                        { value: "linear", label: "Linear" },
-                        { value: "ease", label: "Ease" },
-                        { value: "ease-in", label: "Ease in" },
-                        { value: "ease-out", label: "Ease out" },
+                        { value: "linear", label: t("motion:propertiesPanel.textAnimators.linear", "Linear") },
+                        { value: "ease", label: t("motion:propertiesPanel.textAnimators.easeOption", "Ease") },
+                        { value: "ease-in", label: t("motion:propertiesPanel.textAnimators.easeIn", "Ease in") },
+                        { value: "ease-out", label: t("motion:propertiesPanel.textAnimators.easeOut", "Ease out") },
                       ]}
                       onChange={(easing) =>
                         updateAnimator(animator, (current) => ({
@@ -4603,7 +4931,7 @@ function TextAnimatorsSection({
                 </div>
 
                 <div className="grid grid-cols-2 gap-2.5">
-                  <Field label="Initial X" hint="px">
+                  <Field label={t("motion:propertiesPanel.textAnimators.initialX", "Initial X")} hint="px">
                     <NumberInput
                       value={animator.properties.position.x}
                       onChange={(x) =>
@@ -4617,7 +4945,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Initial Y" hint="px">
+                  <Field label={t("motion:propertiesPanel.textAnimators.initialY", "Initial Y")} hint="px">
                     <NumberInput
                       value={animator.properties.position.y}
                       onChange={(y) =>
@@ -4631,7 +4959,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Initial scale">
+                  <Field label={t("motion:propertiesPanel.textAnimators.initialScale", "Initial scale")}>
                     <NumberInput
                       value={animator.properties.scale.x}
                       min={0.001}
@@ -4647,7 +4975,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Initial opacity">
+                  <Field label={t("motion:propertiesPanel.textAnimators.initialOpacity", "Initial opacity")}>
                     <NumberInput
                       value={animator.properties.opacity}
                       min={0}
@@ -4661,7 +4989,7 @@ function TextAnimatorsSection({
                       }
                     />
                   </Field>
-                  <Field label="Initial rotation" hint="deg">
+                  <Field label={t("motion:propertiesPanel.textAnimators.initialRotation", "Initial rotation")} hint="deg">
                     <NumberInput
                       value={animator.properties.rotation}
                       onChange={(rotation) =>
@@ -4699,6 +5027,7 @@ function ShapeModifiersSection({
   setSelectedProperty: (property: string | null) => void;
   replaceLayer: (nextLayer: MotionLayer) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const trimPaths = getMotionTrimPathsModifier(layer);
   const repeater = getMotionRepeaterModifier(layer);
   const zigZag = getMotionZigZagModifier(layer);
@@ -4844,7 +5173,16 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Diamond}
-            label={`${keyframeAtPlayhead ? "Remove" : "Add"} ${label} keyframe`}
+            label={t(
+              "motion:propertiesPanel.shapeModifiers.keyframeToggle",
+              "{{action}} {{label}} keyframe",
+              {
+                action: keyframeAtPlayhead
+                  ? t("motion:propertiesPanel.common.remove", "Remove")
+                  : t("motion:propertiesPanel.common.add", "Add"),
+                label,
+              },
+            )}
             size="sm"
             active={Boolean(keyframeAtPlayhead)}
             variant={selectedProperty === keyframeProperty ? "solid" : "ghost"}
@@ -4857,13 +5195,13 @@ function ShapeModifiersSection({
 
   return (
     <Section
-      title="Shape Modifiers"
+      title={t("motion:propertiesPanel.shapeModifiers.title", "Shape Modifiers")}
       icon={Scissors}
       action={
         <div className="flex items-center gap-1">
           <IconButton
             icon={Plus}
-            label="Add Trim Paths"
+            label={t("motion:propertiesPanel.shapeModifiers.addTrimPaths", "Add Trim Paths")}
             size="sm"
             variant="outline"
             disabled={Boolean(trimPaths)}
@@ -4871,7 +5209,7 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Plus}
-            label="Add Repeater"
+            label={t("motion:propertiesPanel.shapeModifiers.addRepeater", "Add Repeater")}
             size="sm"
             variant="outline"
             disabled={Boolean(repeater)}
@@ -4879,7 +5217,7 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Plus}
-            label="Add Zig Zag"
+            label={t("motion:propertiesPanel.shapeModifiers.addZigZag", "Add Zig Zag")}
             size="sm"
             variant="outline"
             disabled={Boolean(zigZag)}
@@ -4887,7 +5225,7 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Plus}
-            label="Add Round Corners"
+            label={t("motion:propertiesPanel.shapeModifiers.addRoundCorners", "Add Round Corners")}
             size="sm"
             variant="outline"
             disabled={Boolean(roundCorners)}
@@ -4895,7 +5233,7 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Plus}
-            label="Add Wiggle Paths"
+            label={t("motion:propertiesPanel.shapeModifiers.addWigglePaths", "Add Wiggle Paths")}
             size="sm"
             variant="outline"
             disabled={Boolean(wigglePaths)}
@@ -4903,7 +5241,7 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Plus}
-            label="Add Offset Paths"
+            label={t("motion:propertiesPanel.shapeModifiers.addOffsetPaths", "Add Offset Paths")}
             size="sm"
             variant="outline"
             disabled={Boolean(offsetPaths)}
@@ -4911,7 +5249,7 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Plus}
-            label="Add Pucker & Bloat"
+            label={t("motion:propertiesPanel.shapeModifiers.addPuckerBloat", "Add Pucker & Bloat")}
             size="sm"
             variant="outline"
             disabled={Boolean(puckerBloat)}
@@ -4919,7 +5257,7 @@ function ShapeModifiersSection({
           />
           <IconButton
             icon={Plus}
-            label="Add Twist"
+            label={t("motion:propertiesPanel.shapeModifiers.addTwist", "Add Twist")}
             size="sm"
             variant="outline"
             disabled={Boolean(twist)}
@@ -4937,9 +5275,7 @@ function ShapeModifiersSection({
       !puckerBloat &&
       !twist ? (
         <ToolcraftText type="supporting" color="secondary" className="block rounded-lg border border-dashed border-border bg-bg-2 px-3 py-3 text-[12px] leading-relaxed text-fg-muted">
-          Add Trim Paths, Repeater, Zig Zag, Round Corners, Wiggle Paths, Offset
-          Paths, Pucker &amp; Bloat, or Twist modifiers for logo reveals, line
-          draws, patterns, echoes, kinetic outlines, and organic distortions.
+          {t("motion:propertiesPanel.shapeModifiers.empty", "Add Trim Paths, Repeater, Zig Zag, Round Corners, Wiggle Paths, Offset Paths, Pucker & Bloat, or Twist modifiers for logo reveals, line draws, patterns, echoes, kinetic outlines, and organic distortions.")}
         </ToolcraftText>
       ) : (
         <div className="space-y-3">
@@ -4954,14 +5290,16 @@ function ShapeModifiersSection({
                     {trimPaths.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    Stroke reveal modifier
+                    {t("motion:propertiesPanel.shapeModifiers.trimPathsSubtitle", "Stroke reveal modifier")}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
                   <IconButton
                     icon={trimPaths.enabled ? Eye : EyeOff}
                     label={
-                      trimPaths.enabled ? "Disable Trim Paths" : "Enable Trim Paths"
+                      trimPaths.enabled
+                        ? t("motion:propertiesPanel.shapeModifiers.disableTrimPaths", "Disable Trim Paths")
+                        : t("motion:propertiesPanel.shapeModifiers.enableTrimPaths", "Enable Trim Paths")
                     }
                     size="sm"
                     active={trimPaths.enabled}
@@ -4977,7 +5315,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Trim Paths"
+                    label={t("motion:propertiesPanel.shapeModifiers.removeTrimPaths", "Remove Trim Paths")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -4987,9 +5325,9 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: trimPaths.id, property: "start", label: "Start", hint: "%", min: 0, max: 100 })}
-                {renderModifierNumberInput({ modifierId: trimPaths.id, property: "end", label: "End", hint: "%", min: 0, max: 100 })}
-                {renderModifierNumberInput({ modifierId: trimPaths.id, property: "offset", label: "Offset", hint: "deg" })}
+                {renderModifierNumberInput({ modifierId: trimPaths.id, property: "start", label: t("motion:propertiesPanel.common.start", "Start"), hint: "%", min: 0, max: 100 })}
+                {renderModifierNumberInput({ modifierId: trimPaths.id, property: "end", label: t("motion:propertiesPanel.common.end", "End"), hint: "%", min: 0, max: 100 })}
+                {renderModifierNumberInput({ modifierId: trimPaths.id, property: "offset", label: t("motion:propertiesPanel.common.offset", "Offset"), hint: "deg" })}
               </div>
             </div>
           ) : null}
@@ -5005,13 +5343,17 @@ function ShapeModifiersSection({
                     {repeater.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    {repeater.copies} generated copies
+                    {t("motion:propertiesPanel.shapeModifiers.repeaterSubtitle", "{{count}} generated copies", { count: repeater.copies })}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
                   <IconButton
                     icon={repeater.enabled ? Eye : EyeOff}
-                    label={repeater.enabled ? "Disable Repeater" : "Enable Repeater"}
+                    label={
+                      repeater.enabled
+                        ? t("motion:propertiesPanel.shapeModifiers.disableRepeater", "Disable Repeater")
+                        : t("motion:propertiesPanel.shapeModifiers.enableRepeater", "Enable Repeater")
+                    }
                     size="sm"
                     active={repeater.enabled}
                     onClick={() =>
@@ -5026,7 +5368,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Repeater"
+                    label={t("motion:propertiesPanel.shapeModifiers.removeRepeater", "Remove Repeater")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -5036,14 +5378,14 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "copies", label: "Copies", min: 1, max: 256 })}
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "offset", label: "Offset", step: 0.1 })}
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "position.x", label: "Position X", hint: "px" })}
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "position.y", label: "Position Y", hint: "px" })}
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "scale.x", label: "Scale X", min: 0.001, step: 0.05 })}
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "scale.y", label: "Scale Y", min: 0.001, step: 0.05 })}
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "rotation", label: "Rotation", hint: "deg" })}
-                {renderModifierNumberInput({ modifierId: repeater.id, property: "opacity", label: "Opacity", min: 0, max: 1, step: 0.05 })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "copies", label: t("motion:propertiesPanel.shapeModifiers.copies", "Copies"), min: 1, max: 256 })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "offset", label: t("motion:propertiesPanel.common.offset", "Offset"), step: 0.1 })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "position.x", label: t("motion:propertiesPanel.shapeModifiers.positionX", "Position X"), hint: "px" })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "position.y", label: t("motion:propertiesPanel.shapeModifiers.positionY", "Position Y"), hint: "px" })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "scale.x", label: t("motion:propertiesPanel.shapeModifiers.scaleX", "Scale X"), min: 0.001, step: 0.05 })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "scale.y", label: t("motion:propertiesPanel.shapeModifiers.scaleY", "Scale Y"), min: 0.001, step: 0.05 })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "rotation", label: t("motion:propertiesPanel.common.rotation", "Rotation"), hint: "deg" })}
+                {renderModifierNumberInput({ modifierId: repeater.id, property: "opacity", label: t("motion:propertiesPanel.common.opacity", "Opacity"), min: 0, max: 1, step: 0.05 })}
               </div>
             </div>
           ) : null}
@@ -5059,13 +5401,17 @@ function ShapeModifiersSection({
                     {zigZag.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    {zigZag.ridgesPerSegment} ridges per segment
+                    {t("motion:propertiesPanel.shapeModifiers.zigZagSubtitle", "{{count}} ridges per segment", { count: zigZag.ridgesPerSegment })}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
                   <IconButton
                     icon={zigZag.enabled ? Eye : EyeOff}
-                    label={zigZag.enabled ? "Disable Zig Zag" : "Enable Zig Zag"}
+                    label={
+                      zigZag.enabled
+                        ? t("motion:propertiesPanel.shapeModifiers.disableZigZag", "Disable Zig Zag")
+                        : t("motion:propertiesPanel.shapeModifiers.enableZigZag", "Enable Zig Zag")
+                    }
                     size="sm"
                     active={zigZag.enabled}
                     onClick={() =>
@@ -5080,7 +5426,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Zig Zag"
+                    label={t("motion:propertiesPanel.shapeModifiers.removeZigZag", "Remove Zig Zag")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -5090,8 +5436,8 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: zigZag.id, property: "size", label: "Size", hint: "px", min: -4000, max: 4000, step: 1 })}
-                {renderModifierNumberInput({ modifierId: zigZag.id, property: "ridgesPerSegment", label: "Ridges", min: 0, max: 128, step: 1 })}
+                {renderModifierNumberInput({ modifierId: zigZag.id, property: "size", label: t("motion:propertiesPanel.common.size", "Size"), hint: "px", min: -4000, max: 4000, step: 1 })}
+                {renderModifierNumberInput({ modifierId: zigZag.id, property: "ridgesPerSegment", label: t("motion:propertiesPanel.shapeModifiers.ridges", "Ridges"), min: 0, max: 128, step: 1 })}
               </div>
             </div>
           ) : null}
@@ -5107,7 +5453,7 @@ function ShapeModifiersSection({
                     {roundCorners.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    {roundCorners.radius}px radius, {roundCorners.segments} samples
+                    {t("motion:propertiesPanel.shapeModifiers.roundCornersSubtitle", "{{radius}}px radius, {{segments}} samples", { radius: roundCorners.radius, segments: roundCorners.segments })}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
@@ -5115,8 +5461,8 @@ function ShapeModifiersSection({
                     icon={roundCorners.enabled ? Eye : EyeOff}
                     label={
                       roundCorners.enabled
-                        ? "Disable Round Corners"
-                        : "Enable Round Corners"
+                        ? t("motion:propertiesPanel.shapeModifiers.disableRoundCorners", "Disable Round Corners")
+                        : t("motion:propertiesPanel.shapeModifiers.enableRoundCorners", "Enable Round Corners")
                     }
                     size="sm"
                     active={roundCorners.enabled}
@@ -5132,7 +5478,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Round Corners"
+                    label={t("motion:propertiesPanel.shapeModifiers.removeRoundCorners", "Remove Round Corners")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -5144,8 +5490,8 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: roundCorners.id, property: "radius", label: "Radius", hint: "px", min: 0, max: 4000, step: 1 })}
-                {renderModifierNumberInput({ modifierId: roundCorners.id, property: "segments", label: "Samples", min: 1, max: 48, step: 1 })}
+                {renderModifierNumberInput({ modifierId: roundCorners.id, property: "radius", label: t("motion:propertiesPanel.common.radius", "Radius"), hint: "px", min: 0, max: 4000, step: 1 })}
+                {renderModifierNumberInput({ modifierId: roundCorners.id, property: "segments", label: t("motion:propertiesPanel.shapeModifiers.samples", "Samples"), min: 1, max: 48, step: 1 })}
               </div>
             </div>
           ) : null}
@@ -5161,7 +5507,7 @@ function ShapeModifiersSection({
                     {wigglePaths.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    {wigglePaths.size}px at {wigglePaths.speed}x speed
+                    {t("motion:propertiesPanel.shapeModifiers.wigglePathsSubtitle", "{{size}}px at {{speed}}x speed", { size: wigglePaths.size, speed: wigglePaths.speed })}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
@@ -5169,8 +5515,8 @@ function ShapeModifiersSection({
                     icon={wigglePaths.enabled ? Eye : EyeOff}
                     label={
                       wigglePaths.enabled
-                        ? "Disable Wiggle Paths"
-                        : "Enable Wiggle Paths"
+                        ? t("motion:propertiesPanel.shapeModifiers.disableWigglePaths", "Disable Wiggle Paths")
+                        : t("motion:propertiesPanel.shapeModifiers.enableWigglePaths", "Enable Wiggle Paths")
                     }
                     size="sm"
                     active={wigglePaths.enabled}
@@ -5186,7 +5532,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Wiggle Paths"
+                    label={t("motion:propertiesPanel.shapeModifiers.removeWigglePaths", "Remove Wiggle Paths")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -5198,10 +5544,10 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "size", label: "Size", hint: "px", min: 0, max: 4000, step: 1 })}
-                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "detail", label: "Detail", min: 0, max: 32, step: 1 })}
-                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "speed", label: "Speed", min: 0, max: 60, step: 0.1 })}
-                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "seed", label: "Seed", step: 1 })}
+                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "size", label: t("motion:propertiesPanel.common.size", "Size"), hint: "px", min: 0, max: 4000, step: 1 })}
+                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "detail", label: t("motion:propertiesPanel.shapeModifiers.detail", "Detail"), min: 0, max: 32, step: 1 })}
+                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "speed", label: t("motion:propertiesPanel.common.speed", "Speed"), min: 0, max: 60, step: 0.1 })}
+                {renderModifierNumberInput({ modifierId: wigglePaths.id, property: "seed", label: t("motion:propertiesPanel.common.seed", "Seed"), step: 1 })}
               </div>
             </div>
           ) : null}
@@ -5217,7 +5563,7 @@ function ShapeModifiersSection({
                     {offsetPaths.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    {offsetPaths.amount}px {offsetPaths.lineJoin} join
+                    {t("motion:propertiesPanel.shapeModifiers.offsetPathsSubtitle", "{{amount}}px {{join}} join", { amount: offsetPaths.amount, join: offsetPaths.lineJoin })}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
@@ -5225,8 +5571,8 @@ function ShapeModifiersSection({
                     icon={offsetPaths.enabled ? Eye : EyeOff}
                     label={
                       offsetPaths.enabled
-                        ? "Disable Offset Paths"
-                        : "Enable Offset Paths"
+                        ? t("motion:propertiesPanel.shapeModifiers.disableOffsetPaths", "Disable Offset Paths")
+                        : t("motion:propertiesPanel.shapeModifiers.enableOffsetPaths", "Enable Offset Paths")
                     }
                     size="sm"
                     active={offsetPaths.enabled}
@@ -5242,7 +5588,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Offset Paths"
+                    label={t("motion:propertiesPanel.shapeModifiers.removeOffsetPaths", "Remove Offset Paths")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -5254,7 +5600,7 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: offsetPaths.id, property: "amount", label: "Amount", hint: "px", min: -4000, max: 4000, step: 1 })}
+                {renderModifierNumberInput({ modifierId: offsetPaths.id, property: "amount", label: t("motion:propertiesPanel.common.amount", "Amount"), hint: "px", min: -4000, max: 4000, step: 1 })}
               </div>
             </div>
           ) : null}
@@ -5270,7 +5616,7 @@ function ShapeModifiersSection({
                     {puckerBloat.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    {puckerBloat.amount}% distortion
+                    {t("motion:propertiesPanel.shapeModifiers.puckerBloatSubtitle", "{{amount}}% distortion", { amount: puckerBloat.amount })}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
@@ -5278,8 +5624,8 @@ function ShapeModifiersSection({
                     icon={puckerBloat.enabled ? Eye : EyeOff}
                     label={
                       puckerBloat.enabled
-                        ? "Disable Pucker & Bloat"
-                        : "Enable Pucker & Bloat"
+                        ? t("motion:propertiesPanel.shapeModifiers.disablePuckerBloat", "Disable Pucker & Bloat")
+                        : t("motion:propertiesPanel.shapeModifiers.enablePuckerBloat", "Enable Pucker & Bloat")
                     }
                     size="sm"
                     active={puckerBloat.enabled}
@@ -5295,7 +5641,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Pucker & Bloat"
+                    label={t("motion:propertiesPanel.shapeModifiers.removePuckerBloat", "Remove Pucker & Bloat")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -5307,7 +5653,7 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: puckerBloat.id, property: "amount", label: "Amount", hint: "%", min: -100, max: 100, step: 1 })}
+                {renderModifierNumberInput({ modifierId: puckerBloat.id, property: "amount", label: t("motion:propertiesPanel.common.amount", "Amount"), hint: "%", min: -100, max: 100, step: 1 })}
               </div>
             </div>
           ) : null}
@@ -5323,13 +5669,17 @@ function ShapeModifiersSection({
                     {twist.name}
                   </span>
                   <span className="block text-[10.5px] text-fg-muted">
-                    {twist.angle}deg twist
+                    {t("motion:propertiesPanel.shapeModifiers.twistSubtitle", "{{angle}}deg twist", { angle: twist.angle })}
                   </span>
                 </span>
                 <div className="flex items-center gap-0.5">
                   <IconButton
                     icon={twist.enabled ? Eye : EyeOff}
-                    label={twist.enabled ? "Disable Twist" : "Enable Twist"}
+                    label={
+                      twist.enabled
+                        ? t("motion:propertiesPanel.shapeModifiers.disableTwist", "Disable Twist")
+                        : t("motion:propertiesPanel.shapeModifiers.enableTwist", "Enable Twist")
+                    }
                     size="sm"
                     active={twist.enabled}
                     onClick={() =>
@@ -5340,7 +5690,7 @@ function ShapeModifiersSection({
                   />
                   <IconButton
                     icon={Trash2}
-                    label="Remove Twist"
+                    label={t("motion:propertiesPanel.shapeModifiers.removeTwist", "Remove Twist")}
                     size="sm"
                     variant="danger"
                     onClick={() =>
@@ -5350,7 +5700,7 @@ function ShapeModifiersSection({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2.5 p-3">
-                {renderModifierNumberInput({ modifierId: twist.id, property: "angle", label: "Angle", hint: "deg", min: -3600, max: 3600, step: 1 })}
+                {renderModifierNumberInput({ modifierId: twist.id, property: "angle", label: t("motion:propertiesPanel.common.angle", "Angle"), hint: "deg", min: -3600, max: 3600, step: 1 })}
               </div>
             </div>
           ) : null}

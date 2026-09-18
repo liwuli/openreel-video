@@ -4,6 +4,7 @@ import { Clapperboard, Sparkles } from "@/icons/lucide-compat";
 import { ToolcraftClickableCard, ToolcraftText } from "@openreel/ui";
 import { MOTION_PRESETS, getMotionPresetCategories } from "@openreel/core";
 import { useProjectStore } from "../../stores/project-store";
+import { useTranslation } from "../../i18n";
 import { useMotionStore } from "../stores/motion-store";
 import { PanelHeader, SegmentedControl } from "./primitives";
 
@@ -30,6 +31,7 @@ const CATEGORY_GRADIENTS: Record<string, string> = {
 const DEFAULT_GRADIENT = "from-accent-soft via-bg-3 to-accent-soft";
 
 export function MotionTemplateBrowser(): JSX.Element {
+  const { t } = useTranslation("motion");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const createMotionComposition = useProjectStore(
     (state) => state.createMotionComposition,
@@ -57,14 +59,23 @@ export function MotionTemplateBrowser(): JSX.Element {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <PanelHeader title="Templates" icon={Sparkles} />
+      <PanelHeader
+        title={t("motion:templateBrowser.title", "Templates")}
+        icon={Sparkles}
+      />
 
       <div className="shrink-0 border-b border-border px-3 py-2.5">
         <SegmentedControl
           value={activeCategory}
           options={categories.map((category) => ({
             value: category,
-            label: category === "all" ? "All" : CATEGORY_LABELS[category] ?? category,
+            label:
+              category === "all"
+                ? t("motion:templateBrowser.all", "All")
+                : t(
+                    `motion:templateBrowser.categories.${category}`,
+                    CATEGORY_LABELS[category] ?? category,
+                  ),
           }))}
           onChange={setActiveCategory}
         />
@@ -75,7 +86,9 @@ export function MotionTemplateBrowser(): JSX.Element {
           {presets.map((preset) => (
             <ToolcraftClickableCard
               key={preset.id}
-              label={`Apply ${preset.name}`}
+              label={t("motion:templateBrowser.apply", "Apply {{name}}", {
+                name: preset.name,
+              })}
               onClick={() => void applyPreset(preset.id, preset.name)}
               variant="muted"
               padding={0}
@@ -90,11 +103,16 @@ export function MotionTemplateBrowser(): JSX.Element {
                   <Clapperboard size={20} aria-hidden />
                 </div>
                 <span className="absolute left-2.5 top-2.5 rounded-md bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white/90 backdrop-blur-sm">
-                  {CATEGORY_LABELS[preset.category] ?? preset.category}
+                  {t(
+                    `motion:templateBrowser.categories.${preset.category}`,
+                    CATEGORY_LABELS[preset.category] ?? preset.category,
+                  )}
                 </span>
                 {preset.variables.length > 0 ? (
                   <span className="absolute bottom-2.5 right-2.5 rounded-md bg-black/55 px-2 py-0.5 text-[10px] font-semibold text-white/90 backdrop-blur-sm">
-                    {preset.variables.length} vars
+                    {t("motion:templateBrowser.varsCount", "{{count}} vars", {
+                      count: preset.variables.length,
+                    })}
                   </span>
                 ) : null}
               </div>

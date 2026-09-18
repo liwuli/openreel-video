@@ -73,7 +73,38 @@
     "resume": "Resume",
     "cancel": "Cancel",
     "recording": "Recording...",
-    "paused": "Recording paused"
+    "paused": "Recording paused",
+    "dialogTitle": "Screen Recording",
+    "notSupported": "Screen recording not supported",
+    "notSupportedDesc": "Your browser doesn't support screen recording. Please use Chrome, Edge, or Firefox.",
+    "errorTitle": "Recording Error",
+    "videoSettings": "Video Settings",
+    "audioSettings": "Audio Settings",
+    "systemAudioHint": "System audio capture is only available in Chrome and Edge browsers.",
+    "webcamRecording": "Webcam Recording",
+    "webcamToggle": "Webcam recording",
+    "webcamResolution": "Webcam Resolution",
+    "webcamHint": "Webcam will be recorded as a separate file, giving you full control in the editor.",
+    "countdownHint": "Recording will start after a 3-second countdown",
+    "requestingAccess": "Requesting Access...",
+    "resolutions": {
+      "720p": {
+        "label": "720p HD",
+        "desc": "1280×720 - Smaller files"
+      },
+      "1080p": {
+        "label": "1080p Full HD",
+        "desc": "1920×1080 - Recommended"
+      },
+      "1440p": {
+        "label": "1440p QHD",
+        "desc": "2560×1440 - High quality"
+      },
+      "4k": {
+        "label": "4K Ultra HD",
+        "desc": "3840×2160 - Maximum quality"
+      }
+    }
   },
   "processing": {
     "title": "Processing Effects",
@@ -119,7 +150,7 @@
     "fileInputLabel": "Project JSON file",
     "dropPlaceholder": "Drop a JSON file here or click to browse",
     "dropDescription": "Accepts .json project files",
-    "charsLoaded": "{{count}} characters loaded",
+    "charsLoaded": "{{count, number}} characters loaded",
     "clear": "Clear",
     "validating": "Validating...",
     "reValidate": "Re-validate",
@@ -200,5 +231,101 @@
     "tableTime": "Time",
     "tableValue": "Value",
     "tableEasing": "Easing"
+  },
+  "toast": {
+    "notifications": "Notifications",
+    "dismiss": "Dismiss notification"
+  },
+  "mobileBlocker": {
+    "desktopOnly": "Desktop Only",
+    "description": "OpenReel is a professional video editor that requires a desktop or laptop computer.",
+    "hint": "Please visit this page on your desktop or laptop to start creating amazing videos.",
+    "learnMore": "Learn More"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "unexpectedError": "An unexpected error occurred",
+    "retry": "Retry",
+    "panelFailed": "{{name}} failed to load. Please refresh the page."
+  },
+  "audioMixer": {
+    "title": "Audio Mixer",
+    "console": "Audio Mixing Console",
+    "master": "MASTER",
+    "masterVolumeFader": "Master volume fader",
+    "close": "Close mixer",
+    "noTracks": "No audio tracks in timeline. Add audio or video tracks to see channel strips.",
+    "channelCount": "{{count}} channel",
+    "channelCount_plural": "{{count}} channels",
+    "soloActive": "• Solo active",
+    "sampleRateInfo": "Sample Rate: {{rate}}Hz | Channels: {{channels}}"
+  },
+  "recorder": {
+    "resumeRecording": "Resume recording",
+    "pauseRecording": "Pause recording",
+    "stopRecording": "Stop recording",
+    "cancelRecording": "Cancel recording",
+    "minimizeControls": "Minimize controls"
+  },
+  "editorTools": "Editor tools",
+  "aspectRatio": {
+    "title": "Match Video Dimensions?",
+    "subtitle": "The video you're adding has different dimensions than your current project settings.",
+    "videoDimensions": "Video Dimensions",
+    "currentProject": "Current Project",
+    "aspectRatioValue": "Aspect Ratio: {{value}}",
+    "description": "Match the project dimensions to this video for a clean fit, or keep the current canvas. Your video will be placed at its original size so you can resize it freely.",
+    "keepCurrent": "Keep Current",
+    "matchVideo": "Match Video"
+  },
+  "creationReview": {
+    "title": "Creation Review",
+    "close": "Close creation review",
+    "sceneStats": "{{objects}} object(s) · {{cameras}} camera(s) · {{animations}} animation(s)",
+    "reviewStats": "{{assets}} asset(s) · {{scenes}} scene(s)",
+    "empty": "No agent-created 3D scenes yet. Use the creation tools to build a product, character, or scene."
+  },
+  "recipes": {
+    "selectClipTitle": "Select a clip",
+    "selectClipDesc": "Recipes apply to one selected video or image clip.",
+    "applyFailedTitle": "Could not apply recipe",
+    "applyFailedDesc": "This recipe could not be applied to the current clip.",
+    "appliedTitle": "Recipe applied",
+    "appliedDesc": "{{name}} was added to {{target}}.",
+    "selectedClip": "the selected clip",
+    "selectFirstTitle": "Select a clip first",
+    "selectFirstDesc": "Choose a video or image in the timeline to apply clip-scoped recipes, looks, and caption treatments.",
+    "video": "VIDEO",
+    "image": "IMAGE",
+    "selectedClipName": "Selected Clip",
+    "appliedCount": "{{duration}}s • {{count}} recipes applied",
+    "searchLabel": "Search recipes",
+    "searchPlaceholder": "Search recipes...",
+    "all": "ALL",
+    "noMatch": "No recipes match",
+    "noMatchDesc": "Try a different search or category.",
+    "editControls": "Edit recipe controls",
+    "applying": "Applying"
+  },
+  "templatesTab": {
+    "replaceConfirm": "Applying a template will replace your current project. Continue?",
+    "loading": "Loading templates...",
+    "searchLabel": "Search templates",
+    "searchPlaceholder": "Search templates...",
+    "all": "All",
+    "motionCreatorTitle": "Start a Motion Creator template",
+    "motionCreatorDesc": "Ads, app UI demos, lower thirds, social hooks, logo reveals, and end screens.",
+    "noTemplates": "No templates found",
+    "applying": "Applying..."
+  },
+  "moGraphTour": {
+    "skip": "Skip tour",
+    "skipTour": "Skip Tour",
+    "stepIndicator": "Motion Graphics Tour • Step {{current}} of {{total}}",
+    "proTips": "Pro Tips",
+    "goToStep": "Go to step {{step}}",
+    "back": "Back",
+    "next": "Next",
+    "getStarted": "Get Started"
   }
 }

@@ -68,6 +68,29 @@
     "subtitle": "副标题",
     "lowerThird": "底部人名字幕",
     "caption": "视频旁白字幕",
-    "hero": "醒目海报大字"
-  }
+    "hero": "醒目海报大字",
+    "quote": "引言",
+    "outline": "描边",
+    "badge": "徽章"
+  },
+  "addToTimeline": "添加到时间线",
+  "replaceAsset": "替换素材",
+  "retryGeneration": "重新生成",
+  "createWithKieAI": "使用 KieAI 创建",
+  "kieaiGenerating": "KieAI 正在生成…",
+  "generating": "生成中…",
+  "unknownError": "未知错误",
+  "kieaiOpenFailed": "无法打开 KieAI",
+  "assetNotFound": "未找到素材",
+  "assetNotFoundDesc": "无法加载该素材的图像数据。",
+  "unsavedAudioDiscarded": "未保存的音频已丢弃",
+  "unsavedAudioDiscardedDesc": "请先保存到素材库或下载，以便下次继续使用。",
+  "folderPickerNotSupported": "当前环境不支持文件夹选择器",
+  "folderPickerNotSupportedDesc": "请使用每个缺失素材上的刷新按钮逐一重新链接。",
+  "importingMedia": "正在导入媒体素材...",
+  "importingFile": "正在导入 {{name}}（{{current}}/{{total}}）...",
+  "extractingAudio": "正在从 {{name}} 提取音频...",
+  "replacingAsset": "正在替换素材...",
+  "badgeFailed": "失败",
+  "badgeMissing": "缺失"
 }

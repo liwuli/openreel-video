@@ -4,6 +4,7 @@ import { ToolcraftSelectControl as Selector } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { PropertySlider } from "./shell/PropertySlider";
 import { useProjectStore } from "../../../stores/project-store";
+import { useTranslation } from "../../../i18n";
 
 interface Transform3DSectionProps {
   clipId: string;
@@ -12,6 +13,7 @@ interface Transform3DSectionProps {
 export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const {
     getClip,
     getTextClip,
@@ -88,7 +90,7 @@ export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
   if (!clip) {
     return (
       <Text type="supporting" color="secondary" className="py-8 text-center text-xs">
-        No clip selected
+        {t("transform3d.noClipSelected", "No clip selected")}
       </Text>
     );
   }
@@ -96,7 +98,7 @@ export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
   return (
     <div className="space-y-3">
       <PropertySlider
-        label="Rotation X"
+        label={t("transform3d.rotationX", "Rotation X")}
         value={rotate3d.x}
         onChange={handleRotateXChange}
         min={-360}
@@ -106,7 +108,7 @@ export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
       />
 
       <PropertySlider
-        label="Rotation Y"
+        label={t("transform3d.rotationY", "Rotation Y")}
         value={rotate3d.y}
         onChange={handleRotateYChange}
         min={-360}
@@ -116,7 +118,7 @@ export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
       />
 
       <PropertySlider
-        label="Rotation Z"
+        label={t("transform3d.rotationZ", "Rotation Z")}
         value={rotate3d.z}
         onChange={handleRotateZChange}
         min={-360}
@@ -126,7 +128,7 @@ export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
       />
 
       <PropertySlider
-        label="Perspective"
+        label={t("transform3d.perspective", "Perspective")}
         value={perspective}
         onChange={handlePerspectiveChange}
         min={100}
@@ -137,13 +139,16 @@ export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
 
       <div className="space-y-1">
         <Selector
-          label="Transform Style"
+          label={t("transform3d.transformStyle", "Transform Style")}
           size="sm"
           width="100%"
           value={transformStyle}
           options={[
-            { label: "Flat", value: "flat" },
-            { label: "Preserve 3D", value: "preserve-3d" },
+            { label: t("transform3d.flat", "Flat"), value: "flat" },
+            {
+              label: t("transform3d.preserve3d", "Preserve 3D"),
+              value: "preserve-3d",
+            },
           ]}
           onChange={(value) =>
             handleTransformStyleChange(value as "flat" | "preserve-3d")
@@ -151,17 +156,22 @@ export const Transform3DSection: React.FC<Transform3DSectionProps> = ({
         />
         <Text type="supporting" color="secondary" className="text-[9px]">
           {transformStyle === "flat" &&
-            "Flattens children into the plane of this element"}
-          {transformStyle === "preserve-3d" && "Children positioned in 3D space"}
+            t(
+              "transform3d.flatHint",
+              "Flattens children into the plane of this element",
+            )}
+          {transformStyle === "preserve-3d" &&
+            t("transform3d.preserve3dHint", "Children positioned in 3D space")}
         </Text>
       </div>
 
       {(rotate3d.x !== 0 || rotate3d.y !== 0 || rotate3d.z !== 0) && (
         <Card variant="muted" padding={2} className="border border-primary/20 bg-primary/5">
           <Text type="supporting" color="secondary" className="text-[9px]">
-            Tip: 3D rotations
-            allow you to rotate layers along X, Y, and Z axes for depth effects.
-            Adjust perspective to control the 3D depth perception.
+            {t(
+              "transform3d.tip",
+              "Tip: 3D rotations allow you to rotate layers along X, Y, and Z axes for depth effects. Adjust perspective to control the 3D depth perception.",
+            )}
           </Text>
         </Card>
       )}

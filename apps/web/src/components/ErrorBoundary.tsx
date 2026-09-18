@@ -1,6 +1,7 @@
 import React from "react";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
+import i18n from "../i18n";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -44,13 +45,14 @@ export class ErrorBoundary extends React.Component<
       return (
         <div className="flex flex-col items-center justify-center p-8 text-center bg-background-secondary/50 rounded-lg m-2">
           <Text type="supporting" weight="medium" className="text-red-400 text-sm mb-2">
-            Something went wrong
+            {i18n.t("common:errorBoundary.title", "Something went wrong")}
           </Text>
           <Text type="supporting" color="secondary" className="text-text-muted text-xs mb-4 max-w-xs">
-            {this.state.error?.message || "An unexpected error occurred"}
+            {this.state.error?.message ||
+              i18n.t("common:errorBoundary.unexpectedError", "An unexpected error occurred")}
           </Text>
           <Button
-            label="Retry"
+            label={i18n.t("common:errorBoundary.retry", "Retry")}
             variant="ghost"
             size="sm"
             onClick={this.handleRetry}
@@ -77,7 +79,10 @@ export const PanelErrorBoundary: React.FC<PanelErrorBoundaryProps> = ({
     fallback={
       <div className="flex-1 flex items-center justify-center p-4 text-center">
         <Text type="supporting" color="secondary" className="text-text-muted text-xs">
-          {name} failed to load. Please refresh the page.
+          {i18n.t("common:errorBoundary.panelFailed", {
+            name,
+            defaultValue: "{{name}} failed to load. Please refresh the page.",
+          })}
         </Text>
       </div>
     }

@@ -264,6 +264,7 @@ const MediaThumbnail: React.FC<{
   onKieAI,
   onRetryKieAI,
 }) => {
+  const { t } = useTranslation(["assets", "common"]);
   const [isHovered, setIsHovered] = useState(false);
 
   const getIcon = () => {
@@ -315,25 +316,25 @@ const MediaThumbnail: React.FC<{
     <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center gap-2 animate-in fade-in duration-200">
       {item.kieaiError ? (
         <PanelIconButton
-          label="Retry generation"
+          label={t("assets:retryGeneration", "Retry generation")}
           icon={<RefreshCw size={14} className="text-red-400" />}
           onClick={(e) => { e.stopPropagation(); onRetryKieAI?.(); }}
           className="p-2 bg-red-500/20 rounded-full hover:bg-red-500/40 backdrop-blur-sm transition-colors"
         />
       ) : item.isPending ? (
-        <div title="KieAI generation in progress…" className="p-2">
+        <div title={t("assets:kieaiGenerating", "KieAI generation in progress…")} className="p-2">
           <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </div>
       ) : item.isPlaceholder ? (
         <>
           <PanelIconButton
-            label="Replace asset"
+            label={t("assets:replaceAsset", "Replace asset")}
             icon={<RefreshCw size={14} className="text-yellow-500" />}
             onClick={(e) => { e.stopPropagation(); onReplace(); }}
             className="p-2 bg-yellow-500/20 rounded-full hover:bg-yellow-500/40 backdrop-blur-sm transition-colors"
           />
           <PanelIconButton
-            label="Delete"
+            label={t("common:delete")}
             icon={<Trash2 size={14} className="text-red-400" />}
             onClick={(e) => { e.stopPropagation(); onDelete(); }}
             className="p-2 bg-red-500/20 rounded-full hover:bg-red-500/40 backdrop-blur-sm transition-colors"
@@ -343,20 +344,20 @@ const MediaThumbnail: React.FC<{
         <>
           {item.type === "image" && onKieAI && (
             <PanelIconButton
-              label="Create with KieAI"
+              label={t("assets:createWithKieAI", "Create with KieAI")}
               icon={<Sparkles size={14} className="text-primary" />}
               onClick={(e) => { e.stopPropagation(); onKieAI(); }}
               className="p-2 bg-primary/20 rounded-full hover:bg-primary/40 backdrop-blur-sm transition-colors"
             />
           )}
           <PanelIconButton
-            label="Add to timeline"
+            label={t("assets:addToTimeline", "Add to timeline")}
             icon={<Plus size={14} className="text-primary" />}
             onClick={(e) => { e.stopPropagation(); onAddToTimeline(); }}
             className="p-2 bg-primary/20 rounded-full hover:bg-primary/40 backdrop-blur-sm transition-colors"
           />
           <PanelIconButton
-            label="Delete"
+            label={t("common:delete")}
             icon={<Trash2 size={14} className="text-red-400" />}
             onClick={(e) => { e.stopPropagation(); onDelete(); }}
             className="p-2 bg-red-500/20 rounded-full hover:bg-red-500/40 backdrop-blur-sm transition-colors"
@@ -426,25 +427,25 @@ const MediaThumbnail: React.FC<{
           <div className="flex items-center gap-1 flex-shrink-0">
             {item.kieaiError ? (
               <PanelIconButton
-                label="Retry generation"
+                label={t("assets:retryGeneration", "Retry generation")}
                 icon={<RefreshCw size={12} className="text-red-400" />}
                 onClick={(e) => { e.stopPropagation(); onRetryKieAI?.(); }}
                 className="p-1 bg-red-500/20 rounded hover:bg-red-500/40 transition-colors"
               />
             ) : item.isPending ? (
-              <div className="p-1" title="Generating…">
+              <div className="p-1" title={t("assets:generating", "Generating…")}>
                 <div className="h-3 w-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : item.isPlaceholder ? (
               <>
                 <PanelIconButton
-                  label="Replace asset"
+                  label={t("assets:replaceAsset", "Replace asset")}
                   icon={<RefreshCw size={12} className="text-yellow-500" />}
                   onClick={(e) => { e.stopPropagation(); onReplace(); }}
                   className="p-1 bg-yellow-500/20 rounded hover:bg-yellow-500/40 transition-colors"
                 />
                 <PanelIconButton
-                  label="Delete"
+                  label={t("common:delete")}
                   icon={<Trash2 size={12} className="text-red-400" />}
                   onClick={(e) => { e.stopPropagation(); onDelete(); }}
                   className="p-1 bg-red-500/20 rounded hover:bg-red-500/40 transition-colors"
@@ -454,20 +455,20 @@ const MediaThumbnail: React.FC<{
               <>
                 {item.type === "image" && onKieAI && (
                   <PanelIconButton
-                    label="Create with KieAI"
+                    label={t("assets:createWithKieAI", "Create with KieAI")}
                     icon={<Sparkles size={12} className="text-primary" />}
                     onClick={(e) => { e.stopPropagation(); onKieAI(); }}
                     className="p-1 bg-primary/20 rounded hover:bg-primary/40 transition-colors"
                   />
                 )}
                 <PanelIconButton
-                  label="Add to timeline"
+                  label={t("assets:addToTimeline", "Add to timeline")}
                   icon={<Plus size={12} className="text-primary" />}
                   onClick={(e) => { e.stopPropagation(); onAddToTimeline(); }}
                   className="p-1 bg-primary/20 rounded hover:bg-primary/40 transition-colors"
                 />
                 <PanelIconButton
-                  label="Delete"
+                  label={t("common:delete")}
                   icon={<Trash2 size={12} className="text-red-400" />}
                   onClick={(e) => { e.stopPropagation(); onDelete(); }}
                   className="p-1 bg-red-500/20 rounded hover:bg-red-500/40 transition-colors"
@@ -532,7 +533,7 @@ const MediaThumbnail: React.FC<{
         {item.kieaiError && (
           <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-red-500 rounded text-[8px] text-white font-bold flex items-center gap-1">
             <AlertTriangle size={8} />
-            Failed
+            {t("assets:badgeFailed", "Failed")}
           </div>
         )}
 
@@ -548,7 +549,7 @@ const MediaThumbnail: React.FC<{
         {!item.kieaiError && !item.isPending && item.isPlaceholder && (
           <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-yellow-500 rounded text-[8px] text-black font-bold flex items-center gap-1">
             <AlertTriangle size={10} />
-            Missing
+            {t("assets:badgeMissing", "Missing")}
           </div>
         )}
 
@@ -673,6 +674,12 @@ export const AssetsPanel: React.FC = () => {
           return t("assets:presetNames.caption", "Caption");
         case "hero":
           return t("assets:presetNames.hero", "Hero");
+        case "quote":
+          return t("assets:presetNames.quote", "Quote");
+        case "outline":
+          return t("assets:presetNames.outline", "Outline");
+        case "badge":
+          return t("assets:presetNames.badge", "Badge");
         default:
           return name;
       }
@@ -685,10 +692,16 @@ export const AssetsPanel: React.FC = () => {
 
   const setActiveTab = useCallback((tab: AssetsTab) => {
     if (activeTab === "ai" && tab !== "ai" && ttsHasUnsaved) {
-      toast.warning("Unsaved audio discarded", "Save to media or download next time to keep it.");
+      toast.warning(
+        t("assets:unsavedAudioDiscarded", "Unsaved audio discarded"),
+        t(
+          "assets:unsavedAudioDiscardedDesc",
+          "Save to media or download next time to keep it.",
+        ),
+      );
     }
     setActiveTabRaw(tab);
-  }, [activeTab, ttsHasUnsaved]);
+  }, [activeTab, ttsHasUnsaved, t]);
 
   const [isDragOver, setIsDragOver] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
@@ -757,14 +770,28 @@ export const AssetsPanel: React.FC = () => {
         for (let i = 0; i < fileArray.length; i++) {
           const file = fileArray[i];
           setImportProgress(
-            `Importing ${file.name} (${i + 1}/${fileArray.length})...`,
+            t(
+              "assets:importingFile",
+              "Importing {{name}} ({{current}}/{{total}})...",
+              {
+                name: file.name,
+                current: i + 1,
+                total: fileArray.length,
+              },
+            ),
           );
 
           const result = await importMedia(file);
 
           // If it's a video with audio, extract audio to separate track
           if (result.success && file.type.startsWith("video/")) {
-            setImportProgress(`Extracting audio from ${file.name}...`);
+            setImportProgress(
+              t(
+                "assets:extractingAudio",
+                "Extracting audio from {{name}}...",
+                { name: file.name },
+              ),
+            );
             // Audio extraction is handled by the importMedia function
             // The audio track is created automatically when adding to timeline
           }
@@ -776,7 +803,7 @@ export const AssetsPanel: React.FC = () => {
         setImportProgress("");
       }
     },
-    [importMedia],
+    [importMedia, t],
   );
 
   // Handle drag and drop import — capture FileSystemFileHandle for each dropped file
@@ -846,7 +873,7 @@ export const AssetsPanel: React.FC = () => {
         const file = (e.target as HTMLInputElement).files?.[0];
         if (file) {
           setIsImporting(true);
-          setImportProgress(`Replacing asset...`);
+          setImportProgress(t("assets:replacingAsset", "Replacing asset..."));
           try {
             await replaceMediaAsset(itemId, file);
           } catch (error) {
@@ -859,12 +886,18 @@ export const AssetsPanel: React.FC = () => {
       };
       input.click();
     },
-    [replaceMediaAsset],
+    [replaceMediaAsset, t],
   );
 
   const handleRelinkFromFolder = useCallback(async () => {
     if (!("showDirectoryPicker" in window)) {
-      toast.error("Folder picker not supported", "Please relink assets individually using the refresh button on each missing asset.");
+      toast.error(
+        t("assets:folderPickerNotSupported", "Folder picker not supported"),
+        t(
+          "assets:folderPickerNotSupportedDesc",
+          "Please relink assets individually using the refresh button on each missing asset.",
+        ),
+      );
       return;
     }
     let dirHandle: FileSystemDirectoryHandle;
@@ -901,7 +934,11 @@ export const AssetsPanel: React.FC = () => {
         : null;
       const entry = key ? fileMap.get(key) : null;
       if (entry) {
-        setImportProgress(`Relinking ${item.name}…`);
+        setImportProgress(
+          t("assets:relinkProgress", "Relinking {{name}}…", {
+            name: item.name,
+          }),
+        );
         try {
           // Save individual file handle for future auto-restore
           try { await saveFileHandle(entry.file.name, entry.file.size, entry.handle); } catch { /* best-effort */ }
@@ -916,11 +953,22 @@ export const AssetsPanel: React.FC = () => {
     setImportProgress("");
 
     if (linked > 0) {
-      toast.success(`Relinked ${linked} of ${placeholders.length} asset${placeholders.length !== 1 ? "s" : ""}`);
+      toast.success(
+        t("assets:relinkedSummary", "Relinked {{count}} of {{total}} assets", {
+          count: linked,
+          total: placeholders.length,
+        }),
+      );
     } else {
-      toast.error("No matches found", "None of the files in the selected folder matched the missing assets by filename.");
+      toast.error(
+        t("assets:noMatchesFound", "No matches found"),
+        t(
+          "assets:noMatchesFoundDesc",
+          "None of the files in the selected folder matched the missing assets by filename.",
+        ),
+      );
     }
-  }, [replaceMediaAsset]);
+  }, [replaceMediaAsset, t]);
 
   // Handle drag start for timeline placement
   const handleItemDragStart = useCallback(
@@ -1031,7 +1079,13 @@ export const AssetsPanel: React.FC = () => {
     try {
       const blob = await loadMediaBlob(item.id);
       if (!blob) {
-        toast.error("Asset not found", "Cannot load the image data for this asset.");
+        toast.error(
+          t("assets:assetNotFound", "Asset not found"),
+          t(
+            "assets:assetNotFoundDesc",
+            "Cannot load the image data for this asset.",
+          ),
+        );
         return;
       }
       const mimeType = blob.type || (item.name.match(/\.png$/i) ? "image/png" : "image/jpeg");
@@ -1039,9 +1093,12 @@ export const AssetsPanel: React.FC = () => {
       setKieaiDialog({ file, previewUrl: item.thumbnailUrl });
     } catch (err) {
       console.error("[KieAI] Failed to load media blob:", err);
-      toast.error("Failed to open KieAI", err instanceof Error ? err.message : "Unknown error");
+      toast.error(
+        t("assets:kieaiOpenFailed", "Failed to open KieAI"),
+        err instanceof Error ? err.message : t("assets:unknownError", "Unknown error"),
+      );
     }
-  }, []);
+  }, [t]);
 
   const handleRetryKieAI = useCallback((item: MediaItem) => {
     if (!item.kieaiTaskId) return;
@@ -1102,7 +1159,7 @@ export const AssetsPanel: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  aria-label="Sort media"
+                  aria-label={t("assets:sortMedia", "Sort media")}
                   onClick={() =>
                     setSortOrder((prev) =>
                       prev === "none" ? "asc" : prev === "asc" ? "desc" : "none",
@@ -1230,7 +1287,7 @@ export const AssetsPanel: React.FC = () => {
                       (cat) => (
                         <SelectableCard
                           key={cat}
-                          label={cat.charAt(0).toUpperCase() + cat.slice(1)}
+                          label={t(`assets:bgCategories.${cat}`, cat.charAt(0).toUpperCase() + cat.slice(1))}
                           isSelected={backgroundCategory === cat}
                           onChange={() => setBackgroundCategory(cat)}
                           onClick={() => setBackgroundCategory(cat)}
@@ -1242,7 +1299,7 @@ export const AssetsPanel: React.FC = () => {
                               : "bg-background-tertiary text-text-muted hover:text-text-secondary"
                           }`}
                         >
-                          {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                          {t(`assets:bgCategories.${cat}`, cat.charAt(0).toUpperCase() + cat.slice(1))}
                         </SelectableCard>
                       ),
                     )}
@@ -1436,7 +1493,7 @@ export const AssetsPanel: React.FC = () => {
                       className="text-text-secondary group-hover:text-primary transition-colors"
                     />
                     <span className="text-xs text-text-secondary group-hover:text-text-primary">
-                      Import SVG File
+                      {t("assets:importSvgFile", "Import SVG File")}
                     </span>
                   </PanelButton>
                 </div>
@@ -1605,13 +1662,15 @@ export const AssetsPanel: React.FC = () => {
       {/* ── Body: section content fills the remaining space ──── */}
       <div className="flex-1 flex flex-col min-w-0 h-full bg-bg-1 relative">
         {isImporting && (
-          <LoadingIndicator message={importProgress || "Importing media..."} />
+          <LoadingIndicator
+            message={importProgress || t("assets:importingMedia", "Importing media...")}
+          />
         )}
 
         <input
           ref={fileInputRef}
           type="file"
-          aria-label="Import media"
+          aria-label={t("assets:importMedia", "Import Media")}
           accept="video/*,audio/*,image/*"
           multiple
           className="hidden"

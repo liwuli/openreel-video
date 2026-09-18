@@ -28,6 +28,7 @@ import {
 } from "@openreel/ui";
 import { useProjectStore } from "../../stores/project-store";
 import { getLiveEditorHost, runExclusive } from "../../services/agent/host-singleton";
+import i18n, { useTranslation } from "../../i18n";
 import { useMotionStore } from "../stores/motion-store";
 import type { CreationCameraEditPatch } from "../creation-camera-editing";
 import type { CreationObjectEditPatch } from "../creation-object-editing";
@@ -44,13 +45,33 @@ import { Button, ColorInput, EmptyState, IconButton, PanelHeader } from "./primi
 
 const STATUS_META: Record<
   CreationRenderStatus,
-  { readonly label: string; readonly className: string }
+  { readonly labelKey: string; readonly label: string; readonly className: string }
 > = {
-  ready: { label: "Renderable", className: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" },
-  partial: { label: "Partial", className: "border-amber-500/30 bg-amber-500/10 text-amber-300" },
-  unbound: { label: "Unbound", className: "border-slate-500/30 bg-white/5 text-fg-3" },
-  "missing-composition": { label: "Missing comp", className: "border-red-500/30 bg-red-500/10 text-red-300" },
-  "missing-layer": { label: "Missing layer", className: "border-red-500/30 bg-red-500/10 text-red-300" },
+  ready: {
+    labelKey: "motion:creationWorkspace.status.ready",
+    label: "Renderable",
+    className: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
+  },
+  partial: {
+    labelKey: "motion:creationWorkspace.status.partial",
+    label: "Partial",
+    className: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+  },
+  unbound: {
+    labelKey: "motion:creationWorkspace.status.unbound",
+    label: "Unbound",
+    className: "border-slate-500/30 bg-white/5 text-fg-3",
+  },
+  "missing-composition": {
+    labelKey: "motion:creationWorkspace.status.missingComposition",
+    label: "Missing comp",
+    className: "border-red-500/30 bg-red-500/10 text-red-300",
+  },
+  "missing-layer": {
+    labelKey: "motion:creationWorkspace.status.missingLayer",
+    label: "Missing layer",
+    className: "border-red-500/30 bg-red-500/10 text-red-300",
+  },
 };
 
 function PanelCopy({
@@ -75,6 +96,7 @@ function PanelCopy({
 }
 
 export function CreationWorkspacePanel(): JSX.Element {
+  const { t } = useTranslation("motion");
   const creation = useProjectStore((state) => state.project.creation);
   const motionCompositions = useProjectStore(
     (state) => state.project.motionCompositions ?? [],
@@ -156,7 +178,13 @@ export function CreationWorkspacePanel(): JSX.Element {
     try {
       const result = await recoverMotionScene3DLayer(layer.compositionId, layer.layerId);
       if (!result.success) {
-        setRecoverError(result.error?.message ?? "Could not recover scene");
+        setRecoverError(
+          result.error?.message ??
+            t(
+              "motion:creationWorkspace.couldNotRecoverScene",
+              "Could not recover scene",
+            ),
+        );
       }
     } finally {
       setRecoveringLayerId(null);
@@ -196,7 +224,13 @@ export function CreationWorkspacePanel(): JSX.Element {
     } catch (error) {
       setSyncError({
         sceneId: scene.sceneId,
-        message: error instanceof Error ? error.message : "Could not sync render scene",
+        message:
+          error instanceof Error
+            ? error.message
+            : t(
+                "motion:creationWorkspace.couldNotSyncRenderScene",
+                "Could not sync render scene",
+              ),
       });
     } finally {
       setSyncingSceneId(null);
@@ -205,7 +239,10 @@ export function CreationWorkspacePanel(): JSX.Element {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <PanelHeader title="Creation" icon={Layers3} />
+      <PanelHeader
+        title={t("motion:creationWorkspace.title", "Creation")}
+        icon={Layers3}
+      />
       <div className="min-h-0 flex-1 space-y-3 overflow-auto p-3">
         {!workspace.available || workspace.sceneCount === 0 ? (
           workspace.recoverableScene3DLayers.length > 0 ? (
@@ -218,23 +255,38 @@ export function CreationWorkspacePanel(): JSX.Element {
           ) : (
             <EmptyState
               icon={PackageOpen}
-              title="No creation scenes"
-              description="Agent-created products, characters, and 3D worlds will appear here once MCP tools create them."
+              title={t(
+                "motion:creationWorkspace.noCreationScenes",
+                "No creation scenes",
+              )}
+              description={t(
+                "motion:creationWorkspace.noCreationScenesDescription",
+                "Agent-created products, characters, and 3D worlds will appear here once MCP tools create them.",
+              )}
             />
           )
         ) : (
           <>
             <div className="grid grid-cols-3 gap-2">
-              <MetricCard label="Scenes" value={workspace.sceneCount} />
-              <MetricCard label="Assets" value={workspace.assetCount} />
               <MetricCard
-                label="Ready"
+                label={t("motion:creationWorkspace.scenes", "Scenes")}
+                value={workspace.sceneCount}
+              />
+              <MetricCard
+                label={t("motion:creationWorkspace.assets", "Assets")}
+                value={workspace.assetCount}
+              />
+              <MetricCard
+                label={t("motion:creationWorkspace.ready", "Ready")}
                 value={workspace.scenes.filter((scene) => scene.renderStatus === "ready").length}
               />
             </div>
 
             <section className="space-y-2">
-              <SectionLabel label="Agent scenes" count={workspace.scenes.length} />
+              <SectionLabel
+                label={t("motion:creationWorkspace.agentScenes", "Agent scenes")}
+                count={workspace.scenes.length}
+              />
               <div className="space-y-2">
                 {workspace.scenes.map((scene) => (
                   <SceneButton
@@ -260,7 +312,10 @@ export function CreationWorkspacePanel(): JSX.Element {
 
             {selectedScene ? (
               <section className="space-y-2">
-                <SectionLabel label="Scene detail" count={selectedScene.objectCount} />
+                <SectionLabel
+                  label={t("motion:creationWorkspace.sceneDetail", "Scene detail")}
+                  count={selectedScene.objectCount}
+                />
                 <SceneDetail
                   scene={selectedScene}
                   selectedObjectId={selectedObjectId}
@@ -284,7 +339,13 @@ export function CreationWorkspacePanel(): JSX.Element {
                     try {
                       const result = await updateCreationCamera(selectedScene.sceneId, cameraId, patch);
                       if (!result.success) {
-                        setCameraError(result.error?.message ?? "Could not update creation camera");
+                        setCameraError(
+                          result.error?.message ??
+                            t(
+                              "motion:creationWorkspace.couldNotUpdateCreationCamera",
+                              "Could not update creation camera",
+                            ),
+                        );
                       }
                     } finally {
                       setSavingCameraId(null);
@@ -296,7 +357,13 @@ export function CreationWorkspacePanel(): JSX.Element {
                     try {
                       const result = await updateCreationObject(selectedScene.sceneId, objectId, patch);
                       if (!result.success) {
-                        setEditError(result.error?.message ?? "Could not update creation object");
+                        setEditError(
+                          result.error?.message ??
+                            t(
+                              "motion:creationWorkspace.couldNotUpdateCreationObject",
+                              "Could not update creation object",
+                            ),
+                        );
                       }
                     } finally {
                       setSavingObjectId(null);
@@ -340,6 +407,7 @@ function SceneButton({
   onSelect: () => void;
   onOpen: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const status = STATUS_META[scene.renderStatus];
   const errorCount = scene.issues.filter((issue) => issue.severity === "error").length;
   const warningCount = scene.issues.filter((issue) => issue.severity === "warning").length;
@@ -364,20 +432,41 @@ function SceneButton({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <span className="truncate text-[13px] font-semibold text-fg">{scene.name}</span>
-              {scene.active ? <span className="rounded bg-accent-soft px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.06em] text-accent">Active</span> : null}
+              {scene.active ? <span className="rounded bg-accent-soft px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.06em] text-accent">{t("motion:creationWorkspace.active", "Active")}</span> : null}
             </div>
             <div className="mt-1 text-[10.5px] tabular-nums text-fg-muted">
-              {scene.objectCount} obj · {scene.cameraCount} cam · {scene.animationCount} anim
+              {t(
+                "motion:creationWorkspace.sceneCounts",
+                "{{objects}} obj · {{cameras}} cam · {{animations}} anim",
+                {
+                  objects: scene.objectCount,
+                  cameras: scene.cameraCount,
+                  animations: scene.animationCount,
+                },
+              )}
             </div>
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
-              <StatusPill label={status.label} className={status.className} />
-              {errorCount > 0 ? <StatusPill label={`${errorCount} error`} className="border-red-500/30 bg-red-500/10 text-red-300" /> : null}
-              {warningCount > 0 ? <StatusPill label={`${warningCount} warn`} className="border-amber-500/30 bg-amber-500/10 text-amber-300" /> : null}
+              <StatusPill
+                label={t(status.labelKey, status.label)}
+                className={status.className}
+              />
+              {errorCount > 0 ? <StatusPill label={t("motion:creationWorkspace.errorCount", "{{count}} error", { count: errorCount })} className="border-red-500/30 bg-red-500/10 text-red-300" /> : null}
+              {warningCount > 0 ? <StatusPill label={t("motion:creationWorkspace.warnCount", "{{count}} warn", { count: warningCount })} className="border-amber-500/30 bg-amber-500/10 text-amber-300" /> : null}
             </div>
           </div>
         </Button>
         <IconButton
-          label={canOpen ? "Open bound Motion scene" : "No renderable Motion scene binding"}
+          label={
+            canOpen
+              ? t(
+                  "motion:creationWorkspace.openBoundMotionScene",
+                  "Open bound Motion scene",
+                )
+              : t(
+                  "motion:creationWorkspace.noRenderableMotionScene",
+                  "No renderable Motion scene binding",
+                )
+          }
           icon={<Clapperboard size={15} aria-hidden />}
           size="md"
           variant="ghost"
@@ -403,10 +492,18 @@ function RecoveryCandidates({
   compact?: boolean;
   onRecover: (layer: RecoverableScene3DLayerSummary) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <section className="space-y-2">
       <SectionLabel
-        label={compact ? "Recoverable renders" : "Rendered scenes"}
+        label={
+          compact
+            ? t(
+                "motion:creationWorkspace.recoverableRenders",
+                "Recoverable renders",
+              )
+            : t("motion:creationWorkspace.renderedScenes", "Rendered scenes")
+        }
         count={layers.length}
       />
       {error ? (
@@ -431,11 +528,20 @@ function RecoveryCandidates({
                     {layer.layerName}
                   </PanelCopy>
                   <PanelCopy className="mt-1 truncate text-[10.5px] text-fg-muted">
-                    {layer.compositionName} · {layer.objectCount} render object(s)
+                    {layer.compositionName} ·{" "}
+                    {t(
+                      "motion:creationWorkspace.renderObjectsCount",
+                      "{{count}} render object(s)",
+                      { count: layer.objectCount },
+                    )}
                   </PanelCopy>
                 </div>
                 <Button
-                  label={recovering ? "..." : "Recover"}
+                  label={
+                    recovering
+                      ? "..."
+                      : t("motion:creationWorkspace.recover", "Recover")
+                  }
                   variant="outline"
                   size="sm"
                   disabled={recovering}
@@ -488,6 +594,7 @@ function SceneDetail({
     patch: CreationObjectEditPatch,
   ) => Promise<void>;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const status = STATUS_META[scene.renderStatus];
   const canOpen = scene.renderStatus === "ready" || scene.renderStatus === "partial";
   const camera = scene.cameras.find((candidate) => candidate.active) ?? scene.cameras[0];
@@ -501,13 +608,23 @@ function SceneDetail({
           <div className="min-w-0">
             <PanelCopy className="truncate text-[13px] text-fg" weight="semibold">{scene.name}</PanelCopy>
             <PanelCopy className="mt-1 text-[10.5px] text-fg-muted">
-              {scene.boundObjectCount}/{scene.objectCount} render-bound objects
+              {t(
+                "motion:creationWorkspace.renderBoundObjects",
+                "{{bound}}/{{total}} render-bound objects",
+                {
+                  bound: scene.boundObjectCount,
+                  total: scene.objectCount,
+                },
+              )}
             </PanelCopy>
           </div>
-          <StatusPill label={status.label} className={status.className} />
+          <StatusPill
+            label={t(status.labelKey, status.label)}
+            className={status.className}
+          />
         </div>
         <Button
-          label="Open render scene"
+          label={t("motion:creationWorkspace.openRenderScene", "Open render scene")}
           icon={Eye}
           variant="solid"
           size="md"
@@ -518,10 +635,16 @@ function SceneDetail({
         <Button
           label={
             syncing
-              ? "Syncing render"
+              ? t("motion:creationWorkspace.syncingRender", "Syncing render")
               : scene.renderStatus === "ready"
-                ? "Refresh render scene"
-                : "Sync render scene"
+                ? t(
+                    "motion:creationWorkspace.refreshRenderScene",
+                    "Refresh render scene",
+                  )
+                : t(
+                    "motion:creationWorkspace.syncRenderScene",
+                    "Sync render scene",
+                  )
           }
           icon={RefreshCw}
           variant="outline"
@@ -582,7 +705,11 @@ function SceneDetail({
         ))}
         {scene.objects.length > 24 ? (
           <PanelCopy className="px-2 py-2 text-[11px] text-fg-muted">
-            {scene.objects.length - 24} more object(s)
+            {t(
+              "motion:creationWorkspace.moreObjects",
+              "{{count}} more object(s)",
+              { count: scene.objects.length - 24 },
+            )}
           </PanelCopy>
         ) : null}
       </div>
@@ -609,10 +736,14 @@ function AnimationRigInspector({
   rigs: readonly CreationWorkspaceRigSummary[];
   onCueTime: (time: number) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <div className="space-y-3 border-b border-border p-3">
       {rigs.length > 0 ? (
-        <EditorGroup icon={GitBranch} label="Rigs">
+        <EditorGroup
+          icon={GitBranch}
+          label={t("motion:creationWorkspace.rigs", "Rigs")}
+        >
           <div className="space-y-1.5">
             {rigs.map((rig) => (
               <RigRow key={rig.rigId} rig={rig} />
@@ -622,7 +753,10 @@ function AnimationRigInspector({
       ) : null}
 
       {animations.length > 0 ? (
-        <EditorGroup icon={Activity} label="Animation">
+        <EditorGroup
+          icon={Activity}
+          label={t("motion:creationWorkspace.animation", "Animation")}
+        >
           <div className="space-y-2">
             {animations.map((clip) => (
               <AnimationClipCard
@@ -639,6 +773,7 @@ function AnimationRigInspector({
 }
 
 function RigRow({ rig }: { rig: CreationWorkspaceRigSummary }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <div className="rounded-md border border-border bg-bg-1 px-2.5 py-2">
       <div className="flex items-start justify-between gap-2">
@@ -657,7 +792,9 @@ function RigRow({ rig }: { rig: CreationWorkspaceRigSummary }): JSX.Element {
       </div>
       <div className="mt-2 flex flex-wrap gap-1.5">
         <StatusPill
-          label={`${rig.animatedTrackCount} tracks`}
+          label={t("motion:creationWorkspace.tracksCount", "{{count}} tracks", {
+            count: rig.animatedTrackCount,
+          })}
           className="border-sky-500/30 bg-sky-500/10 text-sky-300"
         />
         {rig.bones.slice(0, 5).map((bone) => (
@@ -685,6 +822,7 @@ function AnimationClipCard({
   clip: CreationWorkspaceAnimationSummary;
   onCueTime: (time: number) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const cueTime = clip.firstTime ?? 0;
   const visibleTracks = clip.tracks.slice(0, 6);
   return (
@@ -693,11 +831,22 @@ function AnimationClipCard({
         <div className="min-w-0 flex-1">
           <PanelCopy className="truncate text-[11.5px] text-fg" weight="semibold">{clip.name}</PanelCopy>
           <PanelCopy className="mt-0.5 text-[10px] tabular-nums text-fg-muted">
-            {formatSeconds(cueTime)}-{formatSeconds(clip.lastTime ?? clip.duration)} · {clip.trackCount} tracks · {clip.keyframeCount} keys
+            {t(
+              "motion:creationWorkspace.clipRange",
+              "{{start}}-{{end}} · {{tracks}} tracks · {{keys}} keys",
+              {
+                start: formatSeconds(cueTime),
+                end: formatSeconds(clip.lastTime ?? clip.duration),
+                tracks: clip.trackCount,
+                keys: clip.keyframeCount,
+              },
+            )}
           </PanelCopy>
         </div>
         <IconButton
-          label={`Cue ${clip.name}`}
+          label={t("motion:creationWorkspace.cueClip", "Cue {{name}}", {
+            name: clip.name,
+          })}
           icon={<Play size={13} aria-hidden />}
           size="sm"
           variant="ghost"
@@ -707,7 +856,11 @@ function AnimationClipCard({
       </div>
       <div className="mt-2 flex flex-wrap gap-1.5">
         <StatusPill
-          label={`${clip.renderedTrackCount}/${clip.trackCount} synced`}
+          label={t(
+            "motion:creationWorkspace.syncedCount",
+            "{{rendered}}/{{total}} synced",
+            { rendered: clip.renderedTrackCount, total: clip.trackCount },
+          )}
           className={
             clip.renderedTrackCount === clip.trackCount
               ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
@@ -715,11 +868,19 @@ function AnimationClipCard({
           }
         />
         <StatusPill
-          label={`${clip.objectTrackCount} object`}
+          label={t(
+            "motion:creationWorkspace.objectTrackCount",
+            "{{count}} object",
+            { count: clip.objectTrackCount },
+          )}
           className="border-slate-500/30 bg-white/5 text-fg-3"
         />
         <StatusPill
-          label={`${clip.cameraTrackCount} camera`}
+          label={t(
+            "motion:creationWorkspace.cameraTrackCount",
+            "{{count}} camera",
+            { count: clip.cameraTrackCount },
+          )}
           className="border-slate-500/30 bg-white/5 text-fg-3"
         />
       </div>
@@ -734,7 +895,12 @@ function AnimationClipCard({
                 {track.targetName ?? track.targetId}
               </PanelCopy>
               <PanelCopy className="mt-0.5 truncate tabular-nums text-fg-muted">
-                {track.channel} · {track.keyframeCount} keys · {formatTrackRange(track.firstTime, track.lastTime)}
+                {track.channel} ·{" "}
+                {t("motion:creationWorkspace.keysCount", "{{count}} keys", {
+                  count: track.keyframeCount,
+                })}{" "}
+                ·{" "}
+                {formatTrackRange(track.firstTime, track.lastTime)}
               </PanelCopy>
             </div>
             <span
@@ -747,17 +913,27 @@ function AnimationClipCard({
               }`}
               title={
                 track.rendered
-                  ? "Synced to render"
+                  ? t(
+                      "motion:creationWorkspace.syncedToRender",
+                      "Synced to render",
+                    )
                   : track.targetKind === "missing"
-                    ? "Missing target"
-                    : "Not render-bound"
+                    ? t("motion:creationWorkspace.missingTarget", "Missing target")
+                    : t(
+                        "motion:creationWorkspace.notRenderBound",
+                        "Not render-bound",
+                      )
               }
             />
           </div>
         ))}
         {clip.tracks.length > visibleTracks.length ? (
           <PanelCopy className="px-1 py-0.5 text-[10px] text-fg-muted">
-            {clip.tracks.length - visibleTracks.length} more track(s)
+            {t(
+              "motion:creationWorkspace.moreTracks",
+              "{{count}} more track(s)",
+              { count: clip.tracks.length - visibleTracks.length },
+            )}
           </PanelCopy>
         ) : null}
       </div>
@@ -776,6 +952,7 @@ function CameraEditor({
   error: string | null;
   onApply: (patch: CreationCameraEditPatch) => Promise<void>;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const [draft, setDraft] = useState(() => cameraToDraft(camera));
 
   useEffect(() => {
@@ -806,7 +983,7 @@ function CameraEditor({
           <PanelCopy className="mt-0.5 truncate text-[10px] text-fg-muted">{camera.cameraId}</PanelCopy>
         </div>
         <IconButton
-          label="Apply camera edit"
+          label={t("motion:creationWorkspace.applyCameraEdit", "Apply camera edit")}
           icon={<Check size={15} aria-hidden />}
           size="md"
           variant="primary"
@@ -824,40 +1001,43 @@ function CameraEditor({
         ) : null}
 
         <ToolcraftTextInputControl
-          label="Camera"
+          label={t("motion:creationWorkspace.camera", "Camera")}
           value={draft.name}
           onChange={(value) => setField("name", value)}
         />
 
-        <EditorGroup icon={Camera} label="Lens">
+        <EditorGroup
+          icon={Camera}
+          label={t("motion:creationWorkspace.lens", "Lens")}
+        >
           <CameraVectorInputs
-            label="Position"
+            label={t("motion:creationWorkspace.position", "Position")}
             values={[draft.positionX, draft.positionY, draft.positionZ]}
             fields={["positionX", "positionY", "positionZ"]}
             onChange={setField}
           />
           <CameraVectorInputs
-            label="Target"
+            label={t("motion:creationWorkspace.target", "Target")}
             values={[draft.targetX, draft.targetY, draft.targetZ]}
             fields={["targetX", "targetY", "targetZ"]}
             onChange={setField}
           />
           <div className="grid grid-cols-3 gap-1.5">
             <ToolcraftTextInputControl
-              label="FOV"
+              label={t("motion:creationWorkspace.fov", "FOV")}
               value={draft.fov}
               inputClassName="tabular-nums"
               onChange={(value) => setField("fov", value)}
             />
             <ToolcraftTextInputControl
-              label="Focus"
+              label={t("motion:creationWorkspace.focus", "Focus")}
               value={draft.focusDistance}
               inputClassName="tabular-nums"
               onChange={(value) => setField("focusDistance", value)}
             />
             <ToolcraftSwitchControl
               checked={draft.depthOfField}
-              label="DOF"
+              label={t("motion:creationWorkspace.dof", "DOF")}
               onCheckedChange={(checked) => setField("depthOfField", checked)}
             />
           </div>
@@ -876,6 +1056,7 @@ function ObjectRow({
   selected: boolean;
   onSelect: () => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <Button
       label={object.name}
@@ -893,8 +1074,12 @@ function ObjectRow({
           {object.partId ? <span className="shrink-0 rounded bg-bg-1 px-1.5 py-0.5 text-[9px] text-fg-muted">{object.partId}</span> : null}
         </div>
         <div className="mt-0.5 truncate text-[10px] text-fg-muted">
-          {object.missingAsset ? "Missing asset" : object.assetId}
-          {object.materialId ? ` · ${object.materialId}` : " · no material"}
+          {object.missingAsset
+            ? t("motion:creationWorkspace.missingAsset", "Missing asset")
+            : object.assetId}
+          {object.materialId
+            ? ` · ${object.materialId}`
+            : t("motion:creationWorkspace.noMaterial", " · no material")}
         </div>
       </div>
       {object.rendered ? <Link2 size={12} className="shrink-0 text-emerald-300" /> : null}
@@ -913,6 +1098,7 @@ function ObjectEditor({
   error: string | null;
   onApply: (patch: CreationObjectEditPatch) => Promise<void>;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   const [draft, setDraft] = useState(() => objectToDraft(object));
 
   useEffect(() => {
@@ -946,7 +1132,7 @@ function ObjectEditor({
           <PanelCopy className="mt-0.5 truncate text-[10px] text-fg-muted">{object.objectId}</PanelCopy>
         </div>
         <IconButton
-          label="Apply object edit"
+          label={t("motion:creationWorkspace.applyObjectEdit", "Apply object edit")}
           icon={<Check size={15} aria-hidden />}
           size="md"
           variant="primary"
@@ -964,35 +1150,43 @@ function ObjectEditor({
         ) : null}
 
         <ToolcraftTextInputControl
-          label="Name"
+          label={t("motion:creationWorkspace.name", "Name")}
           value={draft.name}
           onChange={(value) => setField("name", value)}
         />
 
-        <EditorGroup icon={Move3D} label="Transform">
+        <EditorGroup
+          icon={Move3D}
+          label={t("motion:creationWorkspace.transform", "Transform")}
+        >
           <VectorInputs
-            label="Position"
+            label={t("motion:creationWorkspace.position", "Position")}
             values={[draft.positionX, draft.positionY, draft.positionZ]}
             fields={["positionX", "positionY", "positionZ"]}
             onChange={setField}
           />
           <VectorInputs
-            label="Rotation"
+            label={t("motion:creationWorkspace.rotation", "Rotation")}
             values={[draft.rotationX, draft.rotationY, draft.rotationZ]}
             fields={["rotationX", "rotationY", "rotationZ"]}
             onChange={setField}
           />
           <VectorInputs
-            label="Scale"
+            label={t("motion:creationWorkspace.scale", "Scale")}
             values={[draft.scaleX, draft.scaleY, draft.scaleZ]}
             fields={["scaleX", "scaleY", "scaleZ"]}
             onChange={setField}
           />
         </EditorGroup>
 
-        <EditorGroup icon={Palette} label="Material">
+        <EditorGroup
+          icon={Palette}
+          label={t("motion:creationWorkspace.material", "Material")}
+        >
           <div className="grid grid-cols-[2.5rem_1fr] items-center gap-2">
-            <span className="text-[10px] font-medium text-fg-muted">Color</span>
+            <span className="text-[10px] font-medium text-fg-muted">
+              {t("motion:creationWorkspace.color", "Color")}
+            </span>
             <ColorInput
               value={normalizeColorInput(draft.baseColor)}
               onChange={(value) => setField("baseColor", value)}
@@ -1001,7 +1195,11 @@ function ObjectEditor({
           <ScalarInputs
             values={[draft.metallic, draft.roughness, draft.opacity]}
             fields={["metallic", "roughness", "opacity"]}
-            labels={["Metal", "Rough", "Alpha"]}
+            labels={[
+              t("motion:creationWorkspace.metal", "Metal"),
+              t("motion:creationWorkspace.rough", "Rough"),
+              t("motion:creationWorkspace.alpha", "Alpha"),
+            ]}
             onChange={setField}
           />
         </EditorGroup>
@@ -1108,6 +1306,7 @@ function VectorInputs({
   fields: readonly [keyof ObjectEditorDraft, keyof ObjectEditorDraft, keyof ObjectEditorDraft];
   onChange: (field: keyof ObjectEditorDraft, value: string) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <div className="grid grid-cols-[2.5rem_1fr] items-center gap-2">
       <span className="text-[10px] font-medium text-fg-muted">{label}</span>
@@ -1115,7 +1314,11 @@ function VectorInputs({
         {values.map((value, index) => (
           <ToolcraftTextInputControl
             key={fields[index]}
-            ariaLabel={`${label} ${index + 1}`}
+            ariaLabel={t(
+              "motion:creationWorkspace.vectorFieldAria",
+              "{{label}} {{index}}",
+              { label, index: index + 1 },
+            )}
             value={value}
             onChange={(nextValue) => onChange(fields[index], nextValue)}
             inputClassName="h-8 min-w-0 rounded-md border border-border bg-bg-1 px-1.5 text-[11px] tabular-nums text-fg outline-none focus:border-accent"
@@ -1137,6 +1340,7 @@ function CameraVectorInputs({
   fields: readonly [keyof CameraEditorDraft, keyof CameraEditorDraft, keyof CameraEditorDraft];
   onChange: (field: keyof CameraEditorDraft, value: string | boolean) => void;
 }): JSX.Element {
+  const { t } = useTranslation("motion");
   return (
     <div className="grid grid-cols-[2.5rem_1fr] items-center gap-2">
       <span className="text-[10px] font-medium text-fg-muted">{label}</span>
@@ -1144,7 +1348,11 @@ function CameraVectorInputs({
         {values.map((value, index) => (
           <ToolcraftTextInputControl
             key={fields[index]}
-            ariaLabel={`${label} ${index + 1}`}
+            ariaLabel={t(
+              "motion:creationWorkspace.vectorFieldAria",
+              "{{label}} {{index}}",
+              { label, index: index + 1 },
+            )}
             value={value}
             onChange={(nextValue) => onChange(fields[index], nextValue)}
             inputClassName="h-8 min-w-0 rounded-md border border-border bg-bg-1 px-1.5 text-[11px] tabular-nums text-fg outline-none focus:border-accent"
@@ -1216,7 +1424,9 @@ function formatTrackRange(
   firstTime: number | undefined,
   lastTime: number | undefined,
 ): string {
-  if (firstTime === undefined && lastTime === undefined) return "no time";
+  if (firstTime === undefined && lastTime === undefined) {
+    return i18n.t("motion:creationWorkspace.noTime", "no time");
+  }
   if (firstTime === undefined) return `-${formatSeconds(lastTime ?? 0)}`;
   if (lastTime === undefined || firstTime === lastTime) return formatSeconds(firstTime);
   return `${formatSeconds(firstTime)}-${formatSeconds(lastTime)}`;

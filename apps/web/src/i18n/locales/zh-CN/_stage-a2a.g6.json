@@ -1,0 +1,42 @@
+{
+  "effectsPanel": {
+    "title": "效果",
+    "selectLayer": "选择图层",
+    "selectLayerDescription": "图层效果可以叠加、重新排序，并渲染到编辑器预览与导出中。",
+    "addEffect": "添加效果",
+    "multiLayerNotice": "新效果将添加到全部 {{count}} 个选中图层。",
+    "searchStandardEffects": "搜索标准效果",
+    "searchPlaceholder": "搜索效果",
+    "categoriesLabel": "效果分类",
+    "categories": {
+      "all": "全部",
+      "color": "颜色",
+      "blur": "模糊",
+      "stylize": "风格化",
+      "distort": "扭曲"
+    },
+    "noMatches": "没有匹配“{{query}}”的标准效果。",
+    "addNamed": "添加 {{name}}",
+    "shaders": "着色器",
+    "effectPreviews": "效果预览",
+    "expressionControls": "表达式控件",
+    "stackTitle": "效果栈（{{count}}）",
+    "copyStack": "复制效果栈",
+    "pasteAppend": "粘贴并追加",
+    "pasteReplace": "粘贴并替换",
+    "clearStack": "清空效果栈",
+    "emptyStack": "添加模糊、发光、阴影或颜色调整效果，为该图层打造可复用的动态视觉效果。",
+    "moveUp": "上移效果",
+    "moveDown": "下移效果",
+    "disableEffect": "禁用效果",
+    "enableEffect": "启用效果",
+    "duplicateEffect": "复制效果",
+    "removeEffect": "移除效果",
+    "color": "颜色",
+    "unknownShader": "未知着色器。",
+    "useHint": "用法：",
+    "checkbox": "复选框",
+    "addKeyframe": "为 {{name}} 添加关键帧",
+    "removeKeyframe": "移除 {{name}} 的关键帧"
+  }
+}

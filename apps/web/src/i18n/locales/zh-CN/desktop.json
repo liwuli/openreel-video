@@ -1,0 +1,25 @@
+{
+  "start": {
+    "title": "新建项目",
+    "subtitle": "选择工作区与画幅格式，稍后仍可更改。",
+    "videoEditor": "视频编辑器",
+    "videoEditorDescription": "快速剪辑、裁剪、添加字幕、调色并导出。",
+    "motionCreator": "动效创作",
+    "motionCreatorDescription": "设计动画广告、下三分之一字幕条、应用演示与场景图形。",
+    "formatLabel": "{{format}} {{mode}}",
+    "recentTitle": "最近",
+    "loadingRecents": "正在加载最近的项目...",
+    "noRecents": "暂无最近的项目。请在上方新建项目。",
+    "openRecent": "打开 {{name}}",
+    "today": "今天",
+    "yesterday": "昨天",
+    "daysAgo": "{{count}} 天前",
+    "daysAgo_plural": "{{count}} 天前"
+  },
+  "exportButton": {
+    "export": "导出",
+    "saved": "已保存！",
+    "cancelExport": "取消导出",
+    "dismissError": "忽略导出错误"
+  }
+}

@@ -23,6 +23,7 @@ import {
   type MotionTrackingState,
 } from "../../../bridges/motion-tracking-bridge";
 import type { Rectangle } from "@openreel/core";
+import { useTranslation } from "../../../i18n";
 
 interface MotionTrackingSectionProps {
   clipId: string;
@@ -32,22 +33,30 @@ type TrackingAlgorithm = "correlation" | "optical-flow" | "feature";
 
 const ALGORITHMS: {
   id: TrackingAlgorithm;
+  nameKey: string;
   name: string;
+  descriptionKey: string;
   description: string;
 }[] = [
   {
     id: "correlation",
+    nameKey: "inspector:motionTracking.algoCorrelation",
     name: "Correlation",
+    descriptionKey: "inspector:motionTracking.algoCorrelationDescription",
     description: "Best for high-contrast objects",
   },
   {
     id: "optical-flow",
+    nameKey: "inspector:motionTracking.algoOpticalFlow",
     name: "Optical Flow",
+    descriptionKey: "inspector:motionTracking.algoOpticalFlowDescription",
     description: "Good for smooth motion",
   },
   {
     id: "feature",
+    nameKey: "inspector:motionTracking.algoFeatureMatch",
     name: "Feature Match",
+    descriptionKey: "inspector:motionTracking.algoFeatureMatchDescription",
     description: "Works with complex textures",
   },
 ];
@@ -70,6 +79,7 @@ const RegionInput: React.FC<{
 export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("inspector");
   const [state, setState] = useState<MotionTrackingState>({
     isTracking: false,
     progress: 0,
@@ -173,10 +183,10 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
         <Target size={16} className="text-primary" />
         <div className="flex flex-1 flex-col gap-0.5">
           <Text type="supporting" color="primary" weight="medium">
-            Motion Tracking
+            {t("inspector:motionTracking.title", "Motion Tracking")}
           </Text>
           <Text type="supporting" color="secondary" className="text-[9px]">
-            Track objects to attach elements
+            {t("inspector:motionTracking.subtitle", "Track objects to attach elements")}
           </Text>
         </div>
       </div>
@@ -185,37 +195,40 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
         <>
           <div className="space-y-2">
             <Text type="supporting" color="secondary" weight="medium">
-              Tracking Region
+              {t("inspector:motionTracking.trackingRegion", "Tracking Region")}
             </Text>
             <div className="grid grid-cols-2 gap-2">
               <RegionInput
-                label="X Position"
+                label={t("inspector:motionTracking.xPosition", "X Position")}
                 value={region.x}
                 onChange={(x) => setRegion({ ...region, x })}
               />
               <RegionInput
-                label="Y Position"
+                label={t("inspector:motionTracking.yPosition", "Y Position")}
                 value={region.y}
                 onChange={(y) => setRegion({ ...region, y })}
               />
               <RegionInput
-                label="Width"
+                label={t("inspector:motionTracking.width", "Width")}
                 value={region.width}
                 onChange={(width) => setRegion({ ...region, width })}
               />
               <RegionInput
-                label="Height"
+                label={t("inspector:motionTracking.height", "Height")}
                 value={region.height}
                 onChange={(height) => setRegion({ ...region, height })}
               />
             </div>
             <Text type="supporting" color="secondary" className="text-center text-[9px]">
-              Draw region in preview or enter coordinates
+              {t(
+                "inspector:motionTracking.drawRegionHint",
+                "Draw region in preview or enter coordinates",
+              )}
             </Text>
           </div>
 
           <Button
-            label="Advanced Options"
+            label={t("inspector:motionTracking.advancedOptions", "Advanced Options")}
             size="sm"
             variant="ghost"
             icon={showAdvanced ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
@@ -227,13 +240,20 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
             <Card variant="muted" padding={3} className="space-y-3">
               <div className="space-y-1.5">
                 <Text type="supporting" color="secondary" weight="medium">
-                  Algorithm
+                  {t("inspector:motionTracking.algorithm", "Algorithm")}
                 </Text>
                 <div className="space-y-1">
                   {ALGORITHMS.map((algo) => (
                     <Button
                       key={algo.id}
-                      label={`${algo.name}: ${algo.description}`}
+                      label={t(
+                        "inspector:motionTracking.algorithmOption",
+                        "{{name}}: {{description}}",
+                        {
+                          name: t(algo.nameKey, algo.name),
+                          description: t(algo.descriptionKey, algo.description),
+                        },
+                      )}
                       size="sm"
                       variant={algorithm === algo.id ? "primary" : "secondary"}
                       onClick={() => setAlgorithm(algo.id)}
@@ -244,31 +264,37 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
               </div>
 
               <PropertySlider
-                label="Confidence Threshold"
+                label={t("inspector:motionTracking.confidenceThreshold", "Confidence Threshold")}
                 min={30}
                 max={95}
                 step={5}
                 value={confidenceThreshold}
                 onChange={setConfidenceThreshold}
                 formatValue={(value) => `${value}%`}
-                description="Higher = more accurate but may lose track easier"
+                description={t(
+                  "inspector:motionTracking.confidenceThresholdDescription",
+                  "Higher = more accurate but may lose track easier",
+                )}
               />
 
               <PropertySlider
-                label="Path Smoothing"
+                label={t("inspector:motionTracking.pathSmoothing", "Path Smoothing")}
                 min={0}
                 max={10}
                 step={1}
                 value={smoothing}
                 onChange={setSmoothing}
                 formatValue={(value) => String(value)}
-                description="Reduces jitter in tracking path"
+                description={t(
+                  "inspector:motionTracking.pathSmoothingDescription",
+                  "Reduces jitter in tracking path",
+                )}
               />
             </Card>
           )}
 
           <Button
-            label="Start Tracking"
+            label={t("inspector:motionTracking.startTracking", "Start Tracking")}
             size="md"
             variant="primary"
             icon={<Target size={14} />}
@@ -284,11 +310,11 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
               <Text type="supporting" color="primary" weight="medium">
-                Tracking in Progress
+                {t("inspector:motionTracking.trackingInProgress", "Tracking in Progress")}
               </Text>
             </div>
             <IconButton
-              label="Cancel Tracking"
+              label={t("inspector:motionTracking.cancelTracking", "Cancel Tracking")}
               icon={<X size={14} />}
               size="sm"
               variant="ghost"
@@ -298,7 +324,9 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
 
           <div className="space-y-1">
             <div className="flex items-center justify-between text-[10px]">
-              <Text type="supporting" color="secondary">Analyzing frames...</Text>
+              <Text type="supporting" color="secondary">
+                {t("inspector:motionTracking.analyzingFrames", "Analyzing frames...")}
+              </Text>
               <Text type="supporting" color="primary" className="font-mono">
                 {Math.round(state.progress)}%
               </Text>
@@ -314,7 +342,9 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
           {state.lostFrames.length > 0 && (
             <div className="flex items-center gap-2 p-2 bg-amber-500/10 border border-amber-500/20 rounded text-[10px] text-amber-400">
               <AlertTriangle size={12} />
-              Lost tracking on {state.lostFrames.length} frame(s)
+              {t("inspector:motionTracking.lostTracking", "Lost tracking on {{count}} frame(s)", {
+                count: state.lostFrames.length,
+              })}
             </div>
           )}
         </div>
@@ -324,7 +354,7 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
         <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-[10px] text-red-400">
           <div className="flex items-center gap-2 font-medium mb-1">
             <AlertTriangle size={12} />
-            Tracking Failed
+            {t("inspector:motionTracking.trackingFailed", "Tracking Failed")}
           </div>
           <Text type="supporting" className="text-[9px] text-red-300/80">
             {state.error}
@@ -338,13 +368,19 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
             <Check size={14} className="text-green-400" />
             <div className="flex flex-1 flex-col gap-0.5">
               <Text type="supporting" weight="medium" className="text-[10px] text-green-400">
-                Tracking Complete
+                {t("inspector:motionTracking.trackingComplete", "Tracking Complete")}
               </Text>
               {state.trackingData && (
                 <Text type="supporting" className="text-[9px] text-green-300/70">
-                  {state.trackingData.keyframes.length} keyframes captured
+                  {t(
+                    "inspector:motionTracking.keyframesCaptured",
+                    "{{count}} keyframes captured",
+                    { count: state.trackingData.keyframes.length },
+                  )}
                   {state.trackingData.lostFrames.length > 0 &&
-                    ` • ${state.trackingData.lostFrames.length} frames lost`}
+                    ` • ${t("inspector:motionTracking.framesLost", "{{count}} frames lost", {
+                      count: state.trackingData.lostFrames.length,
+                    })}`}
                 </Text>
               )}
             </div>
@@ -358,16 +394,16 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
               className="flex items-center gap-2"
             >
               <Move size={12} />
-              Position Offset
+              {t("inspector:motionTracking.positionOffset", "Position Offset")}
             </Text>
             <div className="grid grid-cols-2 gap-2">
               <RegionInput
-                label="X Offset"
+                label={t("inspector:motionTracking.xOffset", "X Offset")}
                 value={offsetX}
                 onChange={(value) => handleOffsetChange("x", value)}
               />
               <RegionInput
-                label="Y Offset"
+                label={t("inspector:motionTracking.yOffset", "Y Offset")}
                 value={offsetY}
                 onChange={(value) => handleOffsetChange("y", value)}
               />
@@ -376,11 +412,11 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
 
           <div className="space-y-2">
             <Text type="supporting" color="secondary" weight="medium">
-              Transform Options
+              {t("inspector:motionTracking.transformOptions", "Transform Options")}
             </Text>
             <div className="grid grid-cols-2 gap-2">
               <CheckboxInput
-                label="Scale"
+                label={t("inspector:motionTracking.scale", "Scale")}
                 value={applyScale}
                 labelIcon={<Maximize2 size={10} aria-hidden />}
                 onChange={(value) => {
@@ -391,7 +427,7 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
                 }}
               />
               <CheckboxInput
-                label="Rotation"
+                label={t("inspector:motionTracking.rotation", "Rotation")}
                 value={applyRotation}
                 labelIcon={<RotateCcw size={10} aria-hidden />}
                 onChange={(value) => {
@@ -406,7 +442,7 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
 
           {!isApplied ? (
             <Button
-              label="Apply Tracking to Clip"
+              label={t("inspector:motionTracking.applyTracking", "Apply Tracking to Clip")}
               size="md"
               variant="secondary"
               onClick={handleApplyTracking}
@@ -417,11 +453,11 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
               <div className="flex items-center gap-2 p-2 bg-primary/10 border border-primary/20 rounded-lg">
                 <Check size={12} className="text-primary" />
                 <Text type="supporting" color="primary" className="text-[10px]">
-                  Tracking Applied
+                  {t("inspector:motionTracking.trackingApplied", "Tracking Applied")}
                 </Text>
               </div>
               <Button
-                label="Remove Tracking"
+                label={t("inspector:motionTracking.removeTracking", "Remove Tracking")}
                 size="sm"
                 variant="destructive"
                 onClick={handleRemoveTracking}
@@ -431,7 +467,10 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
           )}
 
           <Button
-            label="Re-track with Different Settings"
+            label={t(
+              "inspector:motionTracking.retrack",
+              "Re-track with Different Settings",
+            )}
             size="sm"
             variant="ghost"
             icon={<RefreshCw size={10} />}
@@ -443,7 +482,10 @@ export const MotionTrackingSection: React.FC<MotionTrackingSectionProps> = ({
 
       <div className="pt-2 border-t border-border">
         <Text type="supporting" color="secondary" className="text-center text-[9px]">
-          Track objects to pin graphics, text, or effects
+          {t(
+            "inspector:motionTracking.footer",
+            "Track objects to pin graphics, text, or effects",
+          )}
         </Text>
       </div>
     </div>

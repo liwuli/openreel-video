@@ -61,6 +61,7 @@ import { createHistorySlice } from "./project/history-slice";
 import { createClipSlice } from "./project/clip-slice";
 import { createTimelineItemSlice } from "./project/timeline-item-slice";
 import { v4 as uuidv4 } from "uuid";
+import i18n from "../i18n";
 import type {
   VideoEffect,
   VideoEffectType,
@@ -2172,7 +2173,10 @@ export const useProjectStore = create<ProjectState>()(
               success: false,
               error: {
                 code: "INVALID_PARAMS" as const,
-                message: "Clipboard is empty",
+                message: i18n.t(
+                  "messages:project.clipboardEmpty",
+                  "Clipboard is empty",
+                ),
               },
             },
           ];
@@ -2181,7 +2185,11 @@ export const useProjectStore = create<ProjectState>()(
         const minStartTime = Math.min(
           ...clipboard.map((item) => item.clip.startTime),
         );
-        actionExecutor.getHistory().beginGroup("Paste timeline clips");
+        actionExecutor
+          .getHistory()
+          .beginGroup(
+            i18n.t("messages:project.history.pasteClips", "Paste timeline clips"),
+          );
         try {
           for (const item of clipboard) {
             const currentProject = get().project;
@@ -2204,7 +2212,11 @@ export const useProjectStore = create<ProjectState>()(
                 success: false,
                 error: {
                   code: "TRACK_NOT_FOUND",
-                  message: `No compatible unlocked track for ${item.kind} clip`,
+                  message: i18n.t(
+                    "messages:project.noCompatibleTrack",
+                    "No compatible unlocked track for {{kind}} clip",
+                    { kind: item.kind },
+                  ),
                 },
               });
               continue;
@@ -2228,7 +2240,11 @@ export const useProjectStore = create<ProjectState>()(
                       : placement.reason === "track-not-found"
                         ? "TRACK_NOT_FOUND"
                         : "OVERLAP_DETECTED",
-                  message: `Could not place ${item.kind} clip`,
+                  message: i18n.t(
+                    "messages:project.couldNotPlaceClip",
+                    "Could not place {{kind}} clip",
+                    { kind: item.kind },
+                  ),
                 },
               });
               continue;
@@ -2269,7 +2285,11 @@ export const useProjectStore = create<ProjectState>()(
                   success: false,
                   error: {
                     code: "INVALID_PARAMS",
-                    message: `Failed to paste ${item.kind} clip`,
+                    message: i18n.t(
+                      "messages:project.pasteClipFailed",
+                      "Failed to paste {{kind}} clip",
+                      { kind: item.kind },
+                    ),
                   },
                 });
               }
@@ -2323,7 +2343,10 @@ export const useProjectStore = create<ProjectState>()(
             success: false,
             error: {
               code: "INVALID_PARAMS" as const,
-              message: "Clip not found",
+              message: i18n.t(
+                "messages:errors.clipNotFound",
+                "Clip not found",
+              ),
             },
           };
         }
@@ -2336,7 +2359,10 @@ export const useProjectStore = create<ProjectState>()(
             success: false,
             error: {
               code: "INVALID_PARAMS" as const,
-              message: "Track not found",
+              message: i18n.t(
+                "messages:errors.trackNotFound",
+                "Track not found",
+              ),
             },
           };
         }
@@ -2412,7 +2438,10 @@ export const useProjectStore = create<ProjectState>()(
             success: false,
             error: {
               code: "INVALID_PARAMS" as const,
-              message: "No effects in clipboard",
+              message: i18n.t(
+                "messages:project.noEffectsInClipboard",
+                "No effects in clipboard",
+              ),
             },
           };
         }
@@ -2437,7 +2466,10 @@ export const useProjectStore = create<ProjectState>()(
         return (
           results[0] || {
             success: false,
-            error: { code: "UNKNOWN" as const, message: "No results" },
+            error: {
+              code: "UNKNOWN" as const,
+              message: i18n.t("messages:project.noResults", "No results"),
+            },
           }
         );
       },
@@ -2513,7 +2545,14 @@ export const useProjectStore = create<ProjectState>()(
 
         return {
           success: false,
-          error: { code: "INVALID_PARAMS", message: `Clip ${clipId} not found` },
+          error: {
+            code: "INVALID_PARAMS",
+            message: i18n.t(
+              "messages:project.clipIdNotFound",
+              "Clip {{clipId}} not found",
+              { clipId },
+            ),
+          },
         };
       },
 
@@ -2571,7 +2610,14 @@ export const useProjectStore = create<ProjectState>()(
 
         return {
           success: false,
-          error: { code: "INVALID_PARAMS", message: `Clip ${clipId} not found` },
+          error: {
+            code: "INVALID_PARAMS",
+            message: i18n.t(
+              "messages:project.clipIdNotFound",
+              "Clip {{clipId}} not found",
+              { clipId },
+            ),
+          },
         };
       },
 
@@ -2586,7 +2632,10 @@ export const useProjectStore = create<ProjectState>()(
             success: false,
             error: {
               code: "INVALID_PARAMS",
-              message: "Blend opacity must be between 0 and 100",
+              message: i18n.t(
+                "messages:project.blendOpacityRange",
+                "Blend opacity must be between 0 and 100",
+              ),
             },
           };
         }
@@ -2637,7 +2686,14 @@ export const useProjectStore = create<ProjectState>()(
 
         return {
           success: false,
-          error: { code: "INVALID_PARAMS", message: `Clip ${clipId} not found` },
+          error: {
+            code: "INVALID_PARAMS",
+            message: i18n.t(
+              "messages:project.clipIdNotFound",
+              "Clip {{clipId}} not found",
+              { clipId },
+            ),
+          },
         };
       },
 
@@ -2700,7 +2756,14 @@ export const useProjectStore = create<ProjectState>()(
 
         return {
           success: false,
-          error: { code: "INVALID_PARAMS", message: `Clip ${clipId} not found` },
+          error: {
+            code: "INVALID_PARAMS",
+            message: i18n.t(
+              "messages:project.clipIdNotFound",
+              "Clip {{clipId}} not found",
+              { clipId },
+            ),
+          },
         };
       },
 
@@ -2932,7 +2995,10 @@ export const useProjectStore = create<ProjectState>()(
             success: false,
             error: {
               code: "INVALID_PARAMS",
-              message: "No project is open",
+              message: i18n.t(
+                "messages:project.noProjectOpen",
+                "No project is open",
+              ),
             },
           };
         }
@@ -3111,7 +3177,11 @@ export const useProjectStore = create<ProjectState>()(
           type: "editing-template",
           mode: "apply",
           timestamp: Date.now(),
-          description: `Apply ${applied.applicationState.appliedTemplate.name}`,
+          description: i18n.t(
+            "messages:project.history.applyTemplate",
+            "Apply {{name}}",
+            { name: applied.applicationState.appliedTemplate.name },
+          ),
           ...applied.applicationState,
         };
 
@@ -3171,7 +3241,11 @@ export const useProjectStore = create<ProjectState>()(
           type: "editing-template",
           mode: "update",
           timestamp: Date.now(),
-          description: `Update ${updated.applicationState.appliedTemplate.name}`,
+          description: i18n.t(
+            "messages:project.history.updateTemplate",
+            "Update {{name}}",
+            { name: updated.applicationState.appliedTemplate.name },
+          ),
           previousState,
           ...updated.applicationState,
         };

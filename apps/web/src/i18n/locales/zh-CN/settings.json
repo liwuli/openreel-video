@@ -159,6 +159,7 @@
     "submit": "设置密码",
     "unlockSubmit": "解锁",
     "changeSubmit": "更新密码",
-    "processing": "正在验证..."
+    "processing": "正在验证...",
+    "errorOccurred": "发生错误"
   }
 }

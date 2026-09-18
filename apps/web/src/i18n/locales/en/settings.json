@@ -159,6 +159,7 @@
     "submit": "Set Password",
     "unlockSubmit": "Unlock",
     "changeSubmit": "Change Password",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "errorOccurred": "An error occurred"
   }
 }

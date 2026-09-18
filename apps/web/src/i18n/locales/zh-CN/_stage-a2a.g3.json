@@ -1,0 +1,163 @@
+{
+  "graphEditor": {
+    "panelTitle": "曲线编辑器",
+    "empty": {
+      "title": "选择对象",
+      "description": "选择图层、相机或灯光，以编辑时间曲线和关键帧。"
+    },
+    "sections": {
+      "animatedProperty": "动画属性",
+      "expression": "表达式",
+      "camera": "相机",
+      "keyframes": "关键帧"
+    },
+    "fields": {
+      "preset": "预设",
+      "enabled": "启用",
+      "enabledDescription": "渲染时叠加程序化数值",
+      "expression": "表达式",
+      "expressionCode": "表达式代码",
+      "referenceLayer": "引用图层",
+      "referenceProperty": "引用属性",
+      "amplitude": "振幅",
+      "samplesPerSec": "采样/秒",
+      "frequency": "频率",
+      "phase": "相位",
+      "seed": "种子",
+      "decay": "衰减",
+      "valueAtPlayhead": "播放头处的值",
+      "layerBase": "图层基础值",
+      "base": "基础值",
+      "rove": "漂浮",
+      "roveDescription": "自动推导时间以保持匀速",
+      "setEasing": "设置属性关键帧的缓动",
+      "chooseEasing": "选择缓动..."
+    },
+    "actions": {
+      "clearExpression": "清除表达式",
+      "addKeyframe": "添加关键帧",
+      "updateKeyframe": "更新关键帧",
+      "clearPropertyKeyframes": "清除属性关键帧",
+      "deleteKeyframe": "删除关键帧",
+      "copyKeyframes": "复制属性关键帧",
+      "pasteKeyframes": "在播放头处粘贴关键帧"
+    },
+    "options": {
+      "none": "无"
+    },
+    "modes": {
+      "value": "数值",
+      "speed": "速度"
+    },
+    "graph": {
+      "ariaLabel": "{{property}} {{type}}曲线图",
+      "typeSpeed": "速度",
+      "typeKeyframe": "关键帧",
+      "addTwoKeyframes": "添加两个关键帧以查看速度",
+      "addKeyframes": "添加关键帧以绘制曲线",
+      "flatSegment": "平坦段 — 控制柄无效"
+    },
+    "expression": {
+      "error": "错误",
+      "insertReference": "插入引用",
+      "empty": "添加安全的表达式预设，为该属性生成程序化运动。",
+      "summary": {
+        "loop": "循环会在此属性的最后一个关键帧之后重复其关键帧。",
+        "pingPong": "往复会正向和反向重复关键帧。",
+        "posterize": "色调分离会以更低的速率对该属性的值进行采样。",
+        "expressionCode": "编写 JavaScript 表达式：value、time、wiggle()、loopOut()、linear()、ease()、clamp()、random()、Math。",
+        "parameters": "请调整上方的表达式参数。"
+      }
+    },
+    "reference": {
+      "thisLayer": "{{name}}（当前图层）"
+    },
+    "keyframes": {
+      "emptyLayer": "该属性还没有关键帧。请在当前播放头处添加一个，开始塑造运动。",
+      "emptyCamera": "该相机属性还没有关键帧。请在当前播放头处添加一个，塑造镜头运动。",
+      "emptyLight": "该灯光属性还没有关键帧。请在当前播放头处添加一个，制作场景灯光动画。"
+    },
+    "keyframe": {
+      "rovingTitle": "{{time}}s · 漂浮",
+      "roveHint": "漂浮：推导此关键帧的时间，使相邻关键帧之间保持匀速",
+      "roveDisabled": "属性的第一个和最后一个关键帧无法漂浮"
+    },
+    "camera": {
+      "title": "相机曲线图"
+    },
+    "light": {
+      "title": "灯光曲线图"
+    },
+    "timing": {
+      "duplicate": "将关键帧向后复制半秒",
+      "reverse": "反转",
+      "reverseTitle": "在当前时间范围内反转关键帧",
+      "compress": "将关键帧时间压缩为一半时长",
+      "stretch": "将关键帧时间拉伸为两倍时长"
+    }
+  },
+  "shapeContents": {
+    "section": {
+      "title": "内容"
+    },
+    "materialize": {
+      "description": "将此形状转换为内容树，以便构建组、合并路径并叠加各组修改器。",
+      "action": "编组内容"
+    },
+    "actions": {
+      "addGroup": "添加组",
+      "addShape": "添加形状",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "delete": "删除",
+      "add": "添加"
+    },
+    "tree": {
+      "collapseGroup": "折叠组",
+      "expandGroup": "展开组",
+      "renameItem": "重命名项目",
+      "toggleVisibility": "切换可见性"
+    },
+    "fields": {
+      "positionX": "位置 X",
+      "positionY": "位置 Y",
+      "scaleX": "缩放 X",
+      "scaleY": "缩放 Y",
+      "rotation": "旋转",
+      "opacity": "不透明度",
+      "mergeMode": "合并模式",
+      "shapeType": "形状类型",
+      "width": "宽度",
+      "height": "高度",
+      "inheritStyle": "继承样式",
+      "fillColor": "填充颜色",
+      "strokeColor": "描边颜色"
+    },
+    "labels": {
+      "inheritGroupStyle": "继承组样式"
+    },
+    "mergeMode": {
+      "none": "无",
+      "union": "并集",
+      "subtract": "差集",
+      "intersect": "交集",
+      "exclude": "排除"
+    },
+    "operators": {
+      "trimPaths": "修剪路径",
+      "repeater": "中继器",
+      "zigZag": "锯齿",
+      "roundCorners": "圆角",
+      "wigglePaths": "摆动路径",
+      "offsetPaths": "偏移路径",
+      "puckerBloat": "收缩和膨胀",
+      "twist": "扭转",
+      "addOperator": "添加修改器",
+      "addOperatorToGroup": "向组添加修改器",
+      "moveUp": "上移修改器",
+      "moveDown": "下移修改器",
+      "remove": "移除修改器",
+      "enabled": "{{name}}已启用"
+    }
+  }
+}

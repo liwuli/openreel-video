@@ -18,10 +18,23 @@ import {
   getSecret,
   isSessionUnlocked,
 } from "../../../services/secure-storage";
+import { useTranslation } from "../../../i18n";
 
-const PROVIDERS: ReadonlyArray<{ id: LlmProvider; label: string }> = [
-  { id: "openai-compatible", label: "OpenAI-compatible" },
-  { id: "anthropic-compatible", label: "Anthropic-compatible" },
+const PROVIDERS: ReadonlyArray<{
+  id: LlmProvider;
+  labelKey: string;
+  label: string;
+}> = [
+  {
+    id: "openai-compatible",
+    labelKey: "chat:provider.openaiCompatible",
+    label: "OpenAI-compatible",
+  },
+  {
+    id: "anthropic-compatible",
+    labelKey: "chat:provider.anthropicCompatible",
+    label: "Anthropic-compatible",
+  },
 ];
 
 interface ProviderModelPickerProps {
@@ -31,6 +44,7 @@ interface ProviderModelPickerProps {
 export function ProviderModelPicker({
   disabled = false,
 }: ProviderModelPickerProps): JSX.Element {
+  const { t } = useTranslation("chat");
   const provider = useSettingsStore((s) => s.defaultLlmProvider);
   const baseUrl = useSettingsStore((s) => s.llmBaseUrl);
   const model = useSettingsStore((s) => s.llmModel);
@@ -48,24 +62,38 @@ export function ProviderModelPicker({
   >("idle");
   const [discoveryMessage, setDiscoveryMessage] = useState("");
 
-  const providerLabel =
-    PROVIDERS.find((item) => item.id === provider)?.label ?? "Not configured";
+  const currentProvider = PROVIDERS.find((item) => item.id === provider);
+  const providerLabel = currentProvider
+    ? t(currentProvider.labelKey, currentProvider.label)
+    : t("chat:provider.notConfigured", "Not configured");
   const currentModel = model.trim();
 
   const discoverModels = async (): Promise<void> => {
     if (!provider) {
       setDiscoveryStatus("error");
-      setDiscoveryMessage("Choose an API format first.");
+      setDiscoveryMessage(
+        t("chat:provider.chooseFormatFirst", "Choose an API format first."),
+      );
       return;
     }
     if (!baseUrl.trim()) {
       setDiscoveryStatus("error");
-      setDiscoveryMessage("Enter the endpoint base URL first.");
+      setDiscoveryMessage(
+        t(
+          "chat:provider.enterBaseUrlFirst",
+          "Enter the endpoint base URL first.",
+        ),
+      );
       return;
     }
     if (configuredServices.includes(provider) && !isSessionUnlocked()) {
       setDiscoveryStatus("error");
-      setDiscoveryMessage("Unlock API keys before loading models.");
+      setDiscoveryMessage(
+        t(
+          "chat:provider.unlockBeforeLoading",
+          "Unlock API keys before loading models.",
+        ),
+      );
       return;
     }
 
@@ -82,8 +110,15 @@ export function ProviderModelPicker({
       setDiscoveryStatus(models.length > 0 ? "ready" : "error");
       setDiscoveryMessage(
         models.length > 0
-          ? `${models.length} model${models.length === 1 ? "" : "s"} found.`
-          : "The endpoint returned no models. Enter a model ID manually.",
+          ? models.length === 1
+            ? t("chat:provider.modelsFoundOne", "1 model found.")
+            : t("chat:provider.modelsFoundOther", "{{count}} models found.", {
+                count: models.length,
+              })
+          : t(
+              "chat:provider.noModels",
+              "The endpoint returned no models. Enter a model ID manually.",
+            ),
       );
     } catch (error) {
       setDiscoveredModels([]);
@@ -91,7 +126,10 @@ export function ProviderModelPicker({
       setDiscoveryMessage(
         error instanceof Error
           ? error.message
-          : "Could not load models from this endpoint.",
+          : t(
+              "chat:provider.loadFailed",
+              "Could not load models from this endpoint.",
+            ),
       );
     }
   };
@@ -103,26 +141,35 @@ export function ProviderModelPicker({
       placement="below"
       alignment="end"
       width={360}
-      label="AI endpoint and model"
+      label={t("chat:provider.popoverLabel", "AI endpoint and model")}
       content={
         <div className="space-y-3 p-3">
           <div>
             <Text type="body" color="primary" className="text-[12px] font-medium">
-              Connect any compatible model
+              {t("chat:provider.connectTitle", "Connect any compatible model")}
             </Text>
             <Text type="supporting" color="secondary" className="mt-0.5 block text-[10px] leading-relaxed">
-              Choose the API format, then use your own host and model. OpenReel does not select a vendor or model for you.
+              {t(
+                "chat:provider.connectDescription",
+                "Choose the API format, then use your own host and model. OpenReel does not select a vendor or model for you.",
+              )}
             </Text>
           </div>
 
           <Selector
-            label="API format"
+            label={t("chat:provider.apiFormat", "API format")}
             size="sm"
             width="100%"
             value={provider ?? ""}
             options={[
-              { value: "", label: "Choose API format…" },
-              ...PROVIDERS.map((item) => ({ value: item.id, label: item.label })),
+              {
+                value: "",
+                label: t("chat:provider.chooseApiFormat", "Choose API format…"),
+              },
+              ...PROVIDERS.map((item) => ({
+                value: item.id,
+                label: t(item.labelKey, item.label),
+              })),
             ]}
             onChange={(value) => {
               setProvider((value || null) as LlmProvider | null);
@@ -133,7 +180,7 @@ export function ProviderModelPicker({
           />
 
           <TextInput
-            label="Base URL"
+            label={t("chat:provider.baseUrl", "Base URL")}
             value={baseUrl}
             onChange={(value) => {
               setBaseUrl(value);
@@ -152,15 +199,22 @@ export function ProviderModelPicker({
             <div className="flex items-end gap-2">
               <div className="min-w-0 flex-1">
                 <TextInput
-                  label="Model ID"
+                  label={t("chat:provider.modelId", "Model ID")}
                   value={model}
                   onChange={setModel}
-                  placeholder="Enter any tool-capable model ID"
+                  placeholder={t(
+                    "chat:provider.modelIdPlaceholder",
+                    "Enter any tool-capable model ID",
+                  )}
                   width="100%"
                 />
               </div>
               <Button
-                label={discoveryStatus === "loading" ? "Loading…" : "Load models"}
+                label={
+                  discoveryStatus === "loading"
+                    ? t("chat:provider.loading", "Loading…")
+                    : t("chat:provider.loadModels", "Load models")
+                }
                 size="sm"
                 variant="secondary"
                 isDisabled={discoveryStatus === "loading" || !provider || !baseUrl.trim()}
@@ -170,7 +224,7 @@ export function ProviderModelPicker({
 
             {discoveredModels.length > 0 && (
               <Selector
-                label="Models from endpoint"
+                label={t("chat:provider.modelsFromEndpoint", "Models from endpoint")}
                 size="sm"
                 width="100%"
                 value={
@@ -179,7 +233,13 @@ export function ProviderModelPicker({
                     : ""
                 }
                 options={[
-                  { value: "", label: "Choose a discovered model…" },
+                  {
+                    value: "",
+                    label: t(
+                      "chat:provider.chooseDiscoveredModel",
+                      "Choose a discovered model…",
+                    ),
+                  },
                   ...discoveredModels.map((item) => ({
                     value: item.id,
                     label: item.label === item.id ? item.id : `${item.label} · ${item.id}`,
@@ -203,11 +263,14 @@ export function ProviderModelPicker({
           </div>
 
           <Text type="supporting" color="secondary" className="block text-[10px] leading-relaxed">
-            Model discovery uses GET /models. If your gateway does not expose it, enter the model ID manually. Browser endpoints must allow CORS.
+            {t(
+              "chat:provider.discoveryHint",
+              "Model discovery uses GET /models. If your gateway does not expose it, enter the model ID manually. Browser endpoints must allow CORS.",
+            )}
           </Text>
 
           <Button
-            label="Manage optional API key"
+            label={t("chat:provider.manageApiKey", "Manage optional API key")}
             size="sm"
             variant="secondary"
             onClick={() => {
@@ -220,7 +283,11 @@ export function ProviderModelPicker({
       }
     >
       <IconButton
-        label={`AI settings: ${providerLabel}, ${currentModel || "no model selected"}`}
+        label={t("chat:provider.settingsLabel", "AI settings: {{provider}}, {{model}}", {
+          provider: providerLabel,
+          model:
+            currentModel || t("chat:provider.noModelSelected", "no model selected"),
+        })}
         icon={<Settings2 size={14} aria-hidden />}
         size="sm"
         variant="ghost"

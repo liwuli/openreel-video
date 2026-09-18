@@ -5,6 +5,7 @@ import { ToolcraftIconButton as IconButton } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
 import { Upload, FileImage, AlertCircle, Check, X } from "@/icons/lucide-compat";
 import { getGraphicsBridge } from "../../../bridges";
+import i18n, { useTranslation } from "../../../i18n";
 
 interface SVGImporterProps {
   trackId: string;
@@ -31,6 +32,7 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
   onImport,
   onError,
 }) => {
+  const { t } = useTranslation("inspector");
   const [status, setStatus] = useState<ImportStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
@@ -46,9 +48,13 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
 
       // Validate file type
       if (!file.name.toLowerCase().endsWith(".svg")) {
+        const selectSvgMessage = t(
+          "svgImporter.selectSvgFile",
+          "Please select an SVG file (.svg)",
+        );
         setStatus("error");
-        setErrorMessage("Please select an SVG file (.svg)");
-        onError?.("Please select an SVG file (.svg)");
+        setErrorMessage(selectSvgMessage);
+        onError?.(selectSvgMessage);
         return;
       }
 
@@ -69,9 +75,12 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
         // Validate SVG content
         const validation = bridge.validateSVG(svgContent);
         if (!validation.valid) {
+          const invalidSvgMessage =
+            validation.error ||
+            t("svgImporter.invalidSvgContent", "Invalid SVG content");
           setStatus("error");
-          setErrorMessage(validation.error || "Invalid SVG content");
-          onError?.(validation.error || "Invalid SVG content");
+          setErrorMessage(invalidSvgMessage);
+          onError?.(invalidSvgMessage);
           return;
         }
 
@@ -84,9 +93,13 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
         });
 
         if (!svgClip) {
+          const importFailedMessage = t(
+            "svgImporter.importFailed",
+            "Failed to import SVG",
+          );
           setStatus("error");
-          setErrorMessage("Failed to import SVG");
-          onError?.("Failed to import SVG");
+          setErrorMessage(importFailedMessage);
+          onError?.(importFailedMessage);
           return;
         }
 
@@ -100,7 +113,9 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
         }, 2000);
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : "Failed to read SVG file";
+          error instanceof Error
+            ? error.message
+            : t("svgImporter.readSvgFailed", "Failed to read SVG file");
         setStatus("error");
         setErrorMessage(message);
         onError?.(message);
@@ -111,7 +126,7 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
         fileInputRef.current.value = "";
       }
     },
-    [trackId, startTime, duration, onImport, onError],
+    [trackId, startTime, duration, onImport, onError, t],
   );
 
   /**
@@ -167,7 +182,7 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
       {/* Hidden file input */}
       <FileInput
         ref={fileInputRef}
-        label="Import SVG file"
+        label={t("svgImporter.importSvgFile", "Import SVG file")}
         isLabelHidden
         value={null}
         accept=".svg"
@@ -216,11 +231,11 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
           <div className="text-center">
             {status === "loading" ? (
               <Text type="supporting" color="secondary" className="text-[10px]">
-                Importing...
+                {t("svgImporter.importing", "Importing...")}
               </Text>
             ) : status === "success" ? (
               <Text type="supporting" className="text-[10px] text-green-500">
-                SVG imported successfully
+                {t("svgImporter.importSuccess", "SVG imported successfully")}
               </Text>
             ) : status === "error" ? (
               <Text type="supporting" className="text-[10px] text-red-500">
@@ -229,10 +244,10 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
             ) : (
               <div className="flex flex-col gap-0.5">
                 <Text type="supporting" color="primary" className="block text-[10px] font-medium">
-                  Import SVG
+                  {t("svgImporter.importSvg", "Import SVG")}
                 </Text>
                 <Text type="supporting" color="secondary" className="block text-[9px]">
-                  Click or drag & drop
+                  {t("svgImporter.clickOrDragDrop", "Click or drag & drop")}
                 </Text>
               </div>
             )}
@@ -252,7 +267,7 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
         {/* Clear error button */}
         {status === "error" && (
           <IconButton
-            label="Clear SVG import error"
+            label={t("svgImporter.clearError", "Clear SVG import error")}
             icon={<X size={14} className="text-fg-3" />}
             variant="ghost"
             size="sm"
@@ -268,7 +283,7 @@ export const SVGImporter: React.FC<SVGImporterProps> = ({
       {/* Supported formats info */}
       <Text type="supporting" color="secondary" className="flex items-center gap-2 text-[9px]">
         <FileImage size={12} />
-        Supported format: SVG (.svg)
+        {t("svgImporter.supportedFormat", "Supported format: SVG (.svg)")}
       </Text>
     </div>
   );
@@ -281,7 +296,8 @@ function readFileAsText(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.onerror = () =>
+      reject(new Error(i18n.t("inspector:svgImporter.readFileFailed", "Failed to read file")));
     reader.readAsText(file);
   });
 }

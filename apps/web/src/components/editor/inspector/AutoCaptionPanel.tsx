@@ -28,23 +28,30 @@ import {
   isWhisperModelKey,
   type WhisperModelKey,
 } from "../../../workers/whisper-models";
+import { useTranslation } from "../../../i18n";
 
-const CAPTION_STYLE_PRESETS = ["default", "modern", "bold", "cinematic", "minimal"] as const;
+const CAPTION_STYLE_PRESETS = [
+  { value: "default", key: "inspector:autoCaption.styleDefault", label: "Default" },
+  { value: "modern", key: "inspector:autoCaption.styleModern", label: "Modern" },
+  { value: "bold", key: "inspector:autoCaption.styleBold", label: "Bold" },
+  { value: "cinematic", key: "inspector:autoCaption.styleCinematic", label: "Cinematic" },
+  { value: "minimal", key: "inspector:autoCaption.styleMinimal", label: "Minimal" },
+] as const;
 const WHISPER_LANGUAGES = [
-  { code: "en", name: "English" },
-  { code: "fr", name: "French" },
-  { code: "de", name: "German" },
-  { code: "es", name: "Spanish" },
-  { code: "it", name: "Italian" },
-  { code: "pt", name: "Portuguese" },
-  { code: "hi", name: "Hindi" },
-  { code: "ja", name: "Japanese" },
-  { code: "ko", name: "Korean" },
-  { code: "zh", name: "Chinese" },
-  { code: "ru", name: "Russian" },
-  { code: "tr", name: "Turkish" },
-  { code: "pl", name: "Polish" },
-  { code: "vi", name: "Vietnamese" },
+  { code: "en", key: "inspector:autoCaption.langEn", name: "English" },
+  { code: "fr", key: "inspector:autoCaption.langFr", name: "French" },
+  { code: "de", key: "inspector:autoCaption.langDe", name: "German" },
+  { code: "es", key: "inspector:autoCaption.langEs", name: "Spanish" },
+  { code: "it", key: "inspector:autoCaption.langIt", name: "Italian" },
+  { code: "pt", key: "inspector:autoCaption.langPt", name: "Portuguese" },
+  { code: "hi", key: "inspector:autoCaption.langHi", name: "Hindi" },
+  { code: "ja", key: "inspector:autoCaption.langJa", name: "Japanese" },
+  { code: "ko", key: "inspector:autoCaption.langKo", name: "Korean" },
+  { code: "zh", key: "inspector:autoCaption.langZh", name: "Chinese" },
+  { code: "ru", key: "inspector:autoCaption.langRu", name: "Russian" },
+  { code: "tr", key: "inspector:autoCaption.langTr", name: "Turkish" },
+  { code: "pl", key: "inspector:autoCaption.langPl", name: "Polish" },
+  { code: "vi", key: "inspector:autoCaption.langVi", name: "Vietnamese" },
 ] as const;
 
 interface AutoCaptionPanelProps {
@@ -63,6 +70,7 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
   clipId,
   maxWordsPerLine = 5,
 }) => {
+  const { t } = useTranslation("inspector");
   const getClip = useProjectStore((state) => state.getClip);
   const getMediaItem = useProjectStore((state) => state.getMediaItem);
   const addSubtitle = useProjectStore((state) => state.addSubtitle);
@@ -112,7 +120,10 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
       audio?: Float32Array,
     ): Promise<{ text?: string; chunks?: WorkerChunk[] }> => {
       const worker = workerRef.current;
-      if (!worker) return Promise.reject(new Error("Caption worker is not ready."));
+      if (!worker)
+        return Promise.reject(
+          new Error(t("inspector:autoCaption.workerNotReady", "Caption worker is not ready.")),
+        );
       const requestId = crypto.randomUUID();
       return new Promise((resolve, reject) => {
         const handleMessage = (event: MessageEvent<Record<string, unknown>>) => {
@@ -122,12 +133,22 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
             setWorkerState("loading");
             const rawProgress = Number(event.data.progress ?? 0);
             setProgress(rawProgress > 1 ? rawProgress / 100 : rawProgress);
-            const file = String(event.data.file ?? "caption model").split("/").pop();
-            setProgressMessage(`Downloading ${file || "caption model"}…`);
+            const fallbackName = t("inspector:autoCaption.captionModel", "caption model");
+            const file = String(event.data.file ?? fallbackName).split("/").pop();
+            setProgressMessage(
+              t("inspector:autoCaption.downloadingFile", "Downloading {{file}}…", {
+                file: file || fallbackName,
+              }),
+            );
           } else if (messageType === "transcription-progress") {
             setWorkerState("ready");
             setProgress(Number(event.data.progress ?? 0));
-            setProgressMessage("Transcribing selected clip locally…");
+            setProgressMessage(
+              t(
+                "inspector:autoCaption.transcribingLocally",
+                "Transcribing selected clip locally…",
+              ),
+            );
           } else if (messageType === "ready") {
             worker.removeEventListener("message", handleMessage);
             setWorkerState("ready");
@@ -140,7 +161,9 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
               }));
             }
             setProgress(1);
-            setProgressMessage("Offline caption model is ready");
+            setProgressMessage(
+              t("inspector:autoCaption.modelReady", "Offline caption model is ready"),
+            );
             resolve({});
           } else if (messageType === "result") {
             worker.removeEventListener("message", handleMessage);
@@ -160,7 +183,14 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
             });
           } else if (messageType === "error") {
             worker.removeEventListener("message", handleMessage);
-            reject(new Error(String(event.data.message ?? "Local transcription failed.")));
+            reject(
+              new Error(
+                String(
+                  event.data.message ??
+                    t("inspector:autoCaption.transcriptionFailed", "Local transcription failed."),
+                ),
+              ),
+            );
           }
         };
         worker.addEventListener("message", handleMessage);
@@ -185,7 +215,7 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
         }
       });
     },
-    [selectedLanguage, selectedModel],
+    [selectedLanguage, selectedModel, t],
   );
 
   const handleModelChange = useCallback(
@@ -195,24 +225,34 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
       setSegments([]);
       setError(null);
       setProgress(readyModels.has(value) ? 1 : 0);
-      setProgressMessage(readyModels.has(value) ? "Offline caption model is ready" : "");
+      setProgressMessage(
+        readyModels.has(value)
+          ? t("inspector:autoCaption.modelReady", "Offline caption model is ready")
+          : "",
+      );
       setWorkerState(readyModels.has(value) ? "ready" : "idle");
     },
-    [readyModels],
+    [readyModels, t],
   );
 
   const handlePrepareModel = useCallback(async () => {
     setError(null);
     setWorkerState("loading");
     setProgress(0);
-    setProgressMessage("Preparing offline caption model…");
+    setProgressMessage(
+      t("inspector:autoCaption.preparingModel", "Preparing offline caption model…"),
+    );
     try {
       await runWorker("load");
     } catch (reason) {
       setWorkerState("idle");
-      setError(reason instanceof Error ? reason.message : "Model download failed.");
+      setError(
+        reason instanceof Error
+          ? reason.message
+          : t("inspector:autoCaption.modelDownloadFailed", "Model download failed."),
+      );
     }
-  }, [runWorker]);
+  }, [runWorker, t]);
 
   const handleTranscribe = useCallback(async () => {
     if (!clip || !mediaItem) return;
@@ -220,7 +260,9 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
     setSegments([]);
     setIsTranscribing(true);
     setProgress(0);
-    setProgressMessage("Extracting selected clip audio…");
+    setProgressMessage(
+      t("inspector:autoCaption.extractingAudio", "Extracting selected clip audio…"),
+    );
 
     let audioContext: AudioContext | null = null;
     try {
@@ -228,7 +270,12 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
         mediaItem.blob ??
         (mediaItem.fileHandle ? await mediaItem.fileHandle.getFile() : null);
       if (!sourceBlob) {
-        throw new Error("Reconnect the source media before creating captions.");
+        throw new Error(
+          t(
+            "inspector:autoCaption.reconnectSource",
+            "Reconnect the source media before creating captions.",
+          ),
+        );
       }
       audioContext = new AudioContext();
       const audioBuffer = await loadAudioBuffer(audioContext, sourceBlob, {
@@ -238,7 +285,13 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
           setProgressMessage(next.message);
         },
       });
-      if (!audioBuffer) throw new Error("The selected clip audio could not be decoded.");
+      if (!audioBuffer)
+        throw new Error(
+          t(
+            "inspector:autoCaption.audioNotDecoded",
+            "The selected clip audio could not be decoded.",
+          ),
+        );
 
       const sourceStart = Math.max(0, clip.inPoint ?? 0);
       const sourceEnd = Math.min(
@@ -251,8 +304,14 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
       setProgress(0.2);
       setProgressMessage(
         workerState === "ready"
-          ? `Transcribing with ${WHISPER_MODELS[selectedModel].shortLabel}…`
-          : `Downloading ${WHISPER_MODELS[selectedModel].shortLabel}, then transcribing…`,
+          ? t("inspector:autoCaption.transcribingWith", "Transcribing with {{model}}…", {
+              model: WHISPER_MODELS[selectedModel].shortLabel,
+            })
+          : t(
+              "inspector:autoCaption.downloadingThenTranscribing",
+              "Downloading {{model}}, then transcribing…",
+              { model: WHISPER_MODELS[selectedModel].shortLabel },
+            ),
       );
       const result = await runWorker("transcribe", samples);
       const sourceDuration = Math.max(0.1, sourceEnd - sourceStart);
@@ -288,17 +347,23 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
         });
       }
       if (nextSegments.length === 0) {
-        throw new Error("No speech was detected in the selected clip.");
+        throw new Error(
+          t("inspector:autoCaption.noSpeechDetected", "No speech was detected in the selected clip."),
+        );
       }
       setSegments(nextSegments);
-      setProgressMessage("Captions are ready to add");
+      setProgressMessage(t("inspector:autoCaption.captionsReady", "Captions are ready to add"));
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Local transcription failed.");
+      setError(
+        reason instanceof Error
+          ? reason.message
+          : t("inspector:autoCaption.transcriptionFailed", "Local transcription failed."),
+      );
     } finally {
       await audioContext?.close().catch(() => undefined);
       setIsTranscribing(false);
     }
-  }, [clip, mediaItem, runWorker, selectedModel, workerState]);
+  }, [clip, mediaItem, runWorker, selectedModel, t, workerState]);
 
   const handleAddToTimeline = useCallback(async () => {
     if (!clip || segments.length === 0) return;
@@ -331,28 +396,37 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
       }
     }
     setSegments([]);
-    setProgressMessage(`${addedCount} single-line caption clips added`);
-  }, [addSubtitle, clip, maxWordsPerLine, segments, selectedModel, selectedStyle]);
+    setProgressMessage(
+      t("inspector:autoCaption.clipsAdded", "{{count}} single-line caption clips added", {
+        count: addedCount,
+      }),
+    );
+  }, [addSubtitle, clip, maxWordsPerLine, segments, selectedModel, selectedStyle, t]);
 
   const modelStatus = useMemo(() => {
     const model = WHISPER_MODELS[selectedModel];
     if (workerState === "ready") {
       const backend = modelBackends[selectedModel];
-      return `Downloaded and cached${backend ? ` · ${backend === "webgpu" ? "GPU" : "CPU"}` : ""}`;
+      return backend
+        ? t("inspector:autoCaption.downloadedAndCachedBackend", "Downloaded and cached · {{backend}}", {
+            backend: backend === "webgpu" ? "GPU" : "CPU",
+          })
+        : t("inspector:autoCaption.downloadedAndCached", "Downloaded and cached");
     }
-    if (workerState === "loading") return progressMessage || "Downloading model…";
+    if (workerState === "loading")
+      return progressMessage || t("inspector:autoCaption.downloadingModel", "Downloading model…");
     return `${model.downloadSize} · ${model.description}`;
-  }, [modelBackends, progressMessage, selectedModel, workerState]);
+  }, [modelBackends, progressMessage, selectedModel, t, workerState]);
 
   return (
     <div className="w-full min-w-0 space-y-3">
       <Card variant="muted" padding={3} className="space-y-2 border border-primary/30 bg-primary/5">
         <div className="flex items-center justify-between gap-2">
           <Text type="supporting" color="secondary" className="text-[10px]">
-            Model quality
+            {t("inspector:autoCaption.modelQuality", "Model quality")}
           </Text>
           <Selector
-            label="Local caption model"
+            label={t("inspector:autoCaption.localModel", "Local caption model")}
             isLabelHidden
             size="sm"
             width={176}
@@ -394,7 +468,9 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
         )}
         {workerState === "idle" && (
           <Button
-            label={`Download ${WHISPER_MODELS[selectedModel].shortLabel}`}
+            label={t("inspector:autoCaption.downloadModel", "Download {{model}}", {
+              model: WHISPER_MODELS[selectedModel].shortLabel,
+            })}
             icon={<Download size={13} aria-hidden />}
             variant="secondary"
             size="sm"
@@ -403,7 +479,10 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
           />
         )}
         <Text type="supporting" color="secondary" className="block text-[9px] leading-relaxed">
-          Stored in this browser after the first download. Media never leaves your device.
+          {t(
+            "inspector:autoCaption.storageNote",
+            "Stored in this browser after the first download. Media never leaves your device.",
+          )}
         </Text>
       </Card>
 
@@ -411,10 +490,12 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5">
             <Languages size={14} className="text-fg-2" aria-hidden />
-            <Text type="supporting" color="secondary" className="text-[10px]">Language</Text>
+            <Text type="supporting" color="secondary" className="text-[10px]">
+              {t("inspector:autoCaption.language", "Language")}
+            </Text>
           </div>
           <Selector
-            label="Caption language"
+            label={t("inspector:autoCaption.captionLanguage", "Caption language")}
             isLabelHidden
             size="sm"
             width={132}
@@ -422,15 +503,17 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
             onChange={setSelectedLanguage}
             isDisabled={isTranscribing}
             options={WHISPER_LANGUAGES.map((language) => ({
-              label: language.name,
+              label: t(language.key, language.name),
               value: language.code,
             }))}
           />
         </div>
         <div className="flex items-center justify-between gap-2">
-          <Text type="supporting" color="secondary" className="text-[10px]">Caption style</Text>
+          <Text type="supporting" color="secondary" className="text-[10px]">
+            {t("inspector:autoCaption.captionStyle", "Caption style")}
+          </Text>
           <Selector
-            label="Caption style"
+            label={t("inspector:autoCaption.captionStyle", "Caption style")}
             isLabelHidden
             size="sm"
             width={132}
@@ -438,8 +521,8 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
             onChange={setSelectedStyle}
             isDisabled={isTranscribing}
             options={CAPTION_STYLE_PRESETS.map((preset) => ({
-              label: preset[0].toUpperCase() + preset.slice(1),
-              value: preset,
+              label: t(preset.key, preset.label),
+              value: preset.value,
             }))}
           />
         </div>
@@ -472,7 +555,9 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
             ))}
           </div>
           <Button
-            label={`Add ${segments.length} as Editable Text`}
+            label={t("inspector:autoCaption.addAsEditableText", "Add {{count}} as Editable Text", {
+              count: segments.length,
+            })}
             variant="primary"
             size="sm"
             onClick={handleAddToTimeline}
@@ -482,7 +567,11 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
       )}
 
       <Button
-        label={isTranscribing ? "Transcribing Locally…" : "Transcribe Selected Clip"}
+        label={
+          isTranscribing
+            ? t("inspector:autoCaption.transcribing", "Transcribing Locally…")
+            : t("inspector:autoCaption.transcribe", "Transcribe Selected Clip")
+        }
         icon={
           isTranscribing ? (
             <Loader2 size={14} className="animate-spin" aria-hidden />
@@ -498,7 +587,10 @@ export const AutoCaptionPanel: React.FC<AutoCaptionPanelProps> = ({
       />
       {!canTranscribe && (
         <Text type="supporting" color="secondary" className="block text-center text-[9px]">
-          Select a connected video or audio clip first.
+          {t(
+            "inspector:autoCaption.selectClipFirst",
+            "Select a connected video or audio clip first.",
+          )}
         </Text>
       )}
     </div>

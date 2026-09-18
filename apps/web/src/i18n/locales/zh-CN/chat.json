@@ -1,0 +1,118 @@
+{
+  "newChat": "新建对话",
+  "panel": {
+    "title": "AI 编辑器",
+    "dryRunOn": "试运行已开启：仅规划，不应用修改",
+    "dryRunOff": "试运行已关闭",
+    "autoApproveOn": "自动批准已开启：破坏性操作无需确认即可执行",
+    "autoApproveOff": "自动批准已关闭：破坏性操作会先请求确认",
+    "undoLastTurn": "撤销上一轮 AI 操作",
+    "conversationHistory": "会话历史",
+    "close": "关闭",
+    "tokens": {
+      "label": "{{tokens}} 词元",
+      "usage": "输入 {{input}} · 输出 {{output}}"
+    }
+  },
+  "empty": {
+    "title": "通过对话剪辑",
+    "description": "用自然语言描述剪辑需求，AI 会在时间线上为你完成。",
+    "noProjectDescription": "打开或新建一个项目，然后用自然语言描述剪辑需求。",
+    "connectTitle": "连接你的模型",
+    "setupEndpoint": "选择 API 格式，然后填写接口地址和模型 ID。",
+    "setupPassword": "设置主密码，然后添加服务商的 API 密钥。",
+    "setupLocked": "解锁加密的 API 密钥，即可开始使用 AI 编辑器。",
+    "setupApiKey": "添加可选的接口 API 密钥，即可开始剪辑。",
+    "unlockApiKeys": "解锁 API 密钥",
+    "configureEndpoint": "配置接口",
+    "setUpChat": "配置 AI 对话",
+    "suggestions": {
+      "welcomeTitle": "在前 3 秒添加一个写着「欢迎」的标题",
+      "trimEnd": "把第一个片段结尾剪掉 2 秒",
+      "fadeIn": "为开场片段添加淡入效果",
+      "listTimeline": "列出时间线上当前的所有内容"
+    }
+  },
+  "composer": {
+    "label": "AI 剪辑指令",
+    "placeholder": "让 AI 帮你剪辑视频…",
+    "stop": "停止",
+    "send": "发送",
+    "hint": "Enter 发送 · Shift+Enter 换行"
+  },
+  "history": {
+    "conversations": "会话列表",
+    "savedOnDevice": "保存在本设备上，仅限当前项目",
+    "emptyTitle": "暂无已保存的会话",
+    "emptyDescription": "对话完成后会自动出现在这里。",
+    "summary": "{{count}} 次请求 · {{time}}",
+    "deleteConversation": "删除 {{title}}"
+  },
+  "confirm": {
+    "title": "确认操作",
+    "bodyPrefix": "助手想要执行",
+    "bodySuffix": "，这可能会修改你的项目或产生费用。",
+    "approve": "批准",
+    "approveForTurn": "本轮全部批准",
+    "reject": "拒绝"
+  },
+  "toolCall": {
+    "running": "运行中",
+    "done": "已完成",
+    "failed": "失败",
+    "skipped": "已跳过",
+    "arguments": "参数",
+    "result": "结果"
+  },
+  "error": {
+    "fallback": "AI 请求失败。",
+    "dismiss": "关闭错误提示",
+    "technicalDetails": "技术详情",
+    "fixIssue": "修复问题",
+    "authTitle": "身份验证失败",
+    "authMessage": "接口拒绝了该 API 密钥。请检查已保存的密钥后重试。",
+    "authAction": "检查 API 密钥",
+    "rateLimitTitle": "已达到速率限制",
+    "rateLimitMessage": "接口收到的请求过多。请稍候重试。",
+    "networkTitle": "无法连接到接口",
+    "networkMessage": "请检查主机地址并确认接口在线。在浏览器中，主机还必须允许来自 OpenReel 的 CORS 请求。",
+    "checkEndpoint": "检查接口",
+    "contextTitle": "会话过长",
+    "contextMessage": "该模型无法容纳完整的会话。请新建对话后继续。",
+    "newChat": "新建对话",
+    "modelTitle": "未找到模型或路由",
+    "modelMessage": "请检查基础地址与模型 ID 是否和接口提供的一致。",
+    "setupTitle": "需要配置 AI",
+    "openApiKeys": "打开 API 密钥",
+    "openAiSettings": "打开 AI 设置",
+    "genericTitle": "AI 请求失败"
+  },
+  "provider": {
+    "popoverLabel": "AI 接口与模型",
+    "connectTitle": "连接任意兼容模型",
+    "connectDescription": "选择 API 格式，然后使用你自己的主机和模型。OpenReel 不会替你选择服务商或模型。",
+    "apiFormat": "API 格式",
+    "chooseApiFormat": "选择 API 格式…",
+    "openaiCompatible": "OpenAI 兼容",
+    "anthropicCompatible": "Anthropic 兼容",
+    "notConfigured": "未配置",
+    "baseUrl": "基础地址",
+    "modelId": "模型 ID",
+    "modelIdPlaceholder": "输入任意支持工具调用的模型 ID",
+    "loading": "加载中…",
+    "loadModels": "加载模型",
+    "modelsFromEndpoint": "接口返回的模型",
+    "chooseDiscoveredModel": "选择已发现的模型…",
+    "modelsFoundOne": "找到 1 个模型。",
+    "modelsFoundOther": "找到 {{count}} 个模型。",
+    "noModels": "接口未返回任何模型。请手动输入模型 ID。",
+    "chooseFormatFirst": "请先选择 API 格式。",
+    "enterBaseUrlFirst": "请先填写接口基础地址。",
+    "unlockBeforeLoading": "请先解锁 API 密钥再加载模型。",
+    "loadFailed": "无法从该接口加载模型。",
+    "discoveryHint": "模型发现使用 GET /models。如果你的网关未提供该接口，请手动输入模型 ID。浏览器访问的接口必须允许 CORS。",
+    "manageApiKey": "管理可选的 API 密钥",
+    "settingsLabel": "AI 设置：{{provider}}，{{model}}",
+    "noModelSelected": "未选择模型"
+  }
+}
