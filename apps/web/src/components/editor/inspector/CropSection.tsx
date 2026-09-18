@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftCard as Card } from "@openreel/ui";
 import { ToolcraftText as Text } from "@openreel/ui";
@@ -12,6 +13,7 @@ interface CropSectionProps {
 }
 
 export const CropSection: React.FC<CropSectionProps> = ({ clip }) => {
+  const { t } = useTranslation("inspector");
   const updateClipTransform = useProjectStore(
     (state) => state.updateClipTransform,
   );
@@ -32,7 +34,7 @@ export const CropSection: React.FC<CropSectionProps> = ({ clip }) => {
   return (
     <div className="space-y-3">
       <Button
-        label={isCropped ? "Adjust Crop" : "Crop Video"}
+        label={isCropped ? t("crop.adjust") : t("crop.cropVideo")}
         icon={<Crop size={14} />}
         variant="primary"
         size="sm"
@@ -45,7 +47,7 @@ export const CropSection: React.FC<CropSectionProps> = ({ clip }) => {
           <Card variant="muted" padding={2} className="space-y-0.5 border border-border">
             <div className="flex justify-between">
               <Text type="supporting" color="secondary" className="text-[9px]">
-                Crop Region:
+                {t("crop.region")}
               </Text>
               <Text type="supporting" color="secondary" className="text-[9px]">
                 {Math.round(crop.width * 100)}% × {Math.round(crop.height * 100)}%
@@ -53,7 +55,7 @@ export const CropSection: React.FC<CropSectionProps> = ({ clip }) => {
             </div>
             <div className="flex justify-between">
               <Text type="supporting" color="secondary" className="text-[9px]">
-                Position:
+                {t("crop.position")}
               </Text>
               <Text type="supporting" color="secondary" className="text-[9px]">
                 ({Math.round(crop.x * 100)}%, {Math.round(crop.y * 100)}%)
@@ -61,7 +63,7 @@ export const CropSection: React.FC<CropSectionProps> = ({ clip }) => {
             </div>
           </Card>
           <Button
-            label="Reset Crop"
+            label={t("crop.reset")}
             icon={<RotateCcw size={12} />}
             variant="secondary"
             size="sm"

@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useAnalytics, AnalyticsEvents } from "../../hooks/useAnalytics";
 import {
   Play,
@@ -58,6 +59,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
   onClose,
   onApply,
 }) => {
+  const { t } = useTranslation("welcome");
   const getTemplateEngine = useEngineStore((state) => state.getTemplateEngine);
   const getTitleEngine = useEngineStore((state) => state.getTitleEngine);
   const loadProject = useProjectStore((state) => state.loadProject);
@@ -207,7 +209,10 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
           <DialogHeader
             title={template.name}
             onOpenChange={(open) => !open && onClose()}
-            subtitle={`${formatDuration(template.timeline.duration)} · ${template.placeholders.length} editable fields`}
+            subtitle={t("gallery.editableFieldsCount", {
+              duration: formatDuration(template.timeline.duration),
+              count: template.placeholders.length,
+            })}
           />
         }
         content={
@@ -237,7 +242,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
               {template.scenes && template.scenes.length > 0 && (
                 <div className="space-y-2">
                   <Text type="label" color="secondary" weight="medium" className="text-xs text-text-muted uppercase tracking-wide">
-                    Scenes
+                    {t("gallery.scenes")}
                   </Text>
                   <div className="flex flex-wrap gap-2">
                     {template.scenes.map((scene) => (
@@ -264,7 +269,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
 
             <div className="space-y-4">
               <Text type="label" color="primary" weight="medium" className="text-sm text-text-primary">
-                Customize Template
+                {t("gallery.customizeTemplate")}
               </Text>
 
               {groupedPlaceholders.main.length > 0 && (
@@ -289,7 +294,7 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
               {groupedPlaceholders.advanced.length > 0 && (
                 <div>
                   <Button
-                    label={`Advanced Options (${groupedPlaceholders.advanced.length})`}
+                    label={t("gallery.advancedOptions", { count: groupedPlaceholders.advanced.length })}
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowAdvanced((value) => !value)}
@@ -334,9 +339,9 @@ export const TemplatePreviewModal: React.FC<TemplatePreviewModalProps> = ({
         }
         footer={
         <LayoutFooter>
-          <Button label="Cancel" variant="ghost" onClick={onClose} />
+          <Button label={t("gallery.cancel")} variant="ghost" onClick={onClose} />
           <Button
-            label={isApplying ? "Applying..." : "Use Template"}
+            label={isApplying ? t("gallery.applying") : t("gallery.useTemplate")}
             icon={isApplying ? (
               <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
             ) : (

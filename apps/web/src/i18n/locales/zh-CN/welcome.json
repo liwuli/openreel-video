@@ -58,8 +58,15 @@
     "title": "从零开始创建",
     "projectName": "工程名称",
     "projectNamePlaceholder": "输入新工程名称…",
-    "createProject": "创建并进入工程",
-    "categories": {
+    "selectFormat": "选择画幅规格",
+    "createProject": "创建工程",
+    "creating": "创建中…",
+    "newProjectDefault": "新建工程",
+    "formatLabel": "{{name}} 画幅",
+    "safeZone": "安全区：上边距 {{top}}px，下边距 {{bottom}}px",
+    "maxDuration": " • 最长 {{duration}} 秒",
+    "recommendedDuration": " • 建议 {{duration}} 秒",
+    "groups": {
       "vertical": "竖屏 (9:16)",
       "square": "正方形 (1:1)",
       "horizontal": "横屏 (16:9)",
@@ -67,11 +74,26 @@
     }
   },
   "gallery": {
-    "searchTemplates": "搜索模板…",
+    "searchPlaceholder": "搜索模板…",
     "loading": "正在加载模板…",
     "noTemplates": "未找到匹配的模板",
-    "noTemplatesDesc": "请尝试更换关键词或筛选分类",
+    "noTemplatesDesc": "请尝试调整搜索关键词或分类筛选",
     "useTemplate": "使用此模板",
-    "preview": "全屏预览"
+    "applying": "应用中…",
+    "preview": "全屏预览",
+    "featured": "精选",
+    "editableCount": "{{count}} 项可编辑",
+    "editableFieldsCount": "{{duration}} · {{count}} 个可编辑字段",
+    "customizeTemplate": "自定义模板内容",
+    "advancedOptions": "高级选项 ({{count}})",
+    "scenes": "场景分段",
+    "cancel": "取消",
+    "all": "全部",
+    "platforms": {
+      "TikTok": "TikTok",
+      "Instagram": "Instagram",
+      "YouTube": "YouTube",
+      "General": "通用"
+    }
   }
 }

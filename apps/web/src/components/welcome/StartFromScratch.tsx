@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Smartphone,
   Monitor,
@@ -25,12 +26,14 @@ interface StartFromScratchProps {
 }
 
 interface PresetGroup {
+  id: "vertical" | "square" | "horizontal" | "other";
   platform: string;
   presets: SocialMediaCategory[];
 }
 
 const PRESET_GROUPS: PresetGroup[] = [
   {
+    id: "vertical",
     platform: "Vertical (9:16)",
     presets: [
       "tiktok",
@@ -40,14 +43,17 @@ const PRESET_GROUPS: PresetGroup[] = [
     ],
   },
   {
+    id: "square",
     platform: "Square (1:1)",
     presets: ["instagram-post", "facebook"],
   },
   {
+    id: "horizontal",
     platform: "Horizontal (16:9)",
     presets: ["youtube-video", "twitter", "linkedin"],
   },
   {
+    id: "other",
     platform: "Other",
     presets: ["pinterest", "custom"],
   },
@@ -63,6 +69,7 @@ const PRESET_ICONS: Record<string, React.ElementType> = {
 export const StartFromScratch: React.FC<StartFromScratchProps> = ({
   onProjectCreated,
 }) => {
+  const { t } = useTranslation("welcome");
   const createNewProject = useProjectStore((state) => state.createNewProject);
   const updateSettings = useProjectStore((state) => state.updateSettings);
   const { track } = useAnalytics();
@@ -78,7 +85,7 @@ export const StartFromScratch: React.FC<StartFromScratchProps> = ({
     setIsCreating(true);
 
     const settings = createProjectSettingsFromPreset(preset);
-    createNewProject(projectName.trim() || `${info?.name || "New"} Project`);
+    createNewProject(projectName.trim() || `${info?.name || t("scratch.newProjectDefault")} Project`);
     await updateSettings(settings);
 
     track(AnalyticsEvents.PROJECT_CREATED, {
@@ -99,6 +106,7 @@ export const StartFromScratch: React.FC<StartFromScratchProps> = ({
     preset,
     projectName,
     info,
+    t,
     onProjectCreated,
     track,
     selectedPreset,
@@ -108,32 +116,33 @@ export const StartFromScratch: React.FC<StartFromScratchProps> = ({
     <div className="space-y-6">
       <div>
         <Text type="label" color="primary" weight="medium" className="text-sm text-text-primary mb-2 block">
-          Project Name
+          {t("scratch.projectName")}
         </Text>
         <ToolcraftTextInputControl
-          label="Project Name"
+          label={t("scratch.projectName")}
           isLabelHidden
           value={projectName}
           onChange={setProjectName}
-          placeholder="My Awesome Video"
+          placeholder={t("scratch.projectNamePlaceholder")}
           className="max-w-md bg-background-tertiary border-border text-text-primary"
         />
       </div>
 
       <div>
         <Text type="label" color="primary" weight="medium" className="text-sm text-text-primary mb-4">
-          Select Format
+          {t("scratch.selectFormat")}
         </Text>
 
         <div className="grid md:grid-cols-2 gap-6">
           {PRESET_GROUPS.map((group) => {
             const GroupIcon = PRESET_ICONS[group.platform] || Square;
+            const groupTitle = t(`scratch.groups.${group.id}`, { defaultValue: group.platform });
 
             return (
               <div key={group.platform} className="space-y-3">
                 <div className="flex items-center gap-2 text-xs text-text-muted font-medium">
                   <GroupIcon size={14} />
-                  <span>{group.platform}</span>
+                  <span>{groupTitle}</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
@@ -192,18 +201,17 @@ export const StartFromScratch: React.FC<StartFromScratchProps> = ({
         <Info size={16} className="text-primary flex-shrink-0 mt-0.5" />
         <div>
           <Text type="supporting" color="primary" weight="medium" className="text-sm text-text-primary">
-            {info?.name || selectedPreset} Format
+            {t("scratch.formatLabel", { name: info?.name || selectedPreset })}
           </Text>
           <Text type="supporting" color="secondary" className="text-xs text-text-muted mt-1">
             {preset.width}×{preset.height}px • {preset.frameRate || 30}fps
-            {preset.maxDuration && ` • Max ${preset.maxDuration}s`}
+            {preset.maxDuration && t("scratch.maxDuration", { duration: preset.maxDuration })}
             {preset.recommendedDuration &&
-              ` • Recommended ${preset.recommendedDuration}s`}
+              t("scratch.recommendedDuration", { duration: preset.recommendedDuration })}
           </Text>
           {preset.safeZone && (
             <Text type="supporting" color="secondary" className="text-xs text-text-muted mt-0.5">
-              Safe zone: {preset.safeZone.top}px top, {preset.safeZone.bottom}px
-              bottom
+              {t("scratch.safeZone", { top: preset.safeZone.top, bottom: preset.safeZone.bottom })}
             </Text>
           )}
         </div>
@@ -211,7 +219,7 @@ export const StartFromScratch: React.FC<StartFromScratchProps> = ({
 
       <div className="flex items-center justify-end gap-3">
         <Button
-          label={isCreating ? "Creating..." : "Create Project"}
+          label={isCreating ? t("scratch.creating") : t("scratch.createProject")}
           icon={isCreating ? (
             <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
           ) : (

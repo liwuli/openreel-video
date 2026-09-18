@@ -100,5 +100,30 @@
     "audioClip": "Audio Clip",
     "imageClip": "Image Clip",
     "clip": "Clip"
+  },
+  "graphicsMenu": {
+    "duplicate": "Duplicate",
+    "selectAllCaptions": "Select All Captions",
+    "selectAllOnTrack": "Select All Clips on Track",
+    "delete": "Delete",
+    "clipTitle": "{{type}} Clip",
+    "types": {
+      "shape": "Shape",
+      "svg": "SVG",
+      "sticker": "Sticker",
+      "emoji": "Emoji",
+      "text": "Text",
+      "graphics": "Graphics"
+    }
+  },
+  "captionBatch": {
+    "selectAll": "Select all captions ({{count}})"
+  },
+  "adjustmentLayer": {
+    "moveAction": "Move adjustment layer",
+    "trimAction": "Trim adjustment layer",
+    "ariaLabel": "{{name}}, adjustment layer",
+    "trimStart": "Trim start of {{name}}",
+    "trimEnd": "Trim end of {{name}}"
   }
 }

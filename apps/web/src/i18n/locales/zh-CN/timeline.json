@@ -100,5 +100,30 @@
     "audioClip": "音频片段",
     "imageClip": "图片片段",
     "clip": "片段"
+  },
+  "graphicsMenu": {
+    "duplicate": "生成副本",
+    "selectAllCaptions": "选择全部字幕",
+    "selectAllOnTrack": "选中轨道全部片段",
+    "delete": "删除",
+    "clipTitle": "{{type}} 片段",
+    "types": {
+      "shape": "形状",
+      "svg": "SVG 矢量",
+      "sticker": "贴纸",
+      "emoji": "表情",
+      "text": "文本",
+      "graphics": "图形"
+    }
+  },
+  "captionBatch": {
+    "selectAll": "选择全部字幕 ({{count}})"
+  },
+  "adjustmentLayer": {
+    "moveAction": "移动调整图层",
+    "trimAction": "修剪调整图层",
+    "ariaLabel": "{{name}}，调整图层",
+    "trimStart": "修剪 {{name}} 起点",
+    "trimEnd": "修剪 {{name}} 终点"
   }
 }

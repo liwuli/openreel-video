@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftCard as Card } from "@openreel/ui";
@@ -62,6 +63,7 @@ interface Props {
 }
 
 export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Props) {
+  const { t } = useTranslation("ai");
   const [step, setStep] = useState<Step>("pick");
   const [selectedModel, setSelectedModel] = useState<ImageModelId | null>(null);
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -220,12 +222,12 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
 
   const title =
     step === "pick"
-      ? "Create with KieAI"
+      ? t("kieai.dialogTitle")
       : step === "form"
         ? modelLabel
         : step === "submitting"
-          ? "Submitting..."
-          : "Submission Failed";
+          ? t("kieai.submitting")
+          : t("kieai.failed");
 
   return (
     <Dialog isOpen={open} onOpenChange={(nextOpen) => !nextOpen && handleClose()} width={512} purpose="form">
@@ -255,7 +257,7 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
                   {sourceFile.name}
                 </Text>
                 <Text type="supporting" color="secondary" display="block" className="text-[10px]">
-                  Source image
+                  {t("kieai.sourceImage")}
                 </Text>
               </div>
               </div>
@@ -287,10 +289,10 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
             <div className="space-y-4 py-4 text-center">
               <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-border border-t-primary" />
               <Text type="body" color="secondary" display="block">
-                Uploading and submitting task...
+                {t("kieai.uploadingAndSubmitting")}
               </Text>
               <Button
-                label="Cancel"
+                label={t("kieai.cancel")}
                 variant="secondary"
                 size="sm"
                 onClick={() => { abortRef.current?.abort(); handleClose(); }}
@@ -307,13 +309,13 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
               </Card>
               <div className="flex gap-2">
                 <Button
-                  label="Close"
+                  label={t("kieai.close")}
                   variant="secondary"
                   className="flex-1"
                   onClick={handleClose}
                 />
                 <Button
-                  label="Try Again"
+                  label={t("kieai.tryAgain")}
                   variant="primary"
                   className="flex-1"
                   onClick={() => setStep("form")}
@@ -327,7 +329,7 @@ export function KieAIImageDialog({ open, onClose, sourceFile, previewUrl }: Prop
           step === "form" ? (
             <LayoutFooter hasDivider>
               <Button
-                label="Back to model selection"
+                label={t("kieai.backToModel")}
                 variant="ghost"
                 size="sm"
                 onClick={handleBack}

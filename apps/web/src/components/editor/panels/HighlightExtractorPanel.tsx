@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftIconButton as IconButton } from "@openreel/ui";
 import { ToolcraftNumberInputControl } from "@openreel/ui";
@@ -20,6 +21,7 @@ interface HighlightExtractorPanelProps {
 export const HighlightExtractorPanel: React.FC<HighlightExtractorPanelProps> = ({
   clipId,
 }) => {
+  const { t } = useTranslation("ai");
   const [highlights, setHighlights] = useState<HighlightResult[]>([]);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [phase, setPhase] = useState("");
@@ -57,7 +59,7 @@ export const HighlightExtractorPanel: React.FC<HighlightExtractorPanelProps> = (
     setHighlights([]);
 
     try {
-      setPhase("Decoding audio...");
+      setPhase(t("highlights.decodingAudio"));
       setProgress(10);
 
       const arrayBuffer = await mediaItem.blob.arrayBuffer();
@@ -114,9 +116,9 @@ export const HighlightExtractorPanel: React.FC<HighlightExtractorPanelProps> = (
     <div className="space-y-3">
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <Text type="label" color="secondary" className="text-[10px] text-text-secondary">Clips</Text>
+          <Text type="label" color="secondary" className="text-[10px] text-text-secondary">{t("highlights.clipsCount")}</Text>
           <ToolcraftNumberInputControl
-            label="Clips"
+            label={t("highlights.clipsCount")}
             isLabelHidden
             size="sm"
             width={48}
@@ -128,9 +130,9 @@ export const HighlightExtractorPanel: React.FC<HighlightExtractorPanelProps> = (
             }
             className="w-12 px-1 py-0.5 text-[10px] bg-background-secondary border border-border rounded text-text-primary"
           />
-          <Text type="label" color="secondary" className="text-[10px] text-text-secondary">Max</Text>
+          <Text type="label" color="secondary" className="text-[10px] text-text-secondary">{t("highlights.maxDuration")}</Text>
           <ToolcraftNumberInputControl
-            label="Max duration"
+            label={t("highlights.maxDuration")}
             isLabelHidden
             size="sm"
             width={48}
@@ -147,7 +149,7 @@ export const HighlightExtractorPanel: React.FC<HighlightExtractorPanelProps> = (
 
         <Button
           label={
-            isProcessing ? `${phase} (${progress}%)` : "Find Highlights"
+            isProcessing ? `${phase} (${progress}%)` : t("highlights.findHighlights")
           }
           icon={
             isProcessing ? (
@@ -199,7 +201,7 @@ export const HighlightExtractorPanel: React.FC<HighlightExtractorPanelProps> = (
                 </div>
                 <div className="flex items-center gap-1">
                   <IconButton
-                    label="Preview highlight"
+                    label={t("highlights.previewHighlight")}
                     icon={<Play size={10} className="text-text-muted" aria-hidden />}
                     variant="ghost"
                     size="sm"
@@ -226,7 +228,11 @@ export const HighlightExtractorPanel: React.FC<HighlightExtractorPanelProps> = (
           ))}
 
           <Button
-            label={`Apply ${selected.size} Highlight${selected.size !== 1 ? "s" : ""}`}
+            label={
+              selected.size === 1
+                ? t("highlights.applySingle")
+                : t("highlights.applyHighlights", { count: selected.size })
+            }
             icon={<Check size={14} aria-hidden />}
             variant="primary"
             size="md"

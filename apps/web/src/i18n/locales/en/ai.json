@@ -32,5 +32,31 @@
   "tools": "Tools",
   "moreComingSoon": "More AI features coming soon — image generation, auto-edit, and more",
   "unsavedDiscarded": "Unsaved audio discarded",
-  "unsavedDiscardedDesc": "Save to media or download next time to keep it."
+  "unsavedDiscardedDesc": "Save to media or download next time to keep it.",
+  "kieai": {
+    "dialogTitle": "Create with KieAI",
+    "submitting": "Submitting…",
+    "failed": "Submission Failed",
+    "sourceImage": "Source image",
+    "uploadingAndSubmitting": "Uploading and submitting task…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "tryAgain": "Try Again",
+    "backToModel": "Back to model selection"
+  },
+  "highlights": {
+    "clipsCount": "Clips",
+    "maxDuration": "Max",
+    "findHighlights": "Find Highlights",
+    "decodingAudio": "Decoding audio…",
+    "previewHighlight": "Preview highlight",
+    "applyHighlights": "Apply {{count}} Highlights",
+    "applySingle": "Apply 1 Highlight"
+  },
+  "tour": {
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish",
+    "skip": "Skip"
+  }
 }

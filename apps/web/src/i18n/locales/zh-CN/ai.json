@@ -32,5 +32,31 @@
   "tools": "剪辑工具",
   "moreComingSoon": "更多 AI 功能即将上线 —— 图像生成、智能成片等",
   "unsavedDiscarded": "未保存的音频已丢弃",
-  "unsavedDiscardedDesc": "下次请保存至媒体库或下载以保留音频。"
+  "unsavedDiscardedDesc": "下次请保存至媒体库或下载以保留音频。",
+  "kieai": {
+    "dialogTitle": "使用 KieAI 智能生图",
+    "submitting": "正在提交任务…",
+    "failed": "提交失败",
+    "sourceImage": "参考原图",
+    "uploadingAndSubmitting": "正在上传图片并提交任务…",
+    "cancel": "取消",
+    "close": "关闭",
+    "tryAgain": "重试",
+    "backToModel": "返回模型选择"
+  },
+  "highlights": {
+    "clipsCount": "片段数",
+    "maxDuration": "最长",
+    "findHighlights": "提取高光片段",
+    "decodingAudio": "正在解析音频…",
+    "previewHighlight": "预览高光片段",
+    "applyHighlights": "应用 {{count}} 个高光片段",
+    "applySingle": "应用 1 个高光片段"
+  },
+  "tour": {
+    "next": "下一步",
+    "back": "上一步",
+    "finish": "完成",
+    "skip": "跳过指引"
+  }
 }

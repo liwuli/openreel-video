@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ToolcraftButton as Button } from "@openreel/ui";
 import { ToolcraftCard as Card } from "@openreel/ui";
 import { ToolcraftFileDropControl as FileInput } from "@openreel/ui";
@@ -15,14 +16,15 @@ interface LUTLoaderProps {
 }
 
 const IntensitySlider: React.FC<{
+  label: string;
   value: number;
   onChange: (value: number) => void;
-}> = ({ value, onChange }) => {
+}> = ({ label, value, onChange }) => {
   const percentage = Math.round(value * 100);
 
   return (
     <PropertySlider
-      label="Intensity"
+      label={label}
       min={0}
       max={100}
       step={1}
@@ -172,6 +174,7 @@ export const LUTLoader: React.FC<LUTLoaderProps> = ({
   onChange,
   onError,
 }) => {
+  const { t } = useTranslation("inspector");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -262,7 +265,7 @@ export const LUTLoader: React.FC<LUTLoaderProps> = ({
       {/* Hidden file input */}
       <FileInput
         ref={fileInputRef}
-        label="Load LUT file"
+        label={t("lut.loadFile")}
         isLabelHidden
         value={null}
         accept=".cube,.3dl"
@@ -282,7 +285,7 @@ export const LUTLoader: React.FC<LUTLoaderProps> = ({
       {/* Load button or loaded LUT info */}
       {!lutData ? (
         <Button
-          label={isLoading ? "Loading..." : "Load LUT (.cube, .3dl)"}
+          label={isLoading ? t("lut.loading") : t("lut.loadBtn")}
           icon={
             isLoading ? (
               <div className="w-3 h-3 border border-text-muted border-t-transparent rounded-full animate-spin" />
@@ -302,14 +305,14 @@ export const LUTLoader: React.FC<LUTLoaderProps> = ({
           <Card variant="muted" padding={2} className="flex items-center justify-between">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <Text type="supporting" color="primary" className="block truncate text-[10px]">
-                {fileName || "LUT Loaded"}
+                {fileName || t("lut.loaded")}
               </Text>
               <Text type="supporting" color="secondary" className="text-[9px]">
                 {lutData.size}x{lutData.size}x{lutData.size} LUT
               </Text>
             </div>
             <IconButton
-              label="Remove LUT"
+              label={t("lut.remove")}
               icon={<X size={14} />}
               variant="ghost"
               size="sm"
@@ -320,13 +323,14 @@ export const LUTLoader: React.FC<LUTLoaderProps> = ({
 
           {/* Intensity slider */}
           <IntensitySlider
+            label={t("lut.intensity")}
             value={lutData.intensity}
             onChange={handleIntensityChange}
           />
 
           {/* Load different LUT button */}
           <Button
-            label="Load Different LUT"
+            label={t("lut.loadDifferent")}
             variant="ghost"
             size="sm"
             onClick={handleLoadClick}

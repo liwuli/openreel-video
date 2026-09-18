@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Play,
   Clock,
@@ -61,6 +62,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({
   template,
   onClick,
 }) => {
+  const { t } = useTranslation("welcome");
   const [isHovered, setIsHovered] = useState(false);
 
   const category: SocialMediaCategory = template.socialCategory || "custom";
@@ -128,7 +130,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({
         {template.featured && (
           <div className="absolute top-2 left-2 px-2 py-0.5 bg-amber-500 text-black text-[10px] font-semibold rounded-full flex items-center gap-1">
             <Star size={10} fill="currentColor" />
-            Featured
+            {t("gallery.featured")}
           </div>
         )}
 
@@ -151,7 +153,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-text-muted">
             <Layers size={11} />
-            <span>{template.placeholders.length} editable</span>
+            <span>{t("gallery.editableCount", { count: template.placeholders.length })}</span>
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Layers } from "@/icons/lucide-compat";
 import type { AdjustmentLayer } from "@openreel/core";
 import { useProjectStore } from "../../../stores/project-store";
@@ -18,6 +19,7 @@ export const AdjustmentLayerTimelineItem: React.FC<AdjustmentLayerTimelineItemPr
   frameRate,
   onSelectOwner,
 }) => {
+  const { t } = useTranslation("timeline");
   const [gesture, setGesture] = useState<"move" | "left" | "right" | null>(null);
   const startRef = useRef({ x: 0, startTime: 0, duration: 0 });
 
@@ -41,7 +43,7 @@ export const AdjustmentLayerTimelineItem: React.FC<AdjustmentLayerTimelineItemPr
     onSelectOwner();
     startRef.current = { x: event.clientX, startTime: layer.startTime, duration: layer.duration };
     useProjectStore.getState().beginHistoryGroup(
-      kind === "move" ? "Move adjustment layer" : "Trim adjustment layer",
+      kind === "move" ? t("adjustmentLayer.moveAction") : t("adjustmentLayer.trimAction"),
     );
     setGesture(kind);
   };
@@ -87,7 +89,7 @@ export const AdjustmentLayerTimelineItem: React.FC<AdjustmentLayerTimelineItemPr
   return (
     <div
       data-testid="adjustment-layer-timeline-item"
-      aria-label={`${layer.name}, adjustment layer`}
+      aria-label={t("adjustmentLayer.ariaLabel", { name: layer.name })}
       className={`absolute top-1 z-20 flex h-5 min-w-[12px] items-center overflow-hidden rounded border text-[9px] font-semibold shadow-sm ${
         layer.enabled
           ? "border-violet-300/70 bg-violet-500/85 text-white"
@@ -102,7 +104,7 @@ export const AdjustmentLayerTimelineItem: React.FC<AdjustmentLayerTimelineItemPr
     >
       <button
         type="button"
-        aria-label={`Trim start of ${layer.name}`}
+        aria-label={t("adjustmentLayer.trimStart", { name: layer.name })}
         className="h-full w-1.5 shrink-0 cursor-ew-resize bg-white/20 hover:bg-white/50"
         onMouseDown={(event) => startGesture(event, "left")}
       />
@@ -110,7 +112,7 @@ export const AdjustmentLayerTimelineItem: React.FC<AdjustmentLayerTimelineItemPr
       <span className="truncate px-1">FX · {layer.name}</span>
       <button
         type="button"
-        aria-label={`Trim end of ${layer.name}`}
+        aria-label={t("adjustmentLayer.trimEnd", { name: layer.name })}
         className="ml-auto h-full w-1.5 shrink-0 cursor-ew-resize bg-white/20 hover:bg-white/50"
         onMouseDown={(event) => startGesture(event, "right")}
       />

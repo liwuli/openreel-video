@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   Smartphone,
   Monitor,
@@ -60,6 +61,7 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({
   onSelectCategory,
   categoryStats,
 }) => {
+  const { t } = useTranslation("welcome");
   const [expandedPlatform, setExpandedPlatform] = React.useState<string | null>(
     null,
   );
@@ -80,7 +82,7 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({
     <div className="space-y-3">
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
         <Button
-          label="All"
+          label={t("gallery.all")}
           onClick={() => {
             onSelectCategory("all");
             setExpandedPlatform(null);
@@ -113,11 +115,12 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({
             (sum, cat) => sum + (categoryStats[cat] || 0),
             0,
           );
+          const platformLabel = t(`gallery.platforms.${platform}`, { defaultValue: platform });
 
           return (
             <Button
               key={platform}
-              label={platform}
+              label={platformLabel}
               onClick={() => handlePlatformClick(platform)}
               variant={isActive || isExpanded ? "primary" : "secondary"}
               size="sm"

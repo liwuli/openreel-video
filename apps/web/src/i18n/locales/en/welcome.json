@@ -58,8 +58,15 @@
     "title": "Start from Scratch",
     "projectName": "Project Name",
     "projectNamePlaceholder": "Enter project name...",
+    "selectFormat": "Select Format",
     "createProject": "Create Project",
-    "categories": {
+    "creating": "Creating…",
+    "newProjectDefault": "New Project",
+    "formatLabel": "{{name}} Format",
+    "safeZone": "Safe zone: {{top}}px top, {{bottom}}px bottom",
+    "maxDuration": " • Max {{duration}}s",
+    "recommendedDuration": " • Recommended {{duration}}s",
+    "groups": {
       "vertical": "Vertical (9:16)",
       "square": "Square (1:1)",
       "horizontal": "Horizontal (16:9)",
@@ -67,11 +74,26 @@
     }
   },
   "gallery": {
-    "searchTemplates": "Search templates...",
-    "loading": "Loading templates...",
+    "searchPlaceholder": "Search templates…",
+    "loading": "Loading templates…",
     "noTemplates": "No templates found",
     "noTemplatesDesc": "Try adjusting your search or filter",
-    "useTemplate": "Use this template",
-    "preview": "Preview"
+    "useTemplate": "Use Template",
+    "applying": "Applying…",
+    "preview": "Preview",
+    "featured": "Featured",
+    "editableCount": "{{count}} editable",
+    "editableFieldsCount": "{{duration}} · {{count}} editable fields",
+    "customizeTemplate": "Customize Template",
+    "advancedOptions": "Advanced Options ({{count}})",
+    "scenes": "Scenes",
+    "cancel": "Cancel",
+    "all": "All",
+    "platforms": {
+      "TikTok": "TikTok",
+      "Instagram": "Instagram",
+      "YouTube": "YouTube",
+      "General": "General"
+    }
   }
 }
